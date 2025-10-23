@@ -6,10 +6,12 @@ import {
   getDocs
 } from 'firebase/firestore';
 import { db } from '@/utils/firebaseConfig';
+import { useRouter } from 'next/navigation';
 
 export function useAuth() {
   const [user, setUser] = useState(null);
-  const [loading, setLoading] = useState(true); // শুরুতে true রাখুন
+  const [loading, setLoading] = useState(true);
+  const router = useRouter()
 
   // Check if user is logged in (from localStorage)
   useEffect(() => {
@@ -49,6 +51,11 @@ export function useAuth() {
         throw new Error('INVALID_PASSWORD');
       }
 
+      // পাসওয়ার্ড চেক করুন
+      if (userData.role !== 'admin') {
+        throw new Error('INVALID_ROLE');
+      }
+
       // লগইন সফল - ইউজার তথ্য স্টোর করুন
       const userInfo = {
         id: userDoc.id,
@@ -68,9 +75,11 @@ export function useAuth() {
       let errorMessage = 'লগইন ব্যর্থ হয়েছে';
       
       if (error.message === 'USER_NOT_FOUND') {
-        errorMessage = 'ইউজারনেমটি存在しない';
+        errorMessage = 'User not Found!';
       } else if (error.message === 'INVALID_PASSWORD') {
-        errorMessage = 'পাসওয়ার্ড ভুল হয়েছে';
+        errorMessage = 'Wrong Password!';
+      } else if (error.message === 'INVALID_ROLE') {
+        errorMessage = 'Only Admin Can Log In!';
       }
       
       return { success: false, error: errorMessage };
@@ -82,6 +91,7 @@ export function useAuth() {
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
+    router.push('/')
   };
 
   return {

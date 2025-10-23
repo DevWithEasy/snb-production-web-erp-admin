@@ -10,6 +10,8 @@
   },
   "dependencies": {
     "firebase": "^12.4.0",
+    "jspdf": "^3.0.3",
+    "jspdf-autotable": "^5.0.2",
     "lodash": "^4.17.21",
     "next": "16.0.0",
     "react": "19.2.0",

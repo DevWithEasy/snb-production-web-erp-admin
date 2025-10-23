@@ -65,14 +65,14 @@ export default function UpdateRecipe() {
   // Drag and Drop Handlers
   const handleDragStart = (e, material) => {
     setDraggedMaterial(material);
-    e.dataTransfer.setData('text/plain', material.id);
-    e.dataTransfer.effectAllowed = 'copy';
+    e.dataTransfer.setData("text/plain", material.id);
+    e.dataTransfer.effectAllowed = "copy";
   };
 
   const handleDragOver = (e) => {
     e.preventDefault();
     setIsDragOver(true);
-    e.dataTransfer.dropEffect = 'copy';
+    e.dataTransfer.dropEffect = "copy";
   };
 
   const handleDragLeave = (e) => {
@@ -83,13 +83,13 @@ export default function UpdateRecipe() {
   const handleDrop = (e) => {
     e.preventDefault();
     setIsDragOver(false);
-    
+
     if (draggedMaterial) {
       handleAddMaterialFromDrag(draggedMaterial);
     } else {
       // Fallback: try to get data from dataTransfer
-      const materialId = e.dataTransfer.getData('text/plain');
-      const material = materials.find(m => m.id === materialId);
+      const materialId = e.dataTransfer.getData("text/plain");
+      const material = materials.find((m) => m.id === materialId);
       if (material) {
         handleAddMaterialFromDrag(material);
       }
@@ -272,6 +272,7 @@ export default function UpdateRecipe() {
     setSelectProduct(updatedRecipe);
     setNewMaterial({ id: "", unit: "kg", qty: 0, cartonQty: 0 });
     setDraggedMaterial(null);
+    setShowModal(false)
   };
 
   const removeMaterialFromRecipe = (materialId) => {
@@ -306,27 +307,31 @@ export default function UpdateRecipe() {
 
     const cartonField = `carton_${getField(field)}`;
 
-    const updatedBatchItems = (selectProduct[getField(field)] || []).map((item) => {
-      if (item.id === editMaterial.id) {
-        return {
-          ...item,
-          qty: parseFloat(editMaterial.qty),
-          unit: editMaterial.unit,
-        };
+    const updatedBatchItems = (selectProduct[getField(field)] || []).map(
+      (item) => {
+        if (item.id === editMaterial.id) {
+          return {
+            ...item,
+            qty: parseFloat(editMaterial.qty),
+            unit: editMaterial.unit,
+          };
+        }
+        return item;
       }
-      return item;
-    });
+    );
 
-    const updatedCartonItems = (selectProduct[cartonField] || []).map((item) => {
-      if (item.id === editMaterial.id) {
-        return {
-          ...item,
-          qty: parseFloat(editMaterial.cartonQty),
-          unit: editMaterial.unit,
-        };
+    const updatedCartonItems = (selectProduct[cartonField] || []).map(
+      (item) => {
+        if (item.id === editMaterial.id) {
+          return {
+            ...item,
+            qty: parseFloat(editMaterial.cartonQty),
+            unit: editMaterial.unit,
+          };
+        }
+        return item;
       }
-      return item;
-    });
+    );
 
     setSelectProduct({
       ...selectProduct,
@@ -399,11 +404,10 @@ export default function UpdateRecipe() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="bg-gray-50">
       <ServerLoading visible={updating} message="Recipe updating" />
-
       {/* Main Container with Two Independent Scrollable Sections */}
-      <div className="flex h-screen">
+      <div className="flex h-[calc(100vh-65px)]">
         {/* Left Section - Recipe Editor (8/12 width) */}
         <div className="w-8/12 h-full flex flex-col border-r border-gray-200">
           {/* Fixed Header Section */}
@@ -427,8 +431,10 @@ export default function UpdateRecipe() {
           </div>
 
           {/* Scrollable Content Area with Drop Zone */}
-          <div 
-            className={`flex-1 overflow-y-auto ${isDragOver ? 'bg-blue-100' : ''}`}
+          <div
+            className={`flex-1 overflow-y-auto ${
+              isDragOver ? "bg-blue-100" : ""
+            }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
@@ -482,7 +488,9 @@ export default function UpdateRecipe() {
               {loading && (
                 <div className="flex flex-col items-center justify-center py-8">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-                  <div className="text-gray-600">Loading recipes and materials...</div>
+                  <div className="text-gray-600">
+                    Loading recipes and materials...
+                  </div>
                 </div>
               )}
 
@@ -520,7 +528,9 @@ export default function UpdateRecipe() {
                     title={`Drag to add ${material.name} to recipe`}
                   >
                     <div className="flex justify-between items-center text-sm text-gray-600">
-                      <span className="font-medium text-gray-800">{material?.name}</span>
+                      <span className="font-medium text-gray-800">
+                        {material?.name}
+                      </span>
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
                         {material?.unit}
                       </span>

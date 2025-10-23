@@ -21,13 +21,11 @@ export default function SearchAndProductSelect({
 }) {
   const fields = [
     { label: "Raw Materials (RM)", value: "rm" },
-    { label: "Packaging Materials (PM)", value: "pm" },
-    { label: "[Per Carton] Raw Materials (RM)", value: "carton_rm" },
-    { label: "[Per Carton] Packaging Materials (PM)", value: "carton_pm" },
+    { label: "Packaging Materials (PM)", value: "pm" }
   ];
 
   return (
-    <div className="mb-6">
+    <div className="mb-2">
       {/* Labels Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
         <label className="text-sm font-semibold text-gray-800 flex items-center">

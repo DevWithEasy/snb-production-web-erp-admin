@@ -7,6 +7,7 @@ import { useState } from "react";
 import { FaBars, FaHome, FaTimes } from "react-icons/fa";
 import { FiBook } from "react-icons/fi";
 import { MdImportExport } from "react-icons/md";
+import { TbFileExport } from "react-icons/tb";
 
 export default function DashboardLayout({ children }) {
   const { user, logout } = useAuth();
@@ -85,6 +86,13 @@ export default function DashboardLayout({ children }) {
                 >
                   <MdImportExport className="text-gray-400 group-hover:text-blue-600 transition-colors" />
                   <span className="ml-3 font-medium">Import Recipe</span>
+                </Link>
+                                <Link
+                  href="/dashboard/export-products-materials-code"
+                  className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 group"
+                >
+                  <TbFileExport className="text-gray-400 group-hover:text-blue-600 transition-colors" />
+                  <span className="ml-3 font-medium">Export Code</span>
                 </Link>
               </nav>
             </div>
