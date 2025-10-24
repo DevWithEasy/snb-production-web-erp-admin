@@ -71,6 +71,7 @@ export default function ImportRecipeModal({
         ...updatedData
       });
       setUpdating(false)
+      setVisible(false)
     } catch (error) {
       console.log(error);
       setUpdating(false)

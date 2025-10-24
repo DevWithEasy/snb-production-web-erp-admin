@@ -23,7 +23,7 @@ export default function RootLayout({ children }) {
   return (
     <html lang="en">
       <body
-        className={`${poppins.variable} ${robotoMono.variable} font-sans antialiased`}
+        className={`${poppins.variable} ${robotoMono.variable} text-sm font-sans antialiased`}
       >
         {children}
       </body>

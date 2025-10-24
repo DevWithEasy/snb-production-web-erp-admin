@@ -5,6 +5,8 @@ import React, { useState, useRef, useEffect } from "react";
 import { FaSearch } from "react-icons/fa";
 import * as XLSX from "xlsx";
 import ImportRecipeModal from "@/components/ImportRecipeModal";
+import { FaRegCircleCheck } from "react-icons/fa6";
+import { isEqual } from "lodash";
 
 export default function ImportRecipe() {
   const [excelFile, setExcelFile] = useState(null);
@@ -89,7 +91,7 @@ export default function ImportRecipe() {
         setError("No materials found for this section.");
       }
 
-      setProducts(products);
+      setProducts(products.sort((a,b)=>a.id.localeCompare(b.id)));
       setSectionSelected(true);
 
       setMaterials({
@@ -222,7 +224,7 @@ export default function ImportRecipe() {
           };
           recipeData.push(product);
         }
-        setExcelData(recipeData);
+        setExcelData(recipeData.sort((a,b)=>a.id.localeCompare(b.id)));
       } catch (error) {
         console.error("Error reading Excel file:", error);
         alert(
@@ -475,8 +477,8 @@ export default function ImportRecipe() {
                           setProductArea("local");
                         }}
                       >
-                        <td className="p-3">{product.id}</td>
-                        <td className="p-3">{product.name}</td>
+                        <td className="p-3">{product?.id?.slice(-4)}</td>
+                        <td className="p-3">{product?.name}</td>
                       </tr>
                     ))}
                   </tbody>
@@ -612,20 +614,24 @@ export default function ImportRecipe() {
                   </p>
                   <table className="w-full mt-4">
                     <tbody>
-                      {products?.map((product) => (
-                        <tr
+                      {products?.map((product) => {
+                        const find = excelData?.find(p=> p.id === product.id)
+                        return (
+                          <tr
                           key={product.id}
-                          className="cursor-pointer bg-white border border-gray-200 hover:bg-gray-50"
+                          className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${find ? 'bg-green-50' : 'bg-red-50'}`}
                           onClick={() => {
                             setVisible(true);
                             setProduct(product);
                             setProductArea("firebase");
                           }}
                         >
-                          <td className="p-3 font-medium">{product.id}</td>
-                          <td className="p-3">{product.name}</td>
+                          {find && <td className="p-3"><FaRegCircleCheck size={18} className="text-green-500" /></td>}
+                          <td className="p-3 font-medium">{product?.id?.slice(-4)}</td>
+                          <td className="p-3">{product?.name}</td>
                         </tr>
-                      ))}
+                        )
+                      })}
                     </tbody>
                   </table>
                 </div>

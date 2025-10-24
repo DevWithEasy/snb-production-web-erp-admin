@@ -88,6 +88,12 @@ export function useAuth() {
     }
   };
 
+  const updateUserData = (updatedUser) => {
+    // সঠিকভাবে state আপডেট করুন
+    setUser(updatedUser);
+    localStorage.setItem('user', JSON.stringify(updatedUser));
+  };
+
   const logout = () => {
     setUser(null);
     localStorage.removeItem('user');
@@ -97,6 +103,7 @@ export function useAuth() {
   return {
     user,
     login,
+    updateUserData,
     logout,
     loading
   };
