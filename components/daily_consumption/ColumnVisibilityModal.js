@@ -42,7 +42,7 @@ export default function ColumnVisibilityModal({
   ];
 
   return (
-    <div className="fixed inset-0 bg-black bg-opacity-50 flex items-center justify-center z-50 p-4">
+    <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
       <div className="bg-white rounded-xl shadow-lg w-full max-w-md">
         {/* Header */}
         <div className="flex justify-between items-center px-6 py-4 border-b border-gray-200">

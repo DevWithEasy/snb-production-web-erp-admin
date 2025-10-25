@@ -11,8 +11,7 @@ export default function SectionSelector({ sections, onSectionSelect, title }) {
             onClick={() => onSectionSelect(section.value)}
             className="bg-white p-6 rounded-lg shadow-md border border-gray-200 hover:border-blue-500 hover:shadow-lg transition-all duration-200 text-left"
           >
-            <h3 className="font-semibold text-gray-800 mb-2">{section.label}</h3>
-            <p className="text-sm text-gray-600">Value: {section.value}</p>
+            <h3 className="font-semibold text-gray-800">{section.label}</h3>
           </button>
         ))}
       </div>

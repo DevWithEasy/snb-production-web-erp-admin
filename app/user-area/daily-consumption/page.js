@@ -141,7 +141,7 @@ export default function DailyConsumption() {
         opening: formatNumber(calOpening),
         recieved_total,
         consumption_total,
-        stock: calOpening + Number(recieved_total) - Number(consumption_total),
+        stock: formatNumber(calOpening + Number(recieved_total) - Number(consumption_total)),
       };
     } else {
       return {
@@ -324,7 +324,7 @@ export default function DailyConsumption() {
   if (!section) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50 py-8">
+        <div className="h-[calc(100vh-65px)] bg-gray-50 py-8">
           <div className="max-w-4xl mx-auto px-4">
             <div className="bg-white rounded-lg shadow-md p-6">
               <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
@@ -456,7 +456,7 @@ export default function DailyConsumption() {
                   <FaArrowLeft className="text-gray-600" />
                 </button>
                 <div>
-                  <h1 className="text-xl font-bold text-gray-900">
+                  <h1 className="text-lg font-bold text-gray-900">
                     {section?.charAt(0).toUpperCase() + section?.slice(1)}{" "}
                     Section
                   </h1>
@@ -518,13 +518,13 @@ export default function DailyConsumption() {
                   <FaCalendarAlt size={20} />
                 </button>
 
-                <button
+                {/* <button
                   onClick={() => setSettingsModalVisible(true)}
                   className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                   title="Settings"
                 >
                   <FaCog size={20} />
-                </button>
+                </button> */}
               </div>
             </div>
           </div>

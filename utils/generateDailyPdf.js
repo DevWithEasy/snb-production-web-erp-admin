@@ -62,15 +62,51 @@ export async function generateDailyPDF(setGeneratingPdf, data, section, user, da
     yPosition += 15;
 
     if (allSectionsEmpty) {
-      // Show empty message
-      doc.setFontSize(16);
+      // Show beautiful empty state with border
+      const pageWidth = doc.internal.pageSize.getWidth();
+      const boxWidth = 150;
+      const boxHeight = 60;
+      const boxX = (pageWidth - boxWidth) / 2;
+      const boxY = yPosition;
+
+      // Draw border with rounded corners (simulated)
+      doc.setDrawColor(200, 200, 200);
+      doc.setLineWidth(0.2);
+      doc.rect(boxX, boxY, boxWidth, boxHeight);
+
+      // Add background color
+      doc.setFillColor(250, 250, 250);
+      doc.rect(boxX, boxY, boxWidth, boxHeight, 'F');
+
+      // Draw border again on top of background
+      doc.setDrawColor(150, 150, 150);
+      doc.rect(boxX, boxY, boxWidth, boxHeight);
+
+      // Main message
+      doc.setFontSize(14);
+      doc.setFont('helvetica', 'bold');
       doc.setTextColor(102, 102, 102);
-      doc.text('No Production or Consumption Data Available', 105, yPosition, { align: 'center' });
-      yPosition += 10;
-      doc.setFontSize(12);
-      doc.text('No batch production, carton production, material received,', 105, yPosition, { align: 'center' });
-      yPosition += 8;
-      doc.text('or material consumption was recorded for this date.', 105, yPosition, { align: 'center' });
+      doc.text('No Data Available', 105, boxY + 15, { align: 'center' });
+
+      // Sub message
+      doc.setFontSize(10);
+      doc.setFont('helvetica', 'normal');
+      doc.setTextColor(136, 136, 136);
+      
+      const messageLines = [
+        'No production or consumption data was recorded',
+        'for the selected date.',
+        ' ',
+        'Please check if:',
+        '• Batch production was done',
+        '• Carton production was completed', 
+        '• Materials were received or consumed'
+      ];
+
+      messageLines.forEach((line, index) => {
+        doc.text(line, 105, boxY + 25 + (index * 4), { align: 'center' });
+      });
+
     } else {
       // Products Section
       if (filteredProducts.length > 0) {
