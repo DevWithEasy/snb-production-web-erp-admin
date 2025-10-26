@@ -6,6 +6,7 @@ import getPeriodPath from "@/utils/getPeriodPath";
 import { db } from "@/utils/firebaseConfig";
 import { doc, updateDoc } from "firebase/firestore";
 import ServerLoading from "./ServerLoading";
+import { toast } from "sonner";
 
 export default function ImportRecipeModal({
   visible,
@@ -15,6 +16,7 @@ export default function ImportRecipeModal({
   productArea,
   materials,
   section,
+  setImported
 }) {
   const { user } = useAuth();
   const [field, setField] = useState("rm");
@@ -72,6 +74,8 @@ export default function ImportRecipeModal({
       });
       setUpdating(false)
       setVisible(false)
+      setImported((prev)=>[...prev,product.id])
+      toast.success(`${product.name} Recipe Imported Successfully`)
     } catch (error) {
       console.log(error);
       setUpdating(false)

@@ -1,6 +1,7 @@
 "use client";
 import { useEffect, useState } from "react";
 import { collection, getDocs, addDoc } from "firebase/firestore";
+import { toast } from "sonner"; // Sonner import করুন
 import LoadingScreen from "@/components/LoadingScreen";
 import { useAuth } from "@/hooks/useAuth";
 import Firebase from "@/utils/firebase";
@@ -28,10 +29,7 @@ export default function AddMaterials() {
   const units = [
     { label: "Kg", value: "kg" },
     { label: "Pcs", value: "pcs" },
-    { label: "Rim", value: "rim" },
-    { label: "Ltr", value: "ltr" },
-    { label: "Gm", value: "gm" },
-    { label: "Ml", value: "ml" },
+    { label: "Rim", value: "rim" }
   ];
 
   // Firebase collection reference for current section and field
@@ -63,7 +61,7 @@ export default function AddMaterials() {
       if (!section && sortedSections.length > 0)
         setSection(sortedSections[0].value);
     } catch (error) {
-      alert("Failed to load sections");
+      toast.error("Failed to load sections");
       console.error("Failed to load sections:", error);
     } finally {
       setSectionLoading(false);
@@ -92,7 +90,7 @@ export default function AddMaterials() {
         console.log("No materials found in Firestore");
       }
     } catch (error) {
-      alert("Could not load materials: " + error.message);
+      toast.error("Could not load materials: " + error.message);
       console.error("Error loading materials:", error);
     } finally {
       setLoading(false);
@@ -102,68 +100,81 @@ export default function AddMaterials() {
   // Add new material as a new document in Firestore collection
   const handleSubmit = async () => {
     if (!name.trim()) {
-      alert("Please Insert Material name");
+      toast.error("Please Insert Material name");
       return;
     }
 
     if (!section) {
-      alert("Please select a section");
+      toast.error("Please select a section");
       return;
     }
 
     if (!field) {
-      alert("Please select material type");
+      toast.error("Please select material type");
       return;
     }
 
-    setLoading(true);
-    try {
-      const newMaterial = {
-        name: name.trim(),
-        unit,
-        opening: parseFloat(opening) || 0,
-        recieved_total: 0,
-        recieved_days: Array.from({ length: 31 }, (_, i) => ({
-          date: i + 1,
-          qty: 0,
-        })),
-        consumption_total: 0,
-        consumption_days: Array.from({ length: 31 }, (_, i) => ({
-          date: i + 1,
-          qty: 0,
-        })),
-        closing: 0,
-      };
+    // Promise toast তৈরি করুন
+    const promise = new Promise(async (resolve, reject) => {
+      try {
+        setLoading(true);
+        const newMaterial = {
+          name: name.trim(),
+          unit,
+          opening: parseFloat(opening) || 0,
+          recieved_total: 0,
+          recieved_days: Array.from({ length: 31 }, (_, i) => ({
+            date: i + 1,
+            qty: 0,
+          })),
+          consumption_total: 0,
+          consumption_days: Array.from({ length: 31 }, (_, i) => ({
+            date: i + 1,
+            qty: 0,
+          })),
+          closing: 0,
+        };
 
-      if (!periodMaterialCollectionRef) {
-        throw new Error("Invalid collection reference");
+        if (!periodMaterialCollectionRef) {
+          throw new Error("Invalid collection reference");
+        }
+
+        // Add new doc in Firestore
+        const docRef = await addDoc(periodMaterialCollectionRef, newMaterial);
+        const savedMaterial = { id: docRef.id, ...newMaterial };
+
+        // Also create in main collection
+        await Firebase.createDocWithName(materialCollectionName, docRef.id, newMaterial);
+
+        // Update local state
+        const updatedMaterials = [...materialsData, savedMaterial];
+        setMaterialsData(
+          updatedMaterials.sort((a, b) => a.name.localeCompare(b.name))
+        );
+
+        // Reset form
+        setName("");
+        setOpening("");
+        setUnit("kg");
+
+        resolve(savedMaterial);
+      } catch (error) {
+        reject(error);
+      } finally {
+        setLoading(false);
       }
+    });
 
-      // Add new doc in Firestore
-      const docRef = await addDoc(periodMaterialCollectionRef, newMaterial);
-      const savedMaterial = { id: docRef.id, ...newMaterial };
-
-      // Also create in main collection
-      await Firebase.createDocWithName(materialCollectionName, docRef.id, newMaterial);
-
-      // Update local state
-      const updatedMaterials = [...materialsData, savedMaterial];
-      setMaterialsData(
-        updatedMaterials.sort((a, b) => a.name.localeCompare(b.name))
-      );
-
-      // Reset form
-      setName("");
-      setOpening("");
-      setUnit("kg");
-
-      alert("Success: New material added successfully!");
-    } catch (error) {
-      alert("Error: Could not add material: " + error.message);
-      console.error("Error adding material:", error);
-    } finally {
-      setLoading(false);
-    }
+    // Toast প্রদর্শন করুন
+    toast.promise(promise, {
+      loading: 'Adding new material...',
+      success: (data) => {
+        return `"${data.name}" has been added successfully!`;
+      },
+      error: (error) => {
+        return `Could not add material: ${error.message}`;
+      },
+    });
   };
 
   // Open modal function

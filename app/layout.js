@@ -1,5 +1,6 @@
 import { Poppins, Roboto_Mono } from "next/font/google";
 import "./globals.css";
+import { Toaster } from "sonner";
 
 const poppins = Poppins({
   variable: "--font-poppins",
@@ -26,6 +27,7 @@ export default function RootLayout({ children }) {
         className={`${poppins.variable} ${robotoMono.variable} text-sm font-sans antialiased`}
       >
         {children}
+        <Toaster />
       </body>
     </html>
   );

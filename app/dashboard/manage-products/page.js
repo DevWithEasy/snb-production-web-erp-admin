@@ -1,15 +1,16 @@
 "use client";
-import { useEffect, useState } from "react";
-import { collection, addDoc, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import LoadingScreen from "@/components/LoadingScreen";
 import EditProductModal from "@/components/manage_products/EditProductModal";
 import InfoList from "@/components/manage_products/InfoList";
 import ProductList from "@/components/manage_products/ProductList";
-import LoadingScreen from "@/components/LoadingScreen";
 import { useAuth } from "@/hooks/useAuth";
 import Firebase from "@/utils/firebase";
 import { db } from "@/utils/firebaseConfig";
 import formatFieldName from "@/utils/formatedFieldName";
 import getPeriodPath from "@/utils/getPeriodPath";
+import { addDoc, collection, deleteDoc, doc, getDoc, updateDoc } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import { toast } from "sonner";
 
 export default function ManageProducts() {
   const [sections, setSections] = useState([]);
@@ -184,7 +185,7 @@ export default function ManageProducts() {
       const updatedData = [...recipeData, createdProduct];
       setRecipeData(updatedData);
       setName("");
-      alert("Success: New product added successfully!");
+      toast.success('New product added successfully!');
     } catch (err) {
       console.error("Error adding product:", err);
       alert("Error: Could not add product: " + err.message);
@@ -258,10 +259,10 @@ export default function ManageProducts() {
 
       setRecipeData(updatedData);
       setEditModalVisible(false);
-      alert("Success: Product name updated successfully!");
+      toast.success(`${editName} Updated Successfully.`);
     } catch (err) {
       console.error("Error updating product:", err);
-      alert("Error: Could not update product: " + err.message);
+      toast.error(`${editName} Could not update product.`);
     } finally {
       setLoading(false);
     }

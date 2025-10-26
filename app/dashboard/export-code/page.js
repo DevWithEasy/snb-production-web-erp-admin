@@ -1,161 +1,227 @@
 "use client";
 import { useAuth } from "@/hooks/useAuth";
 import Firebase from "@/utils/firebase";
-import React, { useEffect, useState } from "react";
-import { FaSearch, FaFileExcel, FaFilePdf, FaDownload, FaFileCode } from "react-icons/fa";
-import * as XLSX from 'xlsx';
+import LOGO_BASE64 from "@/utils/imageData";
+import { useEffect, useState } from "react";
+import { FaFileCode, FaFileExcel, FaFilePdf, FaSearch } from "react-icons/fa";
+import * as XLSX from "xlsx";
+LOGO_BASE64;
 
 // Manual PDF creation without jspdf-autotable
 const createPDF = (section, products, rmMaterials, pmMaterials) => {
-  // Create a simple PDF using basic jsPDF
-  const { jsPDF } = require('jspdf');
+  const { jsPDF } = require("jspdf");
   const doc = new jsPDF();
 
+  // Page dimensions
+  const pageWidth = doc.internal.pageSize.width;
+  const pageHeight = doc.internal.pageSize.height;
+
+  // Add footer function
+  const addFooter = (pageNumber) => {
+    const footerY = pageHeight - 10;
+    doc.setFontSize(8);
+    doc.setTextColor(100, 100, 100);
+    doc.text(`Page ${pageNumber}`, pageWidth - 20, footerY);
+    doc.text(`Developed By- Robi App Lab`, 20, footerY);
+  };
+
   // Set initial position
-  let yPosition = 20;
+  let yPosition = 5;
+  let currentPage = 1;
 
-  // Title
-  doc.setFontSize(20);
-  doc.setTextColor(0, 0, 128);
-  doc.text(`Products & Materials - ${section}`, 20, yPosition);
-  yPosition += 10;
+  // Add logo and header - 20x20 pixels, centered
+  if (LOGO_BASE64) {
+    const pageWidth = doc.internal.pageSize.getWidth();
+    const logoWidth = 20;
+    const logoX = (pageWidth - logoWidth) / 2; // Center calculation
+    doc.addImage(LOGO_BASE64, "PNG", logoX, yPosition, 20, 20);
+    yPosition += 25;
+  }
 
+  // Company name - Bold
+  doc.setFontSize(18);
+  doc.setFont('helvetica', 'bold');
+  doc.setTextColor(245, 6, 6);
+  doc.text('S&B Nice Nice Food Valley Ltd.', 105, yPosition, { align: 'center' });
+  yPosition += 8;
+
+  // Section info - Normal
   doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal'); // Normal font weight
+  doc.setTextColor(0, 0, 0);
+  doc.text(`${section?.charAt(0).toUpperCase() + section?.slice(1)} Section`, 105, yPosition, { align: 'center' });
+  yPosition += 6;
+
+  // Date info - Normal
+  doc.setFontSize(12);
+  doc.setFont('helvetica', 'normal'); // Normal font weight
+  doc.text(`Product and materials Code`, 105, yPosition, { align: 'center' });
+  yPosition += 15;
+
+  doc.setFontSize(10);
   doc.setTextColor(100, 100, 100);
   doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 20, yPosition);
-  yPosition += 20;
+  yPosition += 10;
 
   // Products Section
   if (products.length > 0) {
-    doc.setFontSize(16);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for section title
     doc.setTextColor(0, 0, 0);
-    doc.text('PRODUCTS', 20, yPosition);
-    yPosition += 10;
+    doc.text("PRODUCTS", 20, yPosition);
+    yPosition += 5;
 
-    // Table Header
+    // Table Header - Bold
     doc.setFillColor(66, 135, 245);
     doc.setTextColor(255, 255, 255);
-    doc.rect(20, yPosition, 170, 8, 'F');
-    doc.text('ID', 25, yPosition + 6);
-    doc.text('Product Name', 80, yPosition + 6);
-    yPosition += 12;
+    doc.rect(20, yPosition, 170, 7, "F");
+    doc.setFont('helvetica', 'bold'); // Bold for header only
+    doc.text("ID", 25, yPosition + 5);
+    doc.text("Product Name", 80, yPosition + 5);
+    yPosition += 10;
 
-    // Table Rows
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
+    // Table Rows with striped background - Normal font weight
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for data rows
+
     products.forEach((product, index) => {
       if (yPosition > 270) {
+        addFooter(currentPage);
         doc.addPage();
+        currentPage++;
         yPosition = 20;
       }
-      
-      doc.text(product.id || 'N/A', 25, yPosition);
-      doc.text(product.name || 'N/A', 80, yPosition);
-      yPosition += 8;
 
-      // Add line separator
-      if (index < products.length - 1) {
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, yPosition - 2, 190, yPosition - 2);
-        yPosition += 4;
+      // Alternate row colors - ODD: light gray, EVEN: white
+      if (index % 2 === 0) {
+        doc.setFillColor(240, 240, 240); // ODD - Light gray
+      } else {
+        doc.setFillColor(255, 255, 255); // EVEN - White
       }
+      doc.rect(20, yPosition - 4, 170, 6, "F");
+
+      // Always black text with normal font weight
+      doc.setTextColor(0, 0, 0);
+      doc.text(product.id || "N/A", 25, yPosition);
+      doc.text(product.name || "N/A", 80, yPosition);
+      yPosition += 6;
     });
 
-    yPosition += 15;
+    yPosition += 8;
   }
 
   // Raw Materials Section
   if (rmMaterials.length > 0) {
-    if (yPosition > 200) {
+    if (yPosition > 250) {
+      addFooter(currentPage);
       doc.addPage();
+      currentPage++;
       yPosition = 20;
     }
 
-    doc.setFontSize(16);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for section title
     doc.setTextColor(0, 0, 0);
-    doc.text('RAW MATERIALS', 20, yPosition);
-    yPosition += 10;
+    doc.text("RAW MATERIALS", 20, yPosition);
+    yPosition += 8;
 
-    // Table Header
+    // Table Header - Bold
     doc.setFillColor(34, 197, 94);
     doc.setTextColor(255, 255, 255);
-    doc.rect(20, yPosition, 170, 8, 'F');
-    doc.text('ID', 25, yPosition + 6);
-    doc.text('Material Name', 80, yPosition + 6);
-    doc.text('Unit', 150, yPosition + 6);
-    yPosition += 12;
+    doc.rect(20, yPosition, 170, 7, "F");
+    doc.setFont('helvetica', 'bold'); // Bold for header only
+    doc.text("ID", 25, yPosition + 5);
+    doc.text("Material Name", 80, yPosition + 5);
+    doc.text("Unit", 150, yPosition + 5);
+    yPosition += 10;
 
-    // Table Rows
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
+    // Table Rows with striped background - Normal font weight
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for data rows
+
     rmMaterials.forEach((material, index) => {
       if (yPosition > 270) {
+        addFooter(currentPage);
         doc.addPage();
+        currentPage++;
         yPosition = 20;
       }
-      
-      doc.text(material.id || 'N/A', 25, yPosition);
-      doc.text(material.name || 'N/A', 80, yPosition);
-      doc.text(material.unit || 'N/A', 150, yPosition);
-      yPosition += 8;
 
-      // Add line separator
-      if (index < rmMaterials.length - 1) {
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, yPosition - 2, 190, yPosition - 2);
-        yPosition += 4;
+      // Alternate row colors - ODD: light gray, EVEN: white
+      if (index % 2 === 0) {
+        doc.setFillColor(240, 240, 240); // ODD - Light gray
+      } else {
+        doc.setFillColor(255, 255, 255); // EVEN - White
       }
+      doc.rect(20, yPosition - 4, 170, 6, "F");
+
+      // Always black text with normal font weight
+      doc.setTextColor(0, 0, 0);
+      doc.text(material.id || "N/A", 25, yPosition);
+      doc.text(material.name || "N/A", 80, yPosition);
+      doc.text(material.unit || "N/A", 150, yPosition);
+      yPosition += 6;
     });
 
-    yPosition += 15;
+    yPosition += 8;
   }
 
   // Packaging Materials Section
   if (pmMaterials.length > 0) {
-    if (yPosition > 200) {
+    if (yPosition > 250) {
+      addFooter(currentPage);
       doc.addPage();
+      currentPage++;
       yPosition = 20;
     }
 
-    doc.setFontSize(16);
+    doc.setFontSize(14);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for section title
     doc.setTextColor(0, 0, 0);
-    doc.text('PACKAGING MATERIALS', 20, yPosition);
-    yPosition += 10;
+    doc.text("PACKAGING MATERIALS", 20, yPosition);
+    yPosition += 8;
 
-    // Table Header
+    // Table Header - Bold
     doc.setFillColor(249, 115, 22);
     doc.setTextColor(255, 255, 255);
-    doc.rect(20, yPosition, 170, 8, 'F');
-    doc.text('ID', 25, yPosition + 6);
-    doc.text('Material Name', 80, yPosition + 6);
-    doc.text('Unit', 150, yPosition + 6);
-    yPosition += 12;
+    doc.rect(20, yPosition, 170, 7, "F");
+    doc.setFont('helvetica', 'bold'); // Bold for header only
+    doc.text("ID", 25, yPosition + 5);
+    doc.text("Material Name", 80, yPosition + 5);
+    doc.text("Unit", 150, yPosition + 5);
+    yPosition += 10;
 
-    // Table Rows
-    doc.setTextColor(0, 0, 0);
-    doc.setFontSize(10);
-    
+    // Table Rows with striped background - Normal font weight
+    doc.setFontSize(9);
+    doc.setFont('helvetica', 'normal'); // Normal font weight for data rows
+
     pmMaterials.forEach((material, index) => {
       if (yPosition > 270) {
+        addFooter(currentPage);
         doc.addPage();
+        currentPage++;
         yPosition = 20;
       }
-      
-      doc.text(material.id || 'N/A', 25, yPosition);
-      doc.text(material.name || 'N/A', 80, yPosition);
-      doc.text(material.unit || 'N/A', 150, yPosition);
-      yPosition += 8;
 
-      // Add line separator
-      if (index < pmMaterials.length - 1) {
-        doc.setDrawColor(200, 200, 200);
-        doc.line(20, yPosition - 2, 190, yPosition - 2);
-        yPosition += 4;
+      // Alternate row colors - ODD: light gray, EVEN: white
+      if (index % 2 === 0) {
+        doc.setFillColor(255, 255, 255); // EVEN - White
+      } else {
+        doc.setFillColor(240, 240, 240); // ODD - Light gray
       }
+      doc.rect(20, yPosition - 4, 170, 6, "F");
+
+      // Always black text with normal font weight
+      doc.setTextColor(0, 0, 0);
+      doc.text(material.id || "N/A", 25, yPosition);
+      doc.text(material.name || "N/A", 80, yPosition);
+      doc.text(material.unit || "N/A", 150, yPosition);
+      yPosition += 6;
     });
   }
+
+  // Add footer to the last page
+  addFooter(currentPage);
 
   return doc;
 };
@@ -168,10 +234,31 @@ export default function ExportProductsMaterialsCode() {
   const [materials, setMaterials] = useState([]);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  
+  // Separate search terms for each section
+  const [productSearch, setProductSearch] = useState("");
+  const [rmSearch, setRmSearch] = useState("");
+  const [pmSearch, setPmSearch] = useState("");
 
   const products_collection_name = `${section}_products`;
   const rm_collection_name = `${section}_rm`;
   const pm_collection_name = `${section}_pm`;
+
+  // Filter data based on separate search terms
+  const filteredProducts = products.filter(item =>
+    item.name?.toLowerCase().includes(productSearch.toLowerCase()) ||
+    item.id?.toLowerCase().includes(productSearch.toLowerCase())
+  );
+
+  const filteredRmMaterials = materials.rm?.filter(item =>
+    item.name?.toLowerCase().includes(rmSearch.toLowerCase()) ||
+    item.id?.toLowerCase().includes(rmSearch.toLowerCase())
+  ) || [];
+
+  const filteredPmMaterials = materials.pm?.filter(item =>
+    item.name?.toLowerCase().includes(pmSearch.toLowerCase()) ||
+    item.id?.toLowerCase().includes(pmSearch.toLowerCase())
+  ) || [];
 
   // Fetch sections on component mount
   const fetchSections = async () => {
@@ -224,6 +311,10 @@ export default function ExportProductsMaterialsCode() {
 
     setLoading(true);
     setError(null);
+    // Reset all search terms when fetching new data
+    setProductSearch("");
+    setRmSearch("");
+    setPmSearch("");
     try {
       // Fetch data directly from Firestore
       const [products, rmData, pmData] = await Promise.all([
@@ -245,7 +336,7 @@ export default function ExportProductsMaterialsCode() {
           const { id, name } = product;
           return {
             name,
-            id
+            id,
           };
         })
       );
@@ -253,17 +344,17 @@ export default function ExportProductsMaterialsCode() {
         rm: rmData.map((material) => {
           const { id, name, unit } = material;
           return {
+            name,
             unit,
             id,
-            name
           };
         }),
         pm: pmData.map((material) => {
           const { id, name, unit } = material;
           return {
             name,
-            id,
             unit,
+            id,
           };
         }),
       });
@@ -281,7 +372,7 @@ export default function ExportProductsMaterialsCode() {
   const exportToExcel = () => {
     const workbook = XLSX.utils.book_new();
 
-    // Products sheet
+    // Use original data for export (not filtered)
     const productsSheet = XLSX.utils.json_to_sheet(products);
     XLSX.utils.book_append_sheet(workbook, productsSheet, "Products");
 
@@ -302,7 +393,7 @@ export default function ExportProductsMaterialsCode() {
     const data = {
       products,
       rm: materials.rm,
-      pm: materials.pm
+      pm: materials.pm,
     };
 
     const dataStr = JSON.stringify(data, null, 2);
@@ -323,8 +414,8 @@ export default function ExportProductsMaterialsCode() {
       const doc = createPDF(section, products, materials.rm, materials.pm);
       doc.save(`${section}_products_materials.pdf`);
     } catch (error) {
-      console.error('Error generating PDF:', error);
-      alert('Error generating PDF. Please try again.');
+      console.error("Error generating PDF:", error);
+      alert("Error generating PDF. Please try again.");
     }
   };
 
@@ -356,6 +447,10 @@ export default function ExportProductsMaterialsCode() {
                     setSection(e.target.value);
                     setProducts([]);
                     setMaterials({ rm: [], pm: [] });
+                    // Reset all search terms when section changes
+                    setProductSearch("");
+                    setRmSearch("");
+                    setPmSearch("");
                   }}
                   className="flex-1 h-12 px-3 border border-gray-300 rounded-l-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
                   disabled={loading}
@@ -407,7 +502,9 @@ export default function ExportProductsMaterialsCode() {
         </div>
 
         {/* Export Buttons */}
-        {(products?.length > 0 || materials.rm?.length > 0 || materials.pm?.length > 0) && (
+        {(products?.length > 0 ||
+          materials.rm?.length > 0 ||
+          materials.pm?.length > 0) && (
           <div className="bg-white rounded-lg shadow-md p-6 mb-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Export Data
@@ -439,7 +536,9 @@ export default function ExportProductsMaterialsCode() {
         )}
 
         {/* Results Section */}
-        {(products?.length > 0 || materials.rm?.length > 0 || materials.pm?.length > 0) && (
+        {(products?.length > 0 ||
+          materials.rm?.length > 0 ||
+          materials.pm?.length > 0) && (
           <div className="bg-white rounded-lg shadow-md p-6">
             <h2 className="text-xl font-semibold text-gray-800 mb-4">
               Results
@@ -473,46 +572,100 @@ export default function ExportProductsMaterialsCode() {
               </div>
             </div>
 
-            {/* Sample Data Preview */}
-            <div className="space-y-4">
-              {/* Products Preview */}
+            {/* Sample Data Preview with Separate Search Inputs */}
+            <div className="space-y-6">
+              {/* Products Preview with Search */}
               {products.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    Products
-                  </h3>
-                  <div className="bg-gray-50 rounded-lg p-4 border max-h-60 overflow-y-auto">
-                    <pre className="text-sm text-gray-600">
-                      {JSON.stringify(products, null, 2)}
-                    </pre>
+                <div className="border border-gray-100 rounded-lg overflow-hidden">
+                  <div className="bg-blue-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                    <h3 className="text-lg font-medium text-gray-700">
+                      Products ({filteredProducts.length} of {products.length})
+                    </h3>
+                    <div className="relative w-64">
+                      <input
+                        type="text"
+                        value={productSearch}
+                        onChange={(e) => setProductSearch(e.target.value)}
+                        placeholder="Search products by name or ID..."
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                      />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                    {filteredProducts.length > 0 ? (
+                      <pre className="text-sm text-gray-600">
+                        {JSON.stringify(filteredProducts, null, 2)}
+                      </pre>
+                    ) : (
+                      <div className="text-center py-4 text-gray-500">
+                        No products match your search
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* RM Materials Preview */}
+              {/* RM Materials Preview with Search */}
               {materials.rm.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    RM Materials
-                  </h3>
-                  <div className="bg-gray-50 rounded-lg p-4 border max-h-60 overflow-y-auto">
-                    <pre className="text-sm text-gray-600">
-                      {JSON.stringify(materials.rm, null, 2)}
-                    </pre>
+                <div className="border border-gray-100 rounded-lg overflow-hidden">
+                  <div className="bg-green-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                    <h3 className="text-lg font-medium text-gray-700">
+                      RM Materials ({filteredRmMaterials.length} of {materials.rm.length})
+                    </h3>
+                    <div className="relative w-64">
+                      <input
+                        type="text"
+                        value={rmSearch}
+                        onChange={(e) => setRmSearch(e.target.value)}
+                        placeholder="Search RM materials by name or ID..."
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                      />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                    {filteredRmMaterials.length > 0 ? (
+                      <pre className="text-sm text-gray-600">
+                        {JSON.stringify(filteredRmMaterials, null, 2)}
+                      </pre>
+                    ) : (
+                      <div className="text-center py-4 text-gray-500">
+                        No RM materials match your search
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
 
-              {/* PM Materials Preview */}
+              {/* PM Materials Preview with Search */}
               {materials.pm.length > 0 && (
-                <div>
-                  <h3 className="text-lg font-medium text-gray-700 mb-2">
-                    PM Materials
-                  </h3>
-                  <div className="bg-gray-50 rounded-lg p-4 border max-h-60 overflow-y-auto">
-                    <pre className="text-sm text-gray-600">
-                      {JSON.stringify(materials.pm, null, 2)}
-                    </pre>
+                <div className="border border-gray-100 rounded-lg overflow-hidden">
+                  <div className="bg-orange-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
+                    <h3 className="text-lg font-medium text-gray-700">
+                      PM Materials ({filteredPmMaterials.length} of {materials.pm.length})
+                    </h3>
+                    <div className="relative w-64">
+                      <input
+                        type="text"
+                        value={pmSearch}
+                        onChange={(e) => setPmSearch(e.target.value)}
+                        placeholder="Search PM materials by name or ID..."
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                      />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                    </div>
+                  </div>
+                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                    {filteredPmMaterials.length > 0 ? (
+                      <pre className="text-sm text-gray-600">
+                        {JSON.stringify(filteredPmMaterials, null, 2)}
+                      </pre>
+                    ) : (
+                      <div className="text-center py-4 text-gray-500">
+                        No PM materials match your search
+                      </div>
+                    )}
                   </div>
                 </div>
               )}
@@ -538,6 +691,7 @@ export default function ExportProductsMaterialsCode() {
           <ul className="space-y-2 text-blue-700 text-sm">
             <li>• Select a section from the dropdown</li>
             <li>• Click the search button to fetch products and materials</li>
+            <li>• Use individual search boxes to filter each section</li>
             <li>• Use export buttons to download data in different formats</li>
             <li>• Excel: Three separate sheets for Products, RM, and PM</li>
             <li>• PDF: Professional formatted document with tables</li>

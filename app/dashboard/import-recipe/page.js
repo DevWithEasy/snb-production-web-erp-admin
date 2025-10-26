@@ -22,6 +22,7 @@ export default function ImportRecipe() {
   const [product, setProduct] = useState(false);
   const [productArea, setProductArea] = useState("local");
   const [sectionSelected, setSectionSelected] = useState(false);
+  const [imported,setImported] = useState([])
 
   const products_collection_name = `${section}_products`;
   const rm_collection_name = `${section}_rm`;
@@ -91,7 +92,7 @@ export default function ImportRecipe() {
         setError("No materials found for this section.");
       }
 
-      setProducts(products.sort((a,b)=>a.id.localeCompare(b.id)));
+      setProducts(products.sort((a, b) => a.name.localeCompare(b.name)));
       setSectionSelected(true);
 
       setMaterials({
@@ -146,15 +147,33 @@ export default function ImportRecipe() {
 
         const sheets = workbook.SheetNames;
         const recipeData = [];
+
         for (const sheet of sheets) {
+          // Skip specific sheets but continue with other sheets
+          if (
+            sheet === "Home" ||
+            sheet === "Cream & Syrup" ||
+            sheet === "Spray Mixer"
+          ) {
+            continue; // Skip this sheet but continue with next sheets
+          }
+
           const worksheet = workbook.Sheets[sheet];
 
           // Convert to JSON
           const jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1 });
+
+          // Check if the sheet has at least one row with data
+          if (jsonData.length === 0) continue;
+
           //get product info
           const [id, name, rmStart, rmEnd, pmStart, pmEnd] = jsonData[0].filter(
             (v) => v != null && v !== ""
           );
+
+          // Skip if essential product info is missing
+          if (!id || !name) continue;
+
           const productInfo = { id, name, rmStart, rmEnd, pmStart, pmEnd };
 
           const rawMaterials = jsonData
@@ -171,7 +190,7 @@ export default function ImportRecipe() {
             .map((material) => {
               return {
                 id: material[0],
-                name : material[2],
+                name: material[2],
                 unit: material[3],
                 batch: formatNumberExcel(material[4], 4),
                 carton: formatNumberExcel(material[5], 5),
@@ -184,12 +203,13 @@ export default function ImportRecipe() {
             .map((material) => {
               return {
                 id: material[0],
-                name : material[2],
+                name: material[2],
                 unit: material[3],
                 batch: formatNumberExcel(material[4], 4),
                 carton: formatNumberExcel(material[5], 5),
               };
             });
+
           const product = {
             id,
             name,
@@ -224,7 +244,7 @@ export default function ImportRecipe() {
           };
           recipeData.push(product);
         }
-        setExcelData(recipeData.sort((a,b)=>a.id.localeCompare(b.id)));
+        setExcelData(recipeData.sort((a, b) => a.name.localeCompare(b.name)));
       } catch (error) {
         console.error("Error reading Excel file:", error);
         alert(
@@ -309,7 +329,7 @@ export default function ImportRecipe() {
                   )}
                 </button>
               </div>
-              
+
               {error && (
                 <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
                   <div className="flex items-center text-red-700">
@@ -354,7 +374,7 @@ export default function ImportRecipe() {
                 Upload your Excel file and specify required Format
               </p>
               <div className="mt-2 text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
-                Section: {sections.find(s => s.value === section)?.label}
+                Section: {sections.find((s) => s.value === section)?.label}
               </div>
             </div>
 
@@ -390,7 +410,10 @@ export default function ImportRecipe() {
                         ref={fileInputRef}
                       />
 
-                      <label htmlFor="excel-file" className="cursor-pointer block">
+                      <label
+                        htmlFor="excel-file"
+                        className="cursor-pointer block"
+                      >
                         <div className="flex flex-col items-center justify-center space-y-3">
                           <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
                             <svg
@@ -467,10 +490,12 @@ export default function ImportRecipe() {
                 </p>
                 <table className="w-full">
                   <tbody>
-                    {excelData?.map((product) => (
+                    {excelData?.map((product) => {
+                      const find = imported.find(prodId=> prodId === product.id)
+                      return(
                       <tr
                         key={product.id}
-                        className="cursor-pointer border border-gray-200 hover:bg-gray-50"
+                        className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${find ? 'bg-green-50' : ''}`}
                         onClick={() => {
                           setVisible(true);
                           setProduct(product);
@@ -480,7 +505,7 @@ export default function ImportRecipe() {
                         <td className="p-3">{product?.id?.slice(-4)}</td>
                         <td className="p-3">{product?.name}</td>
                       </tr>
-                    ))}
+                    )})}
                   </tbody>
                 </table>
               </div>
@@ -495,7 +520,9 @@ export default function ImportRecipe() {
                 <ul className="space-y-2 text-blue-700 text-sm">
                   <li>• Upload your Excel file containing the recipe data</li>
                   <li>• Click on any product to view and import materials</li>
-                  <li>• Use &quot;Clear File&quot; to remove current selection</li>
+                  <li>
+                    • Use &quot;Clear File&quot; to remove current selection
+                  </li>
                   <li>• Use &quot;Change Section&quot; to switch sections</li>
                 </ul>
               </div>
@@ -511,6 +538,7 @@ export default function ImportRecipe() {
           productArea={productArea}
           materials={materials}
           section={section}
+          setImported={setImported}
         />
       </div>
 
@@ -526,7 +554,7 @@ export default function ImportRecipe() {
               <p className="text-gray-600 mb-6">
                 Select a section to view products and materials from Firebase
               </p>
-              
+
               <div className="max-w-md mx-auto">
                 <label className="block text-sm font-medium text-gray-700 mb-3">
                   Choose Section
@@ -571,7 +599,7 @@ export default function ImportRecipe() {
                     Products from Database
                   </h2>
                   <p className="text-sm text-gray-600">
-                    Section: {sections.find(s => s.value === section)?.label}
+                    Section: {sections.find((s) => s.value === section)?.label}
                   </p>
                 </div>
                 <button
@@ -615,22 +643,35 @@ export default function ImportRecipe() {
                   <table className="w-full mt-4">
                     <tbody>
                       {products?.map((product) => {
-                        const find = excelData?.find(p=> p.id === product.id)
+                        const find = excelData?.find(
+                          (p) => p.id === product.id
+                        );
                         return (
                           <tr
-                          key={product.id}
-                          className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${find ? 'bg-green-50' : 'bg-red-50'}`}
-                          onClick={() => {
-                            setVisible(true);
-                            setProduct(product);
-                            setProductArea("firebase");
-                          }}
-                        >
-                          {find && <td className="p-3"><FaRegCircleCheck size={18} className="text-green-500" /></td>}
-                          <td className="p-3 font-medium">{product?.id?.slice(-4)}</td>
-                          <td className="p-3">{product?.name}</td>
-                        </tr>
-                        )
+                            key={product.id}
+                            className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${
+                              find ? "bg-green-50" : "bg-red-50"
+                            }`}
+                            onClick={() => {
+                              setVisible(true);
+                              setProduct(product);
+                              setProductArea("firebase");
+                            }}
+                          >
+                            {find && (
+                              <td className="p-3">
+                                <FaRegCircleCheck
+                                  size={18}
+                                  className="text-green-500"
+                                />
+                              </td>
+                            )}
+                            <td className="p-3 font-medium">
+                              {product?.id?.slice(-4)}
+                            </td>
+                            <td className="p-3">{product?.name}</td>
+                          </tr>
+                        );
                       })}
                     </tbody>
                   </table>

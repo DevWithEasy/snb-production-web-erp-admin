@@ -111,7 +111,7 @@ export default function DashboardLayout({ children }) {
     },
     {
       title: "Export Code",
-      route: "/dashboard/export-products-materials-code",
+      route: "/dashboard/export-code",
       icon: FaFileExport,
     },
     {

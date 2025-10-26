@@ -31,7 +31,7 @@ export default function DashboardLayout({ children }) {
   useEffect(() => {
     const checkDevice = () => {
       const width = window.innerWidth;
-      
+
       if (width < 768) {
         setDeviceType("mobile");
         setSidebarOpen(false);
@@ -48,10 +48,10 @@ export default function DashboardLayout({ children }) {
     checkDevice();
 
     // Add resize listener
-    window.addEventListener('resize', checkDevice);
-    
+    window.addEventListener("resize", checkDevice);
+
     return () => {
-      window.removeEventListener('resize', checkDevice);
+      window.removeEventListener("resize", checkDevice);
     };
   }, []);
 
@@ -70,10 +70,15 @@ export default function DashboardLayout({ children }) {
       icon: FaHome,
     },
     {
+      title: "Recipes",
+      route: "/user-area/recipes",
+      icon: FaBook,
+    },
+    {
       title: "Daily Consumption",
       route: "/user-area/daily-consumption",
       icon: FaBook,
-    }
+    },
   ];
 
   // Memoized navigation items to prevent unnecessary re-renders
@@ -102,18 +107,18 @@ export default function DashboardLayout({ children }) {
                 <FaMobile className="text-red-600 text-4xl" />
               </div>
             </div>
-            
+
             {/* Title */}
             <h1 className="text-2xl font-bold text-gray-800 mb-4">
               Desktop & Tablet Version Only
             </h1>
-            
+
             {/* Message */}
             <p className="text-gray-600 mb-6 leading-relaxed">
-              This dashboard is optimized for desktop and tablet devices. 
-              Please use a computer, laptop, or tablet for the best experience.
+              This dashboard is optimized for desktop and tablet devices. Please
+              use a computer, laptop, or tablet for the best experience.
             </p>
-            
+
             {/* App Suggestion */}
             <div className="bg-blue-50 rounded-lg p-4 mb-6">
               <div className="flex items-center justify-center mb-3">
@@ -123,11 +128,11 @@ export default function DashboardLayout({ children }) {
                 </h3>
               </div>
               <p className="text-blue-700 text-sm">
-                For mobile access, please use our dedicated mobile application 
+                For mobile access, please use our dedicated mobile application
                 which is specially designed for smaller screens.
               </p>
             </div>
-            
+
             {/* Action Buttons */}
             <div className="space-y-3">
               <button
@@ -143,11 +148,12 @@ export default function DashboardLayout({ children }) {
                 Retry Anyway
               </button>
             </div>
-            
+
             {/* Technical Info */}
             <div className="mt-6 pt-4 border-t border-gray-200">
               <p className="text-xs text-gray-500">
-                Screen width: {typeof window !== 'undefined' ? window.innerWidth : 0}px
+                Screen width:{" "}
+                {typeof window !== "undefined" ? window.innerWidth : 0}px
                 <br />
                 Device: {deviceType}
                 <br />
@@ -201,19 +207,17 @@ export default function DashboardLayout({ children }) {
           {/* Sidebar - Tablet এ compact version */}
           <div
             className={`bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ease-in-out [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-scrollbar]:hidden ${
-              sidebarOpen 
-                ? deviceType === "tablet" ? "w-48" : "w-64" 
-                : "w-0"
+              sidebarOpen ? (deviceType === "tablet" ? "w-48" : "w-64") : "w-0"
             }`}
           >
             <div className={`p-3 ${sidebarOpen ? "block" : "hidden"}`}>
               {/* Device Indicator - শুধুমাত্র development এর জন্য */}
-              {process.env.NODE_ENV === 'development' && (
+              {process.env.NODE_ENV === "development" && (
                 <div className="mb-3 px-2 py-1 bg-blue-100 text-blue-700 text-xs rounded text-center">
                   {deviceType.toUpperCase()}
                 </div>
               )}
-              
+
               <nav className="space-y-1">
                 {routes.map((route) => (
                   <NavigationItem
@@ -230,8 +234,10 @@ export default function DashboardLayout({ children }) {
           {/* Content Area */}
           <div
             className={`overflow-y-auto transition-all duration-300 ease-in-out ${
-              sidebarOpen 
-                ? deviceType === "tablet" ? "w-[calc(100%-12rem)]" : "w-[calc(100%-16rem)]" 
+              sidebarOpen
+                ? deviceType === "tablet"
+                  ? "w-[calc(100%-12rem)]"
+                  : "w-[calc(100%-16rem)]"
                 : "w-full"
             }`}
           >
@@ -244,7 +250,7 @@ export default function DashboardLayout({ children }) {
                 </div>
               </div>
             )}
-            
+
             {children}
           </div>
         </main>

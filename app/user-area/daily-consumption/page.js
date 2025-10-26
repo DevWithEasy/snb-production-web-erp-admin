@@ -139,8 +139,8 @@ export default function DailyConsumption() {
       return {
         ...item,
         opening: formatNumber(calOpening),
-        recieved_total,
-        consumption_total,
+        recieved_total : formatNumber(recieved_total),
+        consumption_total : formatNumber(consumption_total),
         stock: formatNumber(calOpening + Number(recieved_total) - Number(consumption_total)),
       };
     } else {
