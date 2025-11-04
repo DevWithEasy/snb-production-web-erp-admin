@@ -51,10 +51,10 @@ export function useAuth() {
         throw new Error('INVALID_PASSWORD');
       }
 
-      // পাসওয়ার্ড চেক করুন
-      if (userData.role !== 'admin') {
-        throw new Error('INVALID_ROLE');
-      }
+      // // পাসওয়ার্ড চেক করুন
+      // if (userData.role !== 'admin') {
+      //   throw new Error('INVALID_ROLE');
+      // }
 
       // লগইন সফল - ইউজার তথ্য স্টোর করুন
       const userInfo = {

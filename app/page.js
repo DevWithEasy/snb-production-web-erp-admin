@@ -1,9 +1,9 @@
-'use client';
+"use client";
 
-import React, { useEffect, useState } from 'react';
-import { useRouter } from 'next/navigation';
-import { useAuth } from '@/hooks/useAuth';
-import Image from 'next/image';
+import React, { useEffect, useState } from "react";
+import { useRouter } from "next/navigation";
+import { useAuth } from "@/hooks/useAuth";
+import Image from "next/image";
 
 export default function Home() {
   const { user, loading } = useAuth();
@@ -14,7 +14,7 @@ export default function Home() {
       if (user) {
         // ইউজার লগইন থাকলে ড্যাশবোর্ডে রিডাইরেক্ট
         const timer = setTimeout(() => {
-          router.push('/dashboard');
+          router.push(user.role === "Admin" ? "/dashboard" : `/section/${user.section}`);
         }, 3000);
 
         return () => {
@@ -23,7 +23,7 @@ export default function Home() {
       } else {
         // ইউজার লগইন না থাকলে লগইন পেজে রিডাইরেক্ট
         const timer = setTimeout(() => {
-          router.push('/auth');
+          router.push("/auth");
         }, 3000);
 
         return () => {
@@ -46,11 +46,10 @@ export default function Home() {
   return (
     <div className="min-h-screen bg-linear-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4">
       <div className="max-w-2xl w-full text-center">
-        
         {/* Hero Section */}
         <div className="flex flex-col justify-center items-center">
           {/* App Logo/Icon */}
-          <Image src='/logo.png' alt='icon' width={100} height={100}/>
+          <Image src="/logo.png" alt="icon" width={100} height={100} />
 
           {/* Welcome Message */}
           <h1 className="text-3xl md:text-5xl font-bold text-gray-900 mb-4 mt-10">

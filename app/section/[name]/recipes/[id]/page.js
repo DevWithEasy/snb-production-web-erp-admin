@@ -12,7 +12,7 @@ import Image from "next/image";
 
 export default function RecipeDetails() {
   const params = useParams();
-  const section = params.section;
+  const section = params.name;
   const productId = params.id;
   const { user } = useAuth();
 
@@ -152,7 +152,7 @@ export default function RecipeDetails() {
             S&B Nice Nice Food Valley Ltd.
           </h1>
 
-          <div className="flex justify-center items-center gap-6 mb-4">
+          <div className="flex flex-col mb-4">
             <p className="text-gray-600">
               <span className="font-semibold">Section:</span> {sectionName}
             </p>
