@@ -5,7 +5,20 @@ import { useAuth } from "@/hooks/useAuth";
 import Link from "next/link";
 import { useParams, useRouter } from "next/navigation";
 import { useState, useEffect } from "react";
-import { FaBars, FaBook, FaTimes } from "react-icons/fa";
+import { 
+  FaBars, 
+  FaTimes, 
+  FaBox, 
+  FaBook, 
+  FaDoorOpen, 
+  FaDoorClosed, 
+  FaTruck, 
+  FaIndustry, 
+  FaSync, 
+  FaFileAlt, 
+  FaChartBar,
+  FaClipboardList
+} from "react-icons/fa";
 
 export default function DashboardLayout({ children }) {
   const params = useParams();
@@ -50,16 +63,16 @@ export default function DashboardLayout({ children }) {
   };
 
   const routes = [
-    { title: "Materials", route: `/section/${name}/materials`, icon: FaBook },
+    { title: "Materials", route: `/section/${name}/materials`, icon: FaBox },
     { title: "Recipes", route: `/section/${name}/recipes`, icon: FaBook },
-    { title: "opening", route: `/section/${name}/opening`, icon: FaBook },
-    { title: "Closing", route: `/section/${name}/closing`, icon: FaBook },
-    { title: "Recieved", route: `/section/${name}/recieved`, icon: FaBook },
-    { title: "Floor Consumption", route: `/section/${name}/consumption`, icon: FaBook },
-    { title: "Consumption Update", route: `/section/${name}/consumption-update`, icon: FaBook },
-    { title: "Production DC", route: `/section/${name}/production-dc`, icon: FaBook },
-    { title: "Daily Consumption Report", route: `/section/${name}/daily-consumption`, icon: FaBook },
-    { title: "Monthly Report", route: `/section/${name}/monthly-report`, icon: FaBook },
+    { title: "Opening Stock", route: `/section/${name}/opening`, icon: FaDoorOpen },
+    { title: "Closing Stock", route: `/section/${name}/closing`, icon: FaDoorClosed },
+    { title: "Received", route: `/section/${name}/recieved`, icon: FaTruck },
+    { title: "Floor Consumption", route: `/section/${name}/consumption`, icon: FaIndustry },
+    { title: "Consumption Update", route: `/section/${name}/consumption-update`, icon: FaSync },
+    { title: "Production DC", route: `/section/${name}/production-dc`, icon: FaClipboardList },
+    { title: "Daily Consumption Report", route: `/section/${name}/daily-consumption`, icon: FaFileAlt },
+    { title: "Monthly Report", route: `/section/${name}/monthly-report`, icon: FaChartBar },
   ];
 
   const NavigationItem = ({ route, title, Icon }) => (
@@ -109,6 +122,7 @@ export default function DashboardLayout({ children }) {
             </div>
           </div>
         </nav>
+
         {/* Mobile Overlay */}
         {isMobile && sidebarOpen && (
           <div 

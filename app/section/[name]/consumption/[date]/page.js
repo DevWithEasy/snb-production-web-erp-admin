@@ -28,6 +28,7 @@ export default function UpdateConsumption() {
   const [updating, setUpdating] = useState(false);
   const [batch, setBatch] = useState("");
   const [carton, setCarton] = useState("");
+  const [expressionErrors, setExpressionErrors] = useState({});
 
   const periodId = getPeriodPath(user?.current_period);
 
@@ -99,8 +100,105 @@ export default function UpdateConsumption() {
     }
   }, [section, user?.current_period]);
 
+  // Improved function to evaluate mathematical expressions safely and detect errors
+  const evaluateExpression = (expression) => {
+    if (!expression || expression === '') return { value: 0, hasError: false };
+    
+    try {
+      // Clean the expression - allow numbers, basic operators, and decimal points
+      let cleanExpression = expression.replace(/[^0-9+\-*/.()\s]/g, '');
+      
+      // Remove any multiple operators except for negative numbers
+      cleanExpression = cleanExpression.replace(/([+\-*/])\1+/g, '$1');
+      
+      // Handle cases like "5+" or "10*" by removing trailing operators
+      cleanExpression = cleanExpression.replace(/[+\-*/.]$/, '');
+      
+      // If expression is empty after cleaning, return 0
+      if (!cleanExpression || cleanExpression === '') return { value: 0, hasError: false };
+      
+      // Check if it's just a simple number
+      if (/^-?\d*\.?\d+$/.test(cleanExpression)) {
+        return { value: parseFloat(cleanExpression), hasError: false };
+      }
+      
+      // For complex expressions, use safer evaluation
+      // Only evaluate if we have valid operators between numbers
+      if (/^[-]?\d*\.?\d+([+\-*/][-]?\d*\.?\d+)*$/.test(cleanExpression)) {
+        // Use a simple parser for basic arithmetic
+        const tokens = cleanExpression.match(/([-]?\d*\.?\d+|[+\-*/])/g);
+        if (!tokens) return { value: parseFloat(cleanExpression) || 0, hasError: false };
+        
+        let result = parseFloat(tokens[0]);
+        
+        for (let i = 1; i < tokens.length; i += 2) {
+          const operator = tokens[i];
+          const nextNum = parseFloat(tokens[i + 1]);
+          
+          switch (operator) {
+            case '+':
+              result += nextNum;
+              break;
+            case '-':
+              result -= nextNum;
+              break;
+            case '*':
+              result *= nextNum;
+              break;
+            case '/':
+              if (nextNum === 0) {
+                return { value: 0, hasError: true, error: "Division by zero" };
+              }
+              result /= nextNum;
+              break;
+            default:
+              break;
+          }
+        }
+        
+        return { value: isNaN(result) ? 0 : result, hasError: false };
+      }
+      
+      // If it doesn't match our safe patterns, try to parse as float
+      const fallbackValue = parseFloat(cleanExpression) || 0;
+      return { value: fallbackValue, hasError: fallbackValue === 0 && cleanExpression !== '0' };
+      
+    } catch (error) {
+      console.error("Error evaluating expression:", error, "Expression:", expression);
+      // Fallback: try to extract the first valid number
+      const match = expression.match(/-?\d*\.?\d+/);
+      const fallbackValue = match ? parseFloat(match[0]) : 0;
+      return { 
+        value: fallbackValue, 
+        hasError: true, 
+        error: "Invalid expression" 
+      };
+    }
+  };
+
+  // Function to check if an expression is valid
+  const isValidExpression = (expression) => {
+    if (!expression || expression === '') return true;
+    
+    const result = evaluateExpression(expression);
+    return !result.hasError;
+  };
+
+  // Function to check if a specific field has expression error
+  const hasExpressionError = (type, itemId, prodIdx) => {
+    const errorKey = `${type}-${itemId}-${prodIdx}`;
+    return expressionErrors[errorKey] || false;
+  };
+
   async function handleChangeSave() {
-    setUpdating(true);
+    // Check if there are any expression errors before saving
+    const hasErrors = Object.values(expressionErrors).some(error => error);
+    if (hasErrors) {
+      alert("Some fields contain invalid expressions. Please fix them before saving.");
+      return;
+    }
+
+    // setUpdating(true);
     try {
       const updateProducts = [];
 
@@ -183,6 +281,8 @@ export default function UpdateConsumption() {
         }),
       };
 
+      
+
       const alUpdateProducts = products.map((product) => {
         const findUpdateProduct = updateProducts.find(
           (p) => p.id === product.id
@@ -190,6 +290,8 @@ export default function UpdateConsumption() {
         if (findUpdateProduct) return findUpdateProduct;
         return product;
       });
+
+      
 
       // Update local state
       setMaterials(updatedMaterials);
@@ -229,14 +331,14 @@ export default function UpdateConsumption() {
       ]);
 
       setConsumption([]);
-      console.log("All changes saved to Firestore successfully");
+      setExpressionErrors({});
       
       setUpdating(false);
       router.back();
     } catch (error) {
       setUpdating(false);
       console.log("Error updating documents:", error);
-      alert("Error", "Failed to save changes: " + error.message);
+      alert("Failed to save changes: " + error.message);
     }
   }
 
@@ -266,9 +368,12 @@ export default function UpdateConsumption() {
   }
 
   function addConsumptionCalculation(batch, carton) {
-    // ensure numeric parsing for base qty calculation
-    const batchNum = parseFloat(String(batch).replace(/[^0-9.-]/g, "")) || 0;
-    const cartonNum = parseFloat(String(carton).replace(/[^0-9.-]/g, "")) || 0;
+    // Evaluate expressions for batch and carton
+    const batchResult = evaluateExpression(String(batch));
+    const cartonResult = evaluateExpression(String(carton));
+    
+    const batchNum = batchResult.value || 0;
+    const cartonNum = cartonResult.value || 0;
 
     setConsumption((prev) => [
       ...prev,
@@ -301,18 +406,27 @@ export default function UpdateConsumption() {
 
   function addConsumption() {
     if (!product) {
-      alert("No Product", "Please select a product");
+      alert("Please select a product");
       return;
     }
     
     const exist = consumption.find((i) => i.id === product.id);
     if (exist) {
-      alert("Exist", "This product is already in the list");
+      alert("This product is already in the list");
       return;
     }
 
     if (!batch && !carton) {
-      alert("Batch and Carton Empty", "Batch and Carton cannot be empty");
+      alert("Batch and Carton cannot be empty");
+      return;
+    }
+
+    // Check for expression errors in batch and carton
+    const batchHasError = !isValidExpression(batch);
+    const cartonHasError = !isValidExpression(carton);
+    
+    if (batchHasError || cartonHasError) {
+      alert("Please fix the mathematical expressions in batch or carton fields.");
       return;
     }
 
@@ -332,14 +446,16 @@ export default function UpdateConsumption() {
     addConsumptionCalculation(batch, carton);
   }
 
-  // update qty (keeps as string)
+  // Enhanced handleValueChange to support mathematical operations and track errors
   function handleValueChange(type, itemId, prodIdx, value) {
-    let cleaned = value.replace(/[^0-9.]/g, "");
-    // keep only first dot
-    const parts = cleaned.split(".");
-    if (parts.length > 2) {
-      cleaned = parts.shift() + "." + parts.join("");
-    }
+    // Update expression errors
+    const errorKey = `${type}-${itemId}-${prodIdx}`;
+    const hasError = !isValidExpression(value);
+    
+    setExpressionErrors(prev => ({
+      ...prev,
+      [errorKey]: hasError
+    }));
 
     setConsumption((prev) => {
       const updated = prev.map((prod, idx) => {
@@ -347,7 +463,7 @@ export default function UpdateConsumption() {
         return {
           ...prod,
           [type]: prod[type].map((item) =>
-            item.id === itemId ? { ...item, qty: cleaned } : item
+            item.id === itemId ? { ...item, qty: value } : item
           ),
         };
       });
@@ -355,7 +471,7 @@ export default function UpdateConsumption() {
     });
   }
 
-  // compute totals (parsing qty strings as floats). returns array of items with totals and per-product numeric totals
+  // Updated getItemTotals to evaluate mathematical expressions
   function getItemTotals(type) {
     const itemMap = {};
     consumption.forEach((product, prodIdx) => {
@@ -367,8 +483,9 @@ export default function UpdateConsumption() {
             totals: Array(consumption.length).fill(0), // numeric per product
           };
         }
-        const q = parseFloat(item.qty);
-        itemMap[item.id].totals[prodIdx] += isNaN(q) ? 0 : q;
+        // Evaluate mathematical expression instead of simple parsing
+        const evaluatedResult = evaluateExpression(item.qty);
+        itemMap[item.id].totals[prodIdx] += isNaN(evaluatedResult.value) ? 0 : evaluatedResult.value;
       });
     });
     // compute total
@@ -415,7 +532,7 @@ export default function UpdateConsumption() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-7xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-7xl mx-auto sm:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-2xl font-bold text-gray-900">
@@ -457,6 +574,7 @@ export default function UpdateConsumption() {
             getItemTotals={getItemTotals}
             getItemName={getItemName}
             handleValueChange={handleValueChange}
+            hasExpressionError={hasExpressionError}
           />
         )}
       </div>

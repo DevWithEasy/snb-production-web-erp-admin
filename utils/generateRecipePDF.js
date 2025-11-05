@@ -9,7 +9,7 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
     
     // Create new PDF document
     const doc = new jsPDF();
-    let yPosition = 20;
+    let yPosition = 5;
 
     // Add logo and header
     if (logoBase64) {
@@ -30,21 +30,21 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
     // Section info
     doc.setFontSize(12);
     doc.setTextColor(0, 0, 0);
-    doc.text(`Section: ${sectionName}`, 105, yPosition, { align: 'center' });
+    doc.text(`${sectionName}`, 105, yPosition, { align: 'center' });
     yPosition += 8;
 
     // Product name
-    doc.setFontSize(14);
+    doc.setFontSize(12);
     doc.setFont('helvetica', 'bold');
-    doc.text(`Product: ${recipeData.name}`, 105, yPosition, { align: 'center' });
-    yPosition += 20;
+    doc.text(`${recipeData.name}`, 105, yPosition, { align: 'center' });
+    yPosition += 15;
 
     // Product Information Section
     if (recipeData.info && Object.keys(recipeData.info).length > 0) {
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('PRODUCT INFORMATION', 14, yPosition);
-      yPosition += 10;
+      yPosition += 5;
 
       const productInfoData = Object.entries(recipeData.info).map(([key, value], index) => {
         const formattedKey = key
@@ -61,11 +61,13 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
         headStyles: {
           fillColor: [0, 122, 255],
           textColor: 255,
-          fontStyle: 'bold'
+          fontStyle: 'bold',
+          halign: 'center' // Header text center alignment
         },
         styles: {
           fontSize: 10,
-          cellPadding: 3,
+          cellPadding: 2,
+          halign: 'center' // Default cell alignment
         },
         columnStyles: {
           0: { cellWidth: 70, halign: 'left' },
@@ -91,10 +93,10 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
         yPosition = 20;
       }
 
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('RAW MATERIALS', 14, yPosition);
-      yPosition += 10;
+      yPosition += 5;
 
       const rmTableData = recipeData.rm.map((rmItem) => {
         const name = findMaterialName(rmItem.id, materialsData.rm || []);
@@ -114,11 +116,13 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
         headStyles: {
           fillColor: [0, 122, 255],
           textColor: 255,
-          fontStyle: 'bold'
+          fontStyle: 'bold',
+          halign: 'center' // Header text center alignment
         },
         styles: {
           fontSize: 9,
           cellPadding: 3,
+          halign: 'center' // Default cell alignment
         },
         columnStyles: {
           0: { cellWidth: 80, halign: 'left' },
@@ -140,10 +144,10 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
         yPosition = 20;
       }
 
-      doc.setFontSize(14);
+      doc.setFontSize(12);
       doc.setFont('helvetica', 'bold');
       doc.text('PACKAGING MATERIALS', 14, yPosition);
-      yPosition += 10;
+      yPosition += 5;
 
       const pmTableData = recipeData.pm.map((pmItem) => {
         const name = findMaterialName(pmItem.id, materialsData.pm || []);
@@ -163,11 +167,13 @@ export const generateRecipePDF = async (recipeData, section, materialsData) => {
         headStyles: {
           fillColor: [0, 122, 255],
           textColor: 255,
-          fontStyle: 'bold'
+          fontStyle: 'bold',
+          halign: 'center' // Header text center alignment
         },
         styles: {
           fontSize: 9,
           cellPadding: 3,
+          halign: 'center' // Default cell alignment
         },
         columnStyles: {
           0: { cellWidth: 80, halign: 'left' },
