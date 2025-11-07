@@ -16,7 +16,7 @@ export default function Login() {
   useEffect(() => {
     if (user) {
       router.push(
-        user.role === "Admin" ? "/dashboard" : `/section/${user.section}`
+        user.role === "admin" ? "/dashboard" : `/section/${user.section}`
       );
     }
   }, [user, router]);
@@ -36,7 +36,7 @@ export default function Login() {
       const result = await login(username, password);
 
       if (result.success) {
-        router.push("/dashboard");
+        router.push(result?.user.role === 'admin' ? "/dashboard" : result?.user.section);
       } else {
         setError(result.error);
       }

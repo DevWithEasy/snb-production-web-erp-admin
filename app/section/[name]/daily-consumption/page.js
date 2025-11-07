@@ -1,7 +1,7 @@
 "use client";
 
 import { useState, useEffect, useCallback } from "react";
-import { useRouter, useSearchParams } from "next/navigation";
+import { useParams, useRouter, useSearchParams } from "next/navigation";
 import { collection, getDocs } from "firebase/firestore";
 import { db } from "@/utils/firebaseConfig";
 import { useAuth } from "@/hooks/useAuth";
@@ -26,8 +26,8 @@ import {
 export default function DailyConsumption() {
   const { user } = useAuth();
   const router = useRouter();
-  const searchParams = useSearchParams();
-  const section = searchParams.get("section");
+  const params = useParams()
+  const section = params.name;
 
   const [products, setProducts] = useState(null);
   const [materials, setMaterials] = useState({ rm: [], pm: [] });
@@ -334,7 +334,7 @@ export default function DailyConsumption() {
                 sections={sections}
                 onSectionSelect={(selectedSection) => {
                   router.push(
-                    `/user-area/daily-consumption?section=${selectedSection}`
+                    `/section/daily-consumption?section=${selectedSection}`
                   );
                 }}
                 title="Please select a section to view daily consumption"

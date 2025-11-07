@@ -13,6 +13,7 @@ import { db } from "@/utils/firebaseConfig";
 import getPeriodPath from "@/utils/getPeriodPath";
 import { collection, getDocs } from "firebase/firestore";
 import { useEffect, useRef, useState } from "react";
+import { toast } from "sonner";
 
 export default function UpdateRecipe() {
   const { user } = useAuth();
@@ -233,7 +234,7 @@ export default function UpdateRecipe() {
           updatedField
         );
 
-        alert("Success: Recipe updated successfully!");
+        toast.success("Recipe updated successfully!");
       } catch (error) {
         console.error("Error updating recipe:", error);
         alert("Error: Failed to update recipe: " + error.message);

@@ -1,6 +1,7 @@
 'use client';
 
 import { useState } from 'react';
+import { FaTrash, FaTimes } from 'react-icons/fa';
 
 export default function UpdateProductionView({
   selectedDate,
@@ -20,13 +21,31 @@ export default function UpdateProductionView({
   updating,
 }) {
   const [showConfirm, setShowConfirm] = useState(false);
+  const [itemToRemove, setItemToRemove] = useState(null);
 
-  const handleRemove = (item) => {
-    setBatch(item.batch.toString());
-    setCarton(item.carton.toString());
-    setProduct(products.find((p) => p.id === item.id));
-    setConsumption((prev) => prev.filter((i) => i.id !== item.id));
+  const handleRemoveClick = (item, e) => {
+    e.stopPropagation(); // Prevent event bubbling
+    setItemToRemove(item);
+    setShowConfirm(true);
+  };
+
+  const handleRemoveConfirm = () => {
+    if (itemToRemove) {
+      // Set the batch and carton values for editing
+      setBatch(itemToRemove.batch.toString());
+      setCarton(itemToRemove.carton.toString());
+      setProduct(products.find((p) => p.id === itemToRemove.id));
+      
+      // Remove the item from consumption list
+      setConsumption((prev) => prev.filter((i) => i.id !== itemToRemove.id));
+    }
     setShowConfirm(false);
+    setItemToRemove(null);
+  };
+
+  const handleCancelRemove = () => {
+    setShowConfirm(false);
+    setItemToRemove(null);
   };
 
   return (
@@ -126,8 +145,9 @@ export default function UpdateProductionView({
         <div className="border border-gray-300 rounded-lg mt-3">
           <div className="flex justify-between bg-gray-100 p-3 border-b border-gray-300">
             <span className="flex-1 font-semibold">Name</span>
-            <span className="w-15 text-center font-semibold">Batch</span>
-            <span className="w-15 text-center font-semibold">Carton</span>
+            <span className="w-20 text-center font-semibold">Batch</span>
+            <span className="w-20 text-center font-semibold">Carton</span>
+            <span className="w-12 text-center font-semibold">Action</span>
           </div>
           
           {consumption.map((item, index) => {
@@ -135,17 +155,22 @@ export default function UpdateProductionView({
             return (
               <div
                 key={index}
-                onContextMenu={(e) => {
-                  e.preventDefault();
-                  setShowConfirm(true);
-                }}
                 className={`flex justify-between items-center p-3 ${
                   !isLastItem ? 'border-b border-gray-200' : ''
-                } hover:bg-gray-50 cursor-pointer`}
+                } hover:bg-gray-50 group`}
               >
                 <span className="flex-1">{item?.name}</span>
-                <span className="w-15 text-center">{item?.batch}</span>
-                <span className="w-15 text-center">{item?.carton}</span>
+                <span className="w-20 text-center">{item?.batch}</span>
+                <span className="w-20 text-center">{item?.carton}</span>
+                <div className="w-12 text-center">
+                  <button
+                    onClick={(e) => handleRemoveClick(item, e)}
+                    className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded hover:bg-red-50"
+                    title="Remove item"
+                  >
+                    <FaTrash size={14} />
+                  </button>
+                </div>
               </div>
             );
           })}
@@ -154,21 +179,44 @@ export default function UpdateProductionView({
 
       {/* Confirmation Modal */}
       {showConfirm && (
-        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 flex items-center justify-center z-50">
-          <div className="bg-white p-6 rounded-lg max-w-sm mx-4">
-            <h3 className="text-lg font-semibold mb-4">Remove Item</h3>
-            <p className="mb-6">Remove this item from the list?</p>
+        <div className="fixed inset-0 bg-gray-500/50 bg-opacity-50 flex items-center justify-center z-50 p-4">
+          <div className="bg-white rounded-lg shadow-xl max-w-sm w-full p-6">
+            <div className="flex justify-between items-center mb-4">
+              <h3 className="text-lg font-semibold text-gray-900">Remove Item</h3>
+              <button
+                onClick={handleCancelRemove}
+                className="text-gray-400 hover:text-gray-600 transition-colors"
+              >
+                <FaTimes size={18} />
+              </button>
+            </div>
+            
+            <div className="mb-6">
+              <p className="text-gray-600 mb-2">
+                Are you sure you want to remove this item?
+              </p>
+              {itemToRemove && (
+                <div className="bg-gray-50 p-3 rounded border">
+                  <p className="font-medium text-gray-800">{itemToRemove.name}</p>
+                  <p className="text-sm text-gray-600">
+                    Batch: {itemToRemove.batch} | Carton: {itemToRemove.carton}
+                  </p>
+                </div>
+              )}
+            </div>
+
             <div className="flex gap-3 justify-end">
               <button
-                onClick={() => setShowConfirm(false)}
-                className="px-4 py-2 border border-gray-300 rounded-lg hover:bg-gray-50"
+                onClick={handleCancelRemove}
+                className="px-4 py-2 border border-gray-300 rounded-lg text-gray-700 hover:bg-gray-50 transition-colors"
               >
                 Cancel
               </button>
               <button
-                onClick={() => handleRemove(consumption.find(item => item))}
-                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600"
+                onClick={handleRemoveConfirm}
+                className="px-4 py-2 bg-red-500 text-white rounded-lg hover:bg-red-600 transition-colors flex items-center gap-2"
               >
+                <FaTrash size={14} />
                 Remove
               </button>
             </div>
