@@ -46,6 +46,9 @@ export default function UpdateRecipe() {
     cartonQty: "",
   });
 
+  // Mobile state
+  const [showMaterialsPanel, setShowMaterialsPanel] = useState(false);
+
   // Drag and Drop state
   const [draggedMaterial, setDraggedMaterial] = useState(null);
   const [isDragOver, setIsDragOver] = useState(false);
@@ -273,7 +276,7 @@ export default function UpdateRecipe() {
     setSelectProduct(updatedRecipe);
     setNewMaterial({ id: "", unit: "kg", qty: 0, cartonQty: 0 });
     setDraggedMaterial(null);
-    setShowModal(false)
+    setShowModal(false);
   };
 
   const removeMaterialFromRecipe = (materialId) => {
@@ -396,6 +399,11 @@ export default function UpdateRecipe() {
     }
   };
 
+  // Mobile toggle for materials panel
+  const toggleMaterialsPanel = () => {
+    setShowMaterialsPanel(!showMaterialsPanel);
+  };
+
   useEffect(() => {
     fetchSections();
   }, []);
@@ -405,14 +413,27 @@ export default function UpdateRecipe() {
   }
 
   return (
-    <div className="bg-gray-50">
+    <div className="bg-gray-50 min-h-screen">
       <ServerLoading visible={updating} message="Recipe updating" />
-      {/* Main Container with Two Independent Scrollable Sections */}
-      <div className="flex h-[calc(100vh-65px)]">
-        {/* Left Section - Recipe Editor (8/12 width) */}
-        <div className="w-8/12 h-full flex flex-col border-r border-gray-200">
+      
+      {/* Mobile Materials Toggle Button */}
+      <div className="lg:hidden fixed top-16 right-4 z-30">
+        <button
+          onClick={toggleMaterialsPanel}
+          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+        >
+          <span className="text-sm font-medium">
+            {showMaterialsPanel ? "Hide" : "Show"} Materials
+          </span>
+        </button>
+      </div>
+
+      {/* Main Container with Responsive Layout */}
+      <div className="flex flex-col lg:flex-row h-[calc(100vh-65px)]">
+        {/* Left Section - Recipe Editor */}
+        <div className="w-full lg:w-8/12 h-full flex flex-col border-r border-gray-200 bg-white">
           {/* Fixed Header Section */}
-          <div className="flex-shrink-0 bg-white p-6 border-b border-gray-200">
+          <div className="flex-shrink-0 bg-white p-4 lg:p-6 border-b border-gray-200">
             <SearchAndProductSelect
               sections={sections}
               section={section}
@@ -440,7 +461,7 @@ export default function UpdateRecipe() {
             onDragLeave={handleDragLeave}
             onDrop={handleDrop}
           >
-            <div className="p-4">
+            <div className="p-3 lg:p-4">
               {products.length > 0 ? (
                 <>
                   <ActionButton
@@ -479,24 +500,24 @@ export default function UpdateRecipe() {
                   )}
                 </>
               ) : (
-                <div className="text-center py-12">
-                  <div className="text-gray-500 text-lg">
+                <div className="text-center py-8 lg:py-12">
+                  <div className="text-gray-500 text-base lg:text-lg">
                     No products found. Please search for recipes.
                   </div>
                 </div>
               )}
 
               {loading && (
-                <div className="flex flex-col items-center justify-center py-8">
+                <div className="flex flex-col items-center justify-center py-6 lg:py-8">
                   <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-                  <div className="text-gray-600">
+                  <div className="text-gray-600 text-sm lg:text-base">
                     Loading recipes and materials...
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4 text-red-700 text-center">
+                <div className="bg-red-50 border border-red-200 rounded-lg p-3 lg:p-4 text-red-700 text-center text-sm lg:text-base">
                   {error}
                 </div>
               )}
@@ -504,32 +525,64 @@ export default function UpdateRecipe() {
           </div>
         </div>
 
-        {/* Right Section - Materials List (4/12 width) */}
+        {/* Right Section - Materials List */}
         {materials.length > 0 && (
-          <div className="w-4/12 h-full flex flex-col bg-white">
-            {/* Fixed Header */}
-            <div className="flex-shrink-0 p-6 border-b border-gray-200">
-              <h2 className="text-lg font-semibold text-gray-800">
-                Available Materials ({materials.length})
-              </h2>
-              <p className="text-sm text-gray-600 mt-1">
-                All materials for {section} section
-              </p>
+          <div className={`
+            w-full lg:w-4/12 h-full flex flex-col bg-white border-t lg:border-t-0 border-gray-200
+            fixed lg:relative inset-0 z-20 transform transition-transform duration-300 ease-in-out
+            ${showMaterialsPanel ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
+          `}>
+            {/* Mobile Header with Close Button */}
+            <div className="flex-shrink-0 p-4 lg:p-6 border-b border-gray-200 bg-white flex justify-between items-center lg:block">
+              <div>
+                <h2 className="text-lg font-semibold text-gray-800">
+                  Available Materials ({materials.length})
+                </h2>
+                <p className="text-sm text-gray-600 mt-1">
+                  All materials for {section} section
+                </p>
+              </div>
+              <button
+                onClick={toggleMaterialsPanel}
+                className="lg:hidden text-gray-500 hover:text-gray-700"
+              >
+                <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
+                </svg>
+              </button>
             </div>
 
+            {/* Mobile Backdrop */}
+            {showMaterialsPanel && (
+              <div 
+                className="lg:hidden fixed inset-0 bg-black bg-opacity-50 z-10"
+                onClick={toggleMaterialsPanel}
+              />
+            )}
+
             {/* Scrollable Materials List */}
-            <div className="flex-1 overflow-y-auto">
-              <div className="p-4 space-y-3">
+            <div className="flex-1 overflow-y-auto bg-white relative z-20">
+              <div className="p-3 lg:p-4 space-y-2 lg:space-y-3">
                 {materials.map((material, i) => (
                   <div
                     key={material?.id || i}
-                    className="p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors duration-200 cursor-pointer"
+                    className="p-3 lg:p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors duration-200 cursor-pointer touch-manipulation"
                     draggable="true"
                     onDragStart={(e) => handleDragStart(e, material)}
-                    title={`Drag to add ${material.name} to recipe`}
+                    onTouchStart={(e) => {
+                      e.preventDefault();
+                      handleDragStart(e, material);
+                    }}
+                    onClick={() => {
+                      // On mobile, add material directly on click
+                      if (window.innerWidth < 1024) {
+                        handleAddMaterialFromDrag(material);
+                      }
+                    }}
+                    title={`${window.innerWidth < 1024 ? 'Tap to add' : 'Drag to add'} ${material.name} to recipe`}
                   >
                     <div className="flex justify-between items-center text-sm text-gray-600">
-                      <span className="font-medium text-gray-800">
+                      <span className="font-medium text-gray-800 text-xs lg:text-sm">
                         {material?.name}
                       </span>
                       <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">

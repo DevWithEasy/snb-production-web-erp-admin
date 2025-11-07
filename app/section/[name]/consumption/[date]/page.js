@@ -198,7 +198,7 @@ export default function UpdateConsumption() {
       return;
     }
 
-    // setUpdating(true);
+    setUpdating(true);
     try {
       const updateProducts = [];
 

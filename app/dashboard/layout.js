@@ -61,7 +61,7 @@ const MobileSidebar = ({
       {/* Mobile Sidebar Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-blue-600 text-white">
         <div>
-          <h2 className="text-xl font-bold">S&B ERP</h2>
+          <h2 className="text-xl font-bold">Admin Dashboard</h2>
           <p className="text-blue-100 text-sm">Welcome, {user?.name || user?.username}</p>
         </div>
         <button
@@ -240,12 +240,17 @@ export default function DashboardLayout({ children }) {
                   {sidebarOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
                 </button>
 
-                <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
-                  Dashboard
-                  {deviceType === "tablet" && (
-                    <span className="text-sm text-gray-500 ml-2">(Tablet)</span>
-                  )}
-                </h1>
+                <div className="flex flex-col">
+                  <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
+                    Admin Dashboard
+                    {deviceType === "tablet" && (
+                      <span className="text-sm text-gray-500 ml-2">(Tablet)</span>
+                    )}
+                  </h1>
+                  <p className="text-xs text-gray-500 hidden sm:block">
+                    System Administration Panel
+                  </p>
+                </div>
               </div>
 
               {/* Right Section */}
@@ -327,7 +332,7 @@ export default function DashboardLayout({ children }) {
             {deviceType === "mobile" && (
               <div className="bg-blue-50 border-b border-blue-200 p-3">
                 <div className="flex items-center justify-center text-blue-700 text-sm">
-                  <span>Mobile View - Tap menu button for navigation</span>
+                  <span>Mobile View - Tap menu button for admin navigation</span>
                 </div>
               </div>
             )}
