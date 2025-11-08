@@ -1,9 +1,16 @@
-import { jsPDF } from 'jspdf';
-import autoTable from 'jspdf-autotable';
-import formatNumber from './formatNumber';
-import LOGO_BASE64 from './imageData';
+import { jsPDF } from "jspdf";
+import autoTable from "jspdf-autotable";
+import formatNumber from "./formatNumber";
+import LOGO_BASE64 from "./imageData";
 
-export async function generateDailyPDF(setGeneratingPdf, data, section, user, date) {
+export async function generateDailyPDF(
+  setGeneratingPdf,
+  data,
+  section,
+  user,
+  date,
+  save = true
+) {
   try {
     setGeneratingPdf(true);
 
@@ -11,294 +18,317 @@ export async function generateDailyPDF(setGeneratingPdf, data, section, user, da
     const formattedDate = date < 10 ? `0${date}` : date;
 
     // Filter out zero data
-    const filteredProducts = (data.products_data || []).filter(product => 
-      (product.batch && Number(product.batch) > 0) || 
-      (product.carton && Number(product.carton) > 0)
+    const filteredProducts = (data.products_data || []).filter(
+      (product) =>
+        (product.batch && Number(product.batch) > 0) ||
+        (product.carton && Number(product.carton) > 0)
     );
 
-    const filteredRm = (data.rm_data || []).filter(rm => 
-      (rm.recieved_total && Number(rm.recieved_total) > 0) || 
-      (rm.consumption_total && Number(rm.consumption_total) > 0)
+    const filteredRm = (data.rm_data || []).filter(
+      (rm) =>
+        (rm.recieved_total && Number(rm.recieved_total) > 0) ||
+        (rm.consumption_total && Number(rm.consumption_total) > 0)
     );
 
-    const filteredPm = (data.pm_data || []).filter(pm => 
-      (pm.recieved_total && Number(pm.recieved_total) > 0) || 
-      (pm.consumption_total && Number(pm.consumption_total) > 0)
+    const filteredPm = (data.pm_data || []).filter(
+      (pm) =>
+        (pm.recieved_total && Number(pm.recieved_total) > 0) ||
+        (pm.consumption_total && Number(pm.consumption_total) > 0)
     );
 
     // Check if all sections are empty
-    const allSectionsEmpty = filteredProducts.length === 0 && filteredRm.length === 0 && filteredPm.length === 0;
+    const allSectionsEmpty =
+      filteredProducts.length === 0 &&
+      filteredRm.length === 0 &&
+      filteredPm.length === 0;
 
-    // Create new PDF document with reduced margins
+    // Create new PDF document
     const doc = new jsPDF();
-    let yPosition = 10; 
-
-    // Flex layout for header - Left side text, Right side image
+    let yPosition = 10;
     const pageWidth = doc.internal.pageSize.getWidth();
-    
-    // Left side - Text content
-    const leftWidth = pageWidth * 0.7; // 70% for text
-    const rightWidth = pageWidth * 0.3; // 30% for image
-    
-    // Company name - Left aligned
+
+    // ====== HEADER ======
     doc.setFontSize(16);
-    doc.setFont('helvetica', 'bold');
+    doc.setFont("helvetica", "bold");
     doc.setTextColor(245, 6, 6);
-    doc.text('S&B Nice Nice Food Valley Ltd.', 10, yPosition);
+    doc.text("S&B Nice Nice Food Valley Ltd.", 10, yPosition);
     yPosition += 6;
 
-    // Section info - Left aligned
-    doc.setFontSize(11);
-    doc.setFont('helvetica', 'normal');
-    doc.setTextColor(0, 0, 0); // Black color
+    doc.setFontSize(10);
+    doc.setFont("helvetica", "normal");
+    doc.setTextColor(0, 0, 0);
     doc.text(`${sectionName} Section`, 10, yPosition);
     yPosition += 5;
 
-    // Date info - Left aligned
-    doc.setFontSize(11);
-    doc.setTextColor(0, 0, 0); // Black color
-    doc.text(`Daily Consumption - ${formattedDate} ${user?.current_period}`, 10, yPosition);
+    doc.setFontSize(10);
+    doc.text(
+      `Daily Consumption - ${formattedDate} ${user?.current_period}`,
+      10,
+      yPosition
+    );
     yPosition += 5;
 
-    // Generated date - Left aligned
     doc.setFontSize(9);
-    doc.setTextColor(100, 100, 100);
     doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 10, yPosition);
     yPosition += 15;
 
-    // Right side - Logo image (centered within right section)
+    // ====== LOGO ======
     if (LOGO_BASE64) {
       const logoWidth = 25;
       const logoHeight = 25;
-      const logoX = pageWidth - rightWidth + (rightWidth - logoWidth) / 2; // Center in right section
-      const logoY = 5; // Align with top text
-      doc.addImage(LOGO_BASE64, 'PNG', logoX, logoY, logoWidth, logoHeight);
+      const rightWidth = pageWidth * 0.3;
+      const logoX = pageWidth - rightWidth + (rightWidth - logoWidth) / 2;
+      const logoY = 5;
+      doc.addImage(LOGO_BASE64, "PNG", logoX, logoY, logoWidth, logoHeight);
     }
 
+    // ====== UNIFIED TABLE STYLE ======
+    const borderStyle = {
+      lineWidth: { top: 0, right: 0, bottom: 0.3, left: 0 },
+      lineColor: [0, 0, 0], // একদম কালো ও সব বর্ডারে সমান
+      fillColor: [255, 255, 255], // সাদা ব্যাকগ্রাউন্ড
+      textColor: 0,
+    };
+
     if (allSectionsEmpty) {
-      // Show beautiful empty state with border
+      // ====== EMPTY STATE (No Data) ======
       const boxWidth = 150;
       const boxHeight = 60;
       const boxX = (pageWidth - boxWidth) / 2;
       const boxY = yPosition;
 
-      // Draw border with rounded corners (simulated)
-      doc.setDrawColor(200, 200, 200);
-      doc.setLineWidth(0.2);
-      doc.rect(boxX, boxY, boxWidth, boxHeight);
-
-      // Add background color
+      // কালো বর্ডার সহ হালকা ব্যাকগ্রাউন্ড
+      doc.setDrawColor(0, 0, 0);
       doc.setFillColor(250, 250, 250);
-      doc.rect(boxX, boxY, boxWidth, boxHeight, 'F');
+      doc.rect(boxX, boxY, boxWidth, boxHeight, "FD");
 
-      // Draw border again on top of background
-      doc.setDrawColor(150, 150, 150);
-      doc.rect(boxX, boxY, boxWidth, boxHeight);
-
-      // Main message
+      // Title
       doc.setFontSize(14);
-      doc.setFont('helvetica', 'bold');
+      doc.setFont("helvetica", "bold");
       doc.setTextColor(102, 102, 102);
-      doc.text('No Data Available', 105, boxY + 15, { align: 'center' });
+      doc.text("No Data Available", 105, boxY + 15, { align: "center" });
 
-      // Sub message
+      // Message lines
       doc.setFontSize(10);
-      doc.setFont('helvetica', 'normal');
+      doc.setFont("helvetica", "normal");
       doc.setTextColor(136, 136, 136);
-      
+
       const messageLines = [
-        'No production or consumption data was recorded',
-        'for the selected date.',
-        ' ',
-        'Please check if:',
-        '• Batch production was done',
-        '• Carton production was completed', 
-        '• Materials were received or consumed'
+        "No production or consumption data was recorded",
+        "for the selected date.",
+        " ",
+        "Please check if:",
+        "• Batch production was done",
+        "• Carton production was completed",
+        "• Materials were received or consumed",
       ];
 
       messageLines.forEach((line, index) => {
-        doc.text(line, 105, boxY + 25 + (index * 4), { align: 'center' });
+        doc.text(line, 105, boxY + 25 + index * 4, { align: "center" });
       });
-
     } else {
-      // Products Section
+      // ====== FINISHED PRODUCTS ======
       if (filteredProducts.length > 0) {
         doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0); // Black color
-        doc.text('FINISHED PRODUCTS', 10, yPosition);
-        yPosition += 5;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("FINISHED PRODUCTS", 10, yPosition);
+        yPosition += 2;
 
         const productsTableData = filteredProducts.map((product, index) => [
           index + 1,
-          product.name || 'N/A',
-          product.carton_weight || '0',
-          product.batch || '0',
-          product.carton || '0',
-          formatNumber(product.output) || '0'
+          product.name || "N/A",
+          product.carton_weight || "0",
+          product.batch || "0",
+          product.carton || "0",
+          formatNumber(product.output) || "0",
         ]);
 
-        // autoTable function with reduced margins and centered header text
         autoTable(doc, {
           startY: yPosition,
-          head: [['No', 'Product Name', 'Carton Weight', 'Batch', 'Carton', 'Output (kg)']],
+          head: [
+            [
+              "No",
+              "Product Name",
+              "Carton Weight",
+              "Batch",
+              "Carton",
+              "Output (kg)",
+            ],
+          ],
           body: productsTableData,
           headStyles: {
             fillColor: [0, 122, 255],
             textColor: 255,
-            fontStyle: 'bold',
-            halign: 'center' // Header text center aligned
+            fontStyle: "bold",
+            halign: "center",
           },
-          bodyStyles: {
-            textColor: 0, // Black color for body text
-            fontStyle: 'normal' // Normal font for body
-          },
+          bodyStyles: borderStyle,
+          alternateRowStyles: { fillColor: [255, 255, 255] },
           styles: {
-            fontSize: 9, 
+            fontSize: 7,
             cellPadding: 2,
+            ...borderStyle,
           },
           columnStyles: {
-            0: { cellWidth: 15, halign: 'center' }, 
-            1: { cellWidth: 80, halign: 'left' },
-            2: { cellWidth: 25, halign: 'center' }, 
-            3: { cellWidth: 25, halign: 'center' }, 
-            4: { cellWidth: 25, halign: 'center' },  
-            5: { cellWidth: 25, halign: 'center' }   
+            0: { cellWidth: 15, halign: "center" },
+            1: { cellWidth: 80, halign: "left" },
+            2: { cellWidth: 25, halign: "center" },
+            3: { cellWidth: 25, halign: "center" },
+            4: { cellWidth: 25, halign: "center" },
+            5: { cellWidth: 25, halign: "center" },
           },
           margin: { left: 10, right: 10, top: 5 },
-          tableWidth: 'auto'
         });
 
-        yPosition = doc.lastAutoTable.finalY + 8;
+        yPosition = doc.lastAutoTable.finalY + 12;
       }
 
-      // Raw Materials Section
+      // ====== RAW MATERIALS ======
       if (filteredRm.length > 0) {
-        // Check if need new page
         if (yPosition > 260) {
           doc.addPage();
           yPosition = 15;
         }
 
         doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0); // Black color
-        doc.text('RAW MATERIALS', 10, yPosition);
-        yPosition += 5;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("RAW MATERIALS", 10, yPosition);
+        yPosition += 2;
 
         const rmTableData = filteredRm.map((rm, index) => [
           index + 1,
-          rm.name || 'N/A',
-          rm.opening || '0',
-          rm.recieved_total || '0',
-          formatNumber(rm.consumption_total) || '0',
-          formatNumber(rm.stock) || '0'
+          rm.name || "N/A",
+          rm.opening || "0",
+          rm.recieved_total || "0",
+          formatNumber(rm.consumption_total) || "0",
+          formatNumber(rm.stock) || "0",
         ]);
 
         autoTable(doc, {
           startY: yPosition,
-          head: [['No', 'Material Name', 'Opening', 'Received', 'Consumption', 'Stock']],
+          head: [
+            [
+              "No",
+              "Material Name",
+              "Opening",
+              "Received",
+              "Consumption",
+              "Stock",
+            ],
+          ],
           body: rmTableData,
           headStyles: {
             fillColor: [0, 122, 255],
             textColor: 255,
-            fontStyle: 'bold',
-            halign: 'center'
+            fontStyle: "bold",
+            halign: "center",
           },
-          bodyStyles: {
-            textColor: 0, // Black color for body text
-            fontStyle: 'normal' // Normal font for body
-          },
+          bodyStyles: borderStyle,
+          alternateRowStyles: { fillColor: [255, 255, 255] },
           styles: {
-            fontSize: 9,
+            fontSize: 7,
             cellPadding: 2,
+            ...borderStyle,
           },
           columnStyles: {
-            0: { cellWidth: 15, halign: 'center' }, 
-            1: { cellWidth: 80, halign: 'left' },
-            2: { cellWidth: 25, halign: 'center' }, 
-            3: { cellWidth: 25, halign: 'center' }, 
-            4: { cellWidth: 25, halign: 'center' },  
-            5: { cellWidth: 25, halign: 'center' }  
+            0: { cellWidth: 15, halign: "center" },
+            1: { cellWidth: 80, halign: "left" },
+            2: { cellWidth: 25, halign: "center" },
+            3: { cellWidth: 25, halign: "center" },
+            4: { cellWidth: 25, halign: "center" },
+            5: { cellWidth: 25, halign: "center" },
           },
           margin: { left: 10, right: 10, top: 5 },
-          tableWidth: 'auto'
         });
 
-        yPosition = doc.lastAutoTable.finalY + 8;
+        yPosition = doc.lastAutoTable.finalY + 12;
       }
 
-      // Packaging Materials Section
+      // ====== PACKAGING MATERIALS ======
       if (filteredPm.length > 0) {
-        // Check if need new page
         if (yPosition > 260) {
           doc.addPage();
           yPosition = 15;
         }
 
         doc.setFontSize(10);
-        doc.setFont('helvetica', 'bold');
-        doc.setTextColor(0, 0, 0); // Black color
-        doc.text('PACKAGING MATERIALS', 10, yPosition);
-        yPosition += 5;
+        doc.setFont("helvetica", "bold");
+        doc.setTextColor(0, 0, 0);
+        doc.text("PACKAGING MATERIALS", 10, yPosition);
+        yPosition += 2;
 
         const pmTableData = filteredPm.map((pm, index) => [
           index + 1,
-          pm.name || 'N/A',
-          pm.opening || '0',
-          pm.recieved_total || '0',
-          formatNumber(pm.consumption_total) || '0',
-          formatNumber(pm.stock) || '0'
+          pm.name || "N/A",
+          pm.opening || "0",
+          pm.recieved_total || "0",
+          formatNumber(pm.consumption_total) || "0",
+          formatNumber(pm.stock) || "0",
         ]);
 
         autoTable(doc, {
           startY: yPosition,
-          head: [['No', 'Material Name', 'Opening', 'Received', 'Consumption', 'Stock']],
+          head: [
+            [
+              "No",
+              "Material Name",
+              "Opening",
+              "Received",
+              "Consumption",
+              "Stock",
+            ],
+          ],
           body: pmTableData,
           headStyles: {
             fillColor: [0, 122, 255],
             textColor: 255,
-            fontStyle: 'bold',
-            halign: 'center'
+            fontStyle: "bold",
+            halign: "center",
           },
-          bodyStyles: {
-            textColor: 0, // Black color for body text
-            fontStyle: 'normal' // Normal font for body
-          },
+          bodyStyles: borderStyle,
+          alternateRowStyles: { fillColor: [255, 255, 255] },
           styles: {
-            fontSize: 9,
+            fontSize: 7,
             cellPadding: 2,
+            ...borderStyle,
           },
           columnStyles: {
-            0: { cellWidth: 15, halign: 'center' },  
-            1: { cellWidth: 80, halign: 'left' },
-            2: { cellWidth: 25, halign: 'center' },  
-            3: { cellWidth: 25, halign: 'center' }, 
-            4: { cellWidth: 25, halign: 'center' },  
-            5: { cellWidth: 25, halign: 'center' }   
+            0: { cellWidth: 15, halign: "center" },
+            1: { cellWidth: 80, halign: "left" },
+            2: { cellWidth: 25, halign: "center" },
+            3: { cellWidth: 25, halign: "center" },
+            4: { cellWidth: 25, halign: "center" },
+            5: { cellWidth: 25, halign: "center" },
           },
           margin: { left: 10, right: 10, top: 5 },
-          tableWidth: 'auto'
         });
       }
     }
 
-    // Footer position adjust করা হয়েছে
+    // ====== FOOTER ======
     const pageCount = doc.getNumberOfPages();
     for (let i = 1; i <= pageCount; i++) {
       doc.setPage(i);
       doc.setFontSize(8);
-      doc.setTextColor(102, 102, 102);
+      doc.setTextColor(0, 0, 0);
       doc.text(`S&B Production ERP`, 10, 290);
-      // doc.text(`Generated on: ${new Date().toLocaleDateString()}`, 10, 290);
-      doc.text('Developed by: Robi App Lab', 105, 290, { align: 'center' });
-      doc.text(`Page ${i} of ${pageCount}`, 200, 290, { align: 'right' });
+      doc.text("Developed by: Robi App Lab", 105, 290, { align: "center" });
+      doc.text(`Page ${i} of ${pageCount}`, 200, 290, { align: "right" });
     }
 
-    // Save PDF
-    const fileName = `Daily_Report_${sectionName}_${formattedDate}_${user?.current_period}.pdf`;
-    doc.save(fileName);
+    if (!save) {
+      // ====== OPEN PDF IN BROWSER (User will manually save) ======
+      const pdfBlob = doc.output("blob");
+      const pdfUrl = URL.createObjectURL(pdfBlob);
 
+      // নতুন ট্যাবে PDF ওপেন করুন
+      window.open(pdfUrl, "_blank");
+    } else {
+      const fileName = `Daily_Report_${sectionName}_${formattedDate}_${user?.current_period}.pdf`;
+      doc.save(fileName);
+    }
   } catch (error) {
     console.error("Error generating PDF:", error);
     alert("Failed to generate PDF. Please try again.");
@@ -306,8 +336,6 @@ export async function generateDailyPDF(setGeneratingPdf, data, section, user, da
     setGeneratingPdf(false);
   }
 }
-
-
 
 /*
 import { jsPDF } from 'jspdf';

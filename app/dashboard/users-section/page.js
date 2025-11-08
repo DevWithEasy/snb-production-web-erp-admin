@@ -142,7 +142,7 @@ export default function UsersSection() {
                       href={`/section/${item.value}`}
                       className="group block"
                     >
-                      <div className="bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1 group-hover:bg-blue-50">
+                      <div className="flex flex-row md:flex-col space-x-2 items-center md:space-x-0 bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1 group-hover:bg-blue-50">
                         {/* Icon */}
                         <div className="flex justify-center mb-4">
                           <div className="bg-blue-100 p-3 rounded-full group-hover:bg-blue-200 transition-colors">
@@ -159,14 +159,14 @@ export default function UsersSection() {
                         </h3>
 
                         {/* Section Code */}
-                        <div className="text-center">
+                        <div className="text-center hidden md:block">
                           <span className="inline-block bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
                             {item.value}
                           </span>
                         </div>
 
                         {/* Hover Indicator */}
-                        <div className="mt-4 text-center">
+                        <div className="flex-1 mt-4 text-center">
                           <span className="text-blue-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                             Click to open →
                           </span>

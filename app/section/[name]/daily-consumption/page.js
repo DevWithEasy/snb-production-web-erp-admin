@@ -1,27 +1,30 @@
 "use client";
 
-import { useState, useEffect, useCallback } from "react";
-import { useParams, useRouter, useSearchParams } from "next/navigation";
-import { collection, getDocs } from "firebase/firestore";
-import { db } from "@/utils/firebaseConfig";
-import { useAuth } from "@/hooks/useAuth";
 import ProtectedRoute from "@/components/ProtectedRoute";
-import SectionSelector from "@/components/daily_consumption/SectionSelector";
-import DatePicker from "@/components/daily_consumption/DatePicker";
 import ColumnVisibilityModal from "@/components/daily_consumption/ColumnVisibilityModal";
-import { generateDailyPDF } from "@/utils/generateDailyPdf";
-import generateDailyExcel from "@/utils/generateDailyExcel";
+import DatePicker from "@/components/daily_consumption/DatePicker";
+import SectionSelector from "@/components/daily_consumption/SectionSelector";
+import { useAuth } from "@/hooks/useAuth";
+import { db } from "@/utils/firebaseConfig";
 import formatNumber from "@/utils/formatNumber";
+import generateDailyExcel from "@/utils/generateDailyExcel";
+import { generateDailyPDF } from "@/utils/generateDailyPdf";
 import getPeriodPath from "@/utils/getPeriodPath";
 import getPeriodText from "@/utils/getPeriodText";
+import { collection, getDocs } from "firebase/firestore";
 import Image from "next/image";
+import { useParams, useRouter } from "next/navigation";
+import { useCallback, useEffect, useState } from "react";
 import {
-  FaFileExcel,
-  FaFilePdf,
-  FaCalendarAlt,
-  FaCog,
   FaArrowLeft,
+  FaCalendarAlt,
+  FaFileDownload,
+  FaFileExcel,
+  FaFilePdf
 } from "react-icons/fa";
+import { IoMdDownload } from "react-icons/io";
+import { IoDownloadSharp } from "react-icons/io5";
+import { LiaDownloadSolid } from "react-icons/lia";
 
 export default function DailyConsumption() {
   const { user } = useAuth();
@@ -496,7 +499,8 @@ export default function DailyConsumption() {
                       processData(),
                       section,
                       user,
-                      date
+                      date,
+                      false
                     )
                   }
                   disabled={generatingPdf}
@@ -507,6 +511,28 @@ export default function DailyConsumption() {
                     <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
                     <FaFilePdf size={20} />
+                  )}
+                </button>
+
+                                <button
+                  onClick={() =>
+                    generateDailyPDF(
+                      setGeneratingPdf,
+                      processData(),
+                      section,
+                      user,
+                      date,
+                      true
+                    )
+                  }
+                  disabled={generatingPdf}
+                  className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+                  title="Export to PDF"
+                >
+                  {generatingPdf ? (
+                    <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+                  ) : (
+                    <FaFileDownload size={20} />
                   )}
                 </button>
 
