@@ -62,15 +62,15 @@ export default function Home() {
             <Image 
               src="/logo.png" 
               alt="S&B Production ERP" 
-              width={120} 
-              height={120} 
-              className="w-24 h-24 md:w-32 md:h-32 lg:w-40 lg:h-40"
+              width={100} 
+              height={100} 
+              className="w-20 h-20 md:w-28 md:h-28 lg:w-32 lg:h-32"
               priority
             />
           </div>
 
           {/* App Name */}
-          <h1 className="text-4xl md:text-5xl lg:text-6xl font-bold text-gray-900 mb-6 text-center">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 text-center">
             S&B Production ERP
           </h1>
 

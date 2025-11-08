@@ -96,7 +96,7 @@ export default function Dashboard() {
   return (
     <div className="h-[calc(100vh-65px)]">
       <CurrentPeriod user={user} onUserUpdate={updateUserData} />
-      <div>
+      <div className="pb-10">
         {routes.map((route) => (
           <NavigationItem
             key={route.route}

@@ -319,24 +319,6 @@ export default function DashboardLayout({ children }) {
               }
             `}
           >
-            {/* Tablet optimization notice */}
-            {deviceType === "tablet" && (
-              <div className="bg-yellow-50 border-b border-yellow-200 p-3">
-                <div className="flex items-center justify-center text-yellow-700 text-sm">
-                  <span>Tablet View - Swipe or use menu button for navigation</span>
-                </div>
-              </div>
-            )}
-
-            {/* Mobile optimization notice */}
-            {deviceType === "mobile" && (
-              <div className="bg-blue-50 border-b border-blue-200 p-3">
-                <div className="flex items-center justify-center text-blue-700 text-sm">
-                  <span>Mobile View - Tap menu button for admin navigation</span>
-                </div>
-              </div>
-            )}
-
             {/* Main Content */}
             <div className="p-4 lg:p-6">
               {children}
