@@ -74,9 +74,11 @@ export default function SectionMaterials() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex justify-center items-center p-5">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <p className="mt-4 text-gray-600">Loading materials...</p>
+      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+        <div className="text-center">
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
+          <p className="mt-4 text-gray-600 text-sm md:text-base">Loading recipes and materials...</p>
+        </div>
       </div>
     );
   }
@@ -90,7 +92,7 @@ export default function SectionMaterials() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="h-[calc(100vh-65px)] bg-gray-50">
       <div className="container mx-auto md:p-6 lg:p-8">
         {/* Header */}
         <div className="mb-6">

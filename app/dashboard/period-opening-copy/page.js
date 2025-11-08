@@ -87,11 +87,11 @@ export default function PeriodOpeningCopy() {
           const materials = await Firebase.getDocuments(fromCollectionName);
           
           for (const material of materials) {
-            const docSnap = await Firebase.getDocument(toCollectionName, material.id);
+            const docSnap = await Firebase.getDocument(fromCollectionName, material.id);
             if (docSnap.exists) {
               const docRef = doc(db, toCollectionName, material.id);
               await updateDoc(docRef, {
-                opening: material.closing || 0,
+                opening: docSnap.data().closing || 0,
               });
             }
           }

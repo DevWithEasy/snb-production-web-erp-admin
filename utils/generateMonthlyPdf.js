@@ -123,7 +123,7 @@ export async function generateMonthlyPDF(
         bodyStyles: borderStyle,
         alternateRowStyles: { fillColor: [255, 255, 255] }, // সব row সাদা
         styles: {
-          fontSize: 8,
+          fontSize: 7,
           cellPadding: 3,
           halign: "center",
           ...borderStyle,
@@ -135,7 +135,7 @@ export async function generateMonthlyPDF(
 
       // ====== FINISHED PRODUCTS ======
       const filteredProducts =
-        data.products_data?.filter((p) => p.total_batch && p.total_carton) ||
+        data.products_data?.filter((p) => p.total_batch || p.total_carton) ||
         [];
       if (filteredProducts.length > 0) {
         if (yPosition > 260) {
@@ -143,7 +143,7 @@ export async function generateMonthlyPDF(
           yPosition = 15;
         }
 
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text("FINISHED PRODUCTS", 10, yPosition);
         yPosition += 5;
 
@@ -177,7 +177,7 @@ export async function generateMonthlyPDF(
           },
           bodyStyles: borderStyle,
           alternateRowStyles: { fillColor: [255, 255, 255] },
-          styles: { fontSize: 8, cellPadding: 2, ...borderStyle },
+          styles: { fontSize: 7, cellPadding: 2, ...borderStyle },
           columnStyles: {
             0: { cellWidth: 10, halign: "center" },
             1: { cellWidth: 65, halign: "left" },
@@ -199,7 +199,7 @@ export async function generateMonthlyPDF(
           yPosition = 15;
         }
 
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text("RAW MATERIALS", 10, yPosition);
         yPosition += 5;
 
@@ -243,7 +243,7 @@ export async function generateMonthlyPDF(
           },
           bodyStyles: borderStyle,
           alternateRowStyles: { fillColor: [255, 255, 255] },
-          styles: { fontSize: 8, cellPadding: 1.5, ...borderStyle },
+          styles: { fontSize:7, cellPadding: 1.5, ...borderStyle },
           margin: { left: 10, right: 15, top: 5 },
           columnStyles: {
             0: { cellWidth: 10, halign: "center" },
@@ -270,7 +270,7 @@ export async function generateMonthlyPDF(
           yPosition = 15;
         }
 
-        doc.setFontSize(12);
+        doc.setFontSize(10);
         doc.text("PACKAGING MATERIALS", 10, yPosition);
         yPosition += 5;
 
@@ -312,7 +312,7 @@ export async function generateMonthlyPDF(
           },
           bodyStyles: borderStyle,
           alternateRowStyles: { fillColor: [255, 255, 255] },
-          styles: { fontSize: 8, cellPadding: 2, ...borderStyle },
+          styles: { fontSize: 7, cellPadding: 2, ...borderStyle },
           margin: { left: 10, right: 15, top: 5 },
           columnStyles: {
             0: { cellWidth: 10, halign: "center" },

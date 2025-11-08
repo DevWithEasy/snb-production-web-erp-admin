@@ -31,9 +31,9 @@ const NavigationItem = ({ route, title, Icon, onClick }) => (
   >
     <Icon
       className="text-gray-500 group-hover:text-blue-600 transition-colors flex-shrink-0"
-      size={20}
+      size={16}
     />
-    <span className="ml-3 text-base font-medium">{title}</span>
+    <span className="ml-3 font-medium">{title}</span>
   </Link>
 );
 
@@ -329,24 +329,6 @@ export default function SectionLayout({ children }) {
               }
             `}
           >
-            {/* Tablet optimization notice */}
-            {deviceType === "tablet" && (
-              <div className="bg-yellow-50 border-b border-yellow-200 p-3">
-                <div className="flex items-center justify-center text-yellow-700 text-sm">
-                  <span>Tablet View - Swipe or use menu button for navigation</span>
-                </div>
-              </div>
-            )}
-
-            {/* Mobile optimization notice */}
-            {deviceType === "mobile" && (
-              <div className="bg-green-50 border-b border-green-200 p-3">
-                <div className="flex items-center justify-center text-green-700 text-sm">
-                  <span>Mobile View - Tap menu button for {name} section navigation</span>
-                </div>
-              </div>
-            )}
-
             {/* Main Content */}
             <div className="p-4 lg:p-6">
               {children}

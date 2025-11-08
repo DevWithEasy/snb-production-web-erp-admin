@@ -36,7 +36,7 @@ export default function ProductionDC() {
       snapshot.forEach((doc) => {
         dataArray.push({ id: doc.id, ...doc.data() });
       });
-      return dataArray;
+      return dataArray.sort((a,b)=>a.name.localeCompare(b.name));
     } catch (err) {
       console.error(`Error fetching recipe collection:`, err);
       return [];

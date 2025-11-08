@@ -70,29 +70,25 @@ export default function UsersSection() {
         <button
           onClick={async () => {
             console.log('Start Update')
-            const period_rm_collection_name = `bakery_rm_period_october_2025`;
-            const period_pm_collection_name = `bakery_pm_period_october_2025`;
-            const collections = [
-              period_rm_collection_name,
-              period_pm_collection_name,
-            ];
-            for (const collection of collections) {
-              const items = await Firebase.getDocuments(collection);
+            for(const section of sections){
+              const collection_name = `${section.value}_products_period_november_2025`;
+              const items = await Firebase.getDocuments(collection_name);
               for (const item of items) {
-                const docRef = doc(db, collection, item.id);
+                const docRef = doc(db, collection_name, item.id);
                 await updateDoc(docRef, {
-                  recieved_days: Array.from({ length: 31 }, (_, i) => ({
+                  batch: Array.from({ length: 31 }, (_, i) => ({
                     date: i + 1,
                     qty: 0,
                   })),
-                  consumption_days: Array.from({ length: 31 }, (_, i) => ({
+                  carton: Array.from({ length: 31 }, (_, i) => ({
                     date: i + 1,
                     qty: 0,
                   })),
                 });
-                console.log(item.name + 'Updated')
+                console.log(item.name + ' Updated')
               }
             }
+            
             console.log('Complete Update')
           }}
         >

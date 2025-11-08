@@ -80,7 +80,7 @@ export default function CurrentPeriod({ user, onUserUpdate }) {
         </div>
       )}
 
-      <div className="flex justify-between items-center p-4 bg-gray-50 rounded-lg mb-4">
+      <div className="flex justify-between items-center p-4 bg-white border border-gray-100 rounded-lg mb-4">
         {/* Current Period Button */}
         <button 
           onClick={() => setModalVisible(true)}

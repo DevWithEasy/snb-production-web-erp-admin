@@ -1,22 +1,29 @@
 "use client";
 
-import React, { useEffect, useState } from "react";
-import { useRouter } from "next/navigation";
 import { useAuth } from "@/hooks/useAuth";
+import Firebase from "@/utils/firebase";
 import Image from "next/image";
+import { useRouter } from "next/navigation";
+import { useEffect } from "react";
 
 export default function Home() {
   const { user, loading } = useAuth();
   const router = useRouter();
 
+  async function saveUpdateUser(id){
+     const docRef = await Firebase.getDocument('users', id)
+     const userInfo = {id : docRef.id,...docRef.data()}
+     localStorage.setItem('user', JSON.stringify(userInfo));
+  }
+
   useEffect(() => {
     if (!loading) {
       if (user) {
         // ইউজার লগইন থাকলে ড্যাশবোর্ডে রিডাইরেক্ট
+        saveUpdateUser(user.id)
         const timer = setTimeout(() => {
           router.push(user.role === "admin" ? "/dashboard" : `/section/${user.section}`);
         }, 3000);
-
         return () => {
           clearTimeout(timer);
         };

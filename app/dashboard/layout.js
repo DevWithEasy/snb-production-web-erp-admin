@@ -29,9 +29,9 @@ const NavigationItem = ({ route, title, Icon, onClick }) => (
   >
     <Icon
       className="text-gray-500 group-hover:text-blue-600 transition-colors flex-shrink-0"
-      size={20}
+      size={16}
     />
-    <span className="ml-3 text-base font-medium">{title}</span>
+    <span className="ml-3 font-medium">{title}</span>
   </Link>
 );
 

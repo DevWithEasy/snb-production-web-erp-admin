@@ -215,7 +215,7 @@ export default function ClosingStock() {
                           onChange={(e) =>
                             handleDateChange(e.target.value, item, "rm")
                           }
-                          className="w-full px-3 py-2 md:py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right text-sm md:text-base"
+                          className="w-full px-3 py-2 md:py-2.5 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right text-sm md:text-base"
                           placeholder="Enter value"
                           min="0"
                           step="0.01"
@@ -259,7 +259,7 @@ export default function ClosingStock() {
                           onChange={(e) =>
                             handleDateChange(e.target.value, item, "pm")
                           }
-                          className="w-full px-3 py-2 md:py-2.5 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right text-sm md:text-base"
+                          className="w-full px-3 py-2 md:py-2.5 bg-white border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right text-sm md:text-base"
                           placeholder="Enter value"
                           min="0"
                           step="0.01"
