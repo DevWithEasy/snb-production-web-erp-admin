@@ -93,7 +93,7 @@ export const generateRecipeExcel = async (recipeData, section, materialsData) =>
     // Apply column widths
     const colWidths = [
       { wch: 35 }, // Name/Property
-      { wch: 20 }, // Unit/Value
+      { wch: 10 }, // Unit/Value
       { wch: 15 }, // Per Batch Qty
       { wch: 15 }, // Per Carton Qty
     ];

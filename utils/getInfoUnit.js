@@ -1,24 +1,26 @@
 export default function getInfoUnit(key) {
-  switch (key) {
-    case "process_loss":
-      return "%";
-    case "net_weight":
-      return "gm";
-    case "foil_weight":
-      return "gm";
-    case "pouch_weight":
-      return "gm";
-    case "biscuit_in_packet":
-      return "Pcs";
-    case "cake_in_packet":
-      return "Pcs";
-    case "bar_in_packet":
-      return "Pcs";
-    case "masala_wrapper_weight":
-      return "gm";
-    case "total_packet_per_carton":
-      return "Pcs";
-    default:
-      break;
-  }
+  const units = {
+    foil_weight: "gm",
+    inner_poly_weight: "gm",
+    process_loss: "%",
+    net_weight: "gm",
+    pouch_weight: "gm",
+    biscuit_in_packet: "pcs",
+    paper_per_packet: "gm",
+    cake_in_packet: "pcs",
+    bar_in_packet: "pcs",
+    masala_wrapper_weight: "gm",
+    total_packet_per_carton: "pcs",
+    alluminium_paper_weight: "gm",
+    box_per_carton: "pcs",
+    packet_per_box: "pcs",
+    inner_per_master: "pcs",
+    inner_size: "",
+    inner_weight: "gm",
+    master_size: "",
+    master_weight: "gm",
+    packet_per_inner: "pcs",
+  };
+
+  return units[key] || "";
 }

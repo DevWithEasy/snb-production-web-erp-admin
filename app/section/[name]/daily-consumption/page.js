@@ -20,7 +20,7 @@ import {
   FaCalendarAlt,
   FaFileDownload,
   FaFileExcel,
-  FaFilePdf
+  FaFilePdf,
 } from "react-icons/fa";
 import { IoMdDownload } from "react-icons/io";
 import { IoDownloadSharp } from "react-icons/io5";
@@ -29,7 +29,7 @@ import { LiaDownloadSolid } from "react-icons/lia";
 export default function DailyConsumption() {
   const { user } = useAuth();
   const router = useRouter();
-  const params = useParams()
+  const params = useParams();
   const section = params.name;
 
   const [products, setProducts] = useState(null);
@@ -142,20 +142,23 @@ export default function DailyConsumption() {
       return {
         ...item,
         opening: formatNumber(calOpening),
-        recieved_total : formatNumber(recieved_total),
-        consumption_total : formatNumber(consumption_total),
-        stock: formatNumber(calOpening + Number(recieved_total) - Number(consumption_total)),
+        recieved_total: formatNumber(recieved_total),
+        consumption_total: formatNumber(consumption_total),
+        stock: formatNumber(
+          calOpening + Number(recieved_total) - Number(consumption_total)
+        ),
       };
     } else {
       return {
         ...item,
         opening: item.opening,
-        recieved_total : formatNumber(recieved_total),
-        consumption_total : formatNumber(consumption_total),
-        stock:
-          formatNumber(Number(item.opening) +
-          Number(recieved_total) -
-          Number(consumption_total)),
+        recieved_total: formatNumber(recieved_total),
+        consumption_total: formatNumber(consumption_total),
+        stock: formatNumber(
+          Number(item.opening) +
+            Number(recieved_total) -
+            Number(consumption_total)
+        ),
       };
     }
   };
@@ -179,7 +182,7 @@ export default function DailyConsumption() {
       carton_weight: (carton_weight / 1000).toFixed(2),
       batch: batch.qty || 0,
       carton: carton.qty || 0,
-      output : formatNumber(output),
+      output: formatNumber(output),
     };
   };
 
@@ -514,7 +517,7 @@ export default function DailyConsumption() {
                   )}
                 </button>
 
-                                <button
+                <button
                   onClick={() =>
                     generateDailyPDF(
                       setGeneratingPdf,

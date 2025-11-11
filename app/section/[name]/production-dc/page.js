@@ -7,6 +7,9 @@ import { db } from "@/utils/firebaseConfig";
 import getPeriodPath from "@/utils/getPeriodPath";
 import { useAuth } from "@/hooks/useAuth";
 import DCFilterModal from "@/components/production_dc/DCFilterModal";
+import { generateProductionDCPDF } from "@/utils/generateProductionDCPDF"; // নতুন PDF ফাংশন ইম্পোর্ট
+import { FaFilePdf } from "react-icons/fa";
+import { IoCalendarNumberOutline } from "react-icons/io5";
 
 export default function ProductionDC() {
   const { user } = useAuth();
@@ -18,6 +21,7 @@ export default function ProductionDC() {
   const [filteredRecipes, setFilteredRecipes] = useState(null);
   const [loading, setLoading] = useState(true);
   const [error, setError] = useState(null);
+  const [generatingPdf, setGeneratingPdf] = useState(false); // PDF স্টেট
 
   // Date filter modal state
   const [dateModalVisible, setDateModalVisible] = useState(false);
@@ -111,6 +115,32 @@ export default function ProductionDC() {
     }
   };
 
+  // PDF জেনারেট করার ফাংশন
+  const handleGeneratePDF = async () => {
+    if (!filteredRecipes || filteredRecipes.length === 0) {
+      alert("No data available to generate PDF");
+      return;
+    }
+
+    const pdfData = {
+      recipes_data: filteredRecipes,
+      summary: totalBatchCarton(filteredRecipes),
+      start_date: startDate,
+      end_date: endDate,
+      section: section,
+      period: user?.current_period
+    };
+
+    await generateProductionDCPDF(
+      setGeneratingPdf,
+      pdfData,
+      section,
+      user,
+      startDate,
+      endDate
+    );
+  };
+
   useEffect(() => {
     if (section && user?.current_period) {
       fetchRecipes();
@@ -151,7 +181,7 @@ export default function ProductionDC() {
 
   return (
     <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto p-4 sm:p-6 lg:p-8">
+      <div className="max-w-6xl mx-auto sm:p-6 lg:p-8">
         {/* Header */}
         <div className="flex justify-between items-center mb-6">
           <div>
@@ -160,15 +190,30 @@ export default function ProductionDC() {
               View production and delivery details
             </p>
           </div>
-          <button
-            onClick={() => setDateModalVisible(true)}
-            className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
-            title="Filter by date range"
-          >
-            <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-              <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
-            </svg>
-          </button>
+          <div className="flex items-center space-x-2">
+            {/* PDF বাটন */}
+            <button
+              onClick={handleGeneratePDF}
+              disabled={generatingPdf || !filteredRecipes || filteredRecipes.length === 0}
+              className="p-2 text-red-600 hover:text-red-700 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed"
+              title="Generate PDF Report"
+            >
+              {generatingPdf ? (
+                <div className="w-6 h-6 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+              ) : (
+                <FaFilePdf size={20} />
+              )}
+            </button>
+
+            {/* ক্যালেন্ডার বাটন */}
+            <button
+              onClick={() => setDateModalVisible(true)}
+              className="p-2 text-gray-600 hover:text-gray-900 hover:bg-gray-100 rounded-lg transition-colors"
+              title="Filter by date range"
+            >
+              <IoCalendarNumberOutline size={20}/>
+            </button>
+          </div>
         </div>
 
         {/* Date Filter Modal */}
@@ -226,7 +271,7 @@ export default function ProductionDC() {
                   {filteredRecipes.map((item) => (
                     <tr 
                       key={item.id}
-                      onClick={() => router.push(`/section/${section}/production-dc//${item.id}`)}
+                      onClick={() => router.push(`/section/${section}/production-dc/${item.id}`)}
                       className="hover:bg-gray-50 cursor-pointer transition-colors"
                     >
                       <td className="px-4 py-3">
