@@ -452,8 +452,8 @@ export default function DailyConsumption() {
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
         <div className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div className="flex justify-between items-center py-4">
+          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
+            <div className="flex flex-col sm:flex-row sm:justify-between md:justify-between md:items-center py-2">
               <div className="flex items-center space-x-4">
                 <button
                   onClick={() => router.back()}
@@ -462,7 +462,7 @@ export default function DailyConsumption() {
                   <FaArrowLeft className="text-gray-600" />
                 </button>
                 <div>
-                  <h1 className="text-lg font-bold text-gray-900">
+                  <h1 className="sm:text-base md:text-lg font-bold text-gray-900">
                     {section?.charAt(0).toUpperCase() + section?.slice(1)}{" "}
                     Section
                   </h1>
@@ -473,7 +473,7 @@ export default function DailyConsumption() {
                 </div>
               </div>
 
-              <div className="flex items-center space-x-3">
+              <div className="flex justify-end items-center space-x-2">
                 <button
                   onClick={() =>
                     generateDailyExcel(
@@ -491,7 +491,7 @@ export default function DailyConsumption() {
                   {generatingExcel ? (
                     <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    <FaFileExcel size={20} />
+                    <FaFileExcel size={18} />
                   )}
                 </button>
 
@@ -513,7 +513,7 @@ export default function DailyConsumption() {
                   {generatingPdf ? (
                     <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    <FaFilePdf size={20} />
+                    <FaFilePdf size={18} />
                   )}
                 </button>
 
@@ -535,7 +535,7 @@ export default function DailyConsumption() {
                   {generatingPdf ? (
                     <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
                   ) : (
-                    <FaFileDownload size={20} />
+                    <FaFileDownload size={18} />
                   )}
                 </button>
 
@@ -544,7 +544,7 @@ export default function DailyConsumption() {
                   className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                   title="Select Date"
                 >
-                  <FaCalendarAlt size={20} />
+                  <FaCalendarAlt size={18} />
                 </button>
 
                 {/* <button
@@ -552,7 +552,7 @@ export default function DailyConsumption() {
                   className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
                   title="Settings"
                 >
-                  <FaCog size={20} />
+                  <FaCog size={18} />
                 </button> */}
               </div>
             </div>
@@ -560,7 +560,7 @@ export default function DailyConsumption() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 py-6">
           {/* Company Header */}
           <div className="text-center mb-8">
             <Image

@@ -75,7 +75,7 @@ export default function UpdateConsumption() {
           fetchFromFirestore(period_pm_collection_name)
         ]);
 
-        setProducts(recipeData);
+        setProducts(recipeData.sort((a,b)=>a.name.localeCompare(b.name)));
         setProduct(recipeData[0] || null);
         setMaterials({ rm: rmData, pm: pmData });
 

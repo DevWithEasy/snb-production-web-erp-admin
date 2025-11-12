@@ -55,7 +55,7 @@ export default function UsersSection() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4 md:p-6">
+    <div className="min-h-screen bg-gray-50 md:p-4">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
         <div className="mb-8">
@@ -69,27 +69,27 @@ export default function UsersSection() {
 
         <button
           onClick={async () => {
-            console.log('Start Update')
-            for(const section of sections){
-              const collection_name = `${section.value}_products_period_november_2025`;
-              const items = await Firebase.getDocuments(collection_name);
-              for (const item of items) {
-                const docRef = doc(db, collection_name, item.id);
-                await updateDoc(docRef, {
-                  batch: Array.from({ length: 31 }, (_, i) => ({
-                    date: i + 1,
-                    qty: 0,
-                  })),
-                  carton: Array.from({ length: 31 }, (_, i) => ({
-                    date: i + 1,
-                    qty: 0,
-                  })),
-                });
-                console.log(item.name + ' Updated')
+            console.log("Start Update");
+            for (const section of sections) {
+              const fields = ["rm", "pm"];
+              for (const field of fields) {
+                const periods = ["september", "october", "november"];
+                for (const period of periods) {
+                  const collection_name = `${section.value}_${field}_period_${period}_2025`;
+                  console.log(collection_name + " Update Starting");
+                  const items = await Firebase.getDocuments(collection_name);
+                  for (const item of items) {
+                    const docRef = doc(db, collection_name, item.id);
+                    await updateDoc(docRef, {
+                      price: 0,
+                      type: field == 'rm' ? "rm" : item.unit==='pcs' ? 'carton' : 'wrapper',
+                    });
+                    console.log(item.name + " Updated");
+                  }
+                }
               }
             }
-            
-            console.log('Complete Update')
+            console.log("Complete Update");
           }}
         >
           ACTION
@@ -148,13 +148,13 @@ export default function UsersSection() {
                           <div className="bg-blue-100 p-3 rounded-full group-hover:bg-blue-200 transition-colors">
                             <IconComponent
                               className="text-blue-600 group-hover:text-blue-700"
-                              size={32}
+                              size={20}
                             />
                           </div>
                         </div>
 
                         {/* Section Name */}
-                        <h3 className="text-lg font-semibold text-gray-800 text-center mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
+                        <h3 className="text-sm sm:text-lg md:text-lg font-semibold text-gray-800 text-center mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
                           {item.label}
                         </h3>
 
