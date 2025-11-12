@@ -113,14 +113,14 @@ export default function UpdateProductionView({
                   <input
                     value={batch}
                     onChange={(e) => setBatch(e.target.value)}
-                    className="flex-1 h-12 border border-gray-300 rounded-lg px-3"
+                    className="h-12 border border-gray-300 rounded-lg px-3"
                     placeholder="Batch"
                     type="number"
                   />
                   <input
                     value={carton}
                     onChange={(e) => setCarton(e.target.value)}
-                    className="flex-1 h-12 border border-gray-300 rounded-lg px-3"
+                    className="h-12 border border-gray-300 rounded-lg px-3"
                     placeholder="Carton"
                     type="number"
                   />
@@ -165,7 +165,7 @@ export default function UpdateProductionView({
                 <div className="w-12 text-center">
                   <button
                     onClick={(e) => handleRemoveClick(item, e)}
-                    className="text-red-500 hover:text-red-700 opacity-0 group-hover:opacity-100 transition-opacity duration-200 p-1 rounded hover:bg-red-50"
+                    className="text-red-500 p-1 rounded cursor-pointer"
                     title="Remove item"
                   >
                     <FaTrash size={14} />

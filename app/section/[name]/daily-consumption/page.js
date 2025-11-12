@@ -22,9 +22,6 @@ import {
   FaFileExcel,
   FaFilePdf,
 } from "react-icons/fa";
-import { IoMdDownload } from "react-icons/io";
-import { IoDownloadSharp } from "react-icons/io5";
-import { LiaDownloadSolid } from "react-icons/lia";
 
 export default function DailyConsumption() {
   const { user } = useAuth();
@@ -199,29 +196,38 @@ export default function DailyConsumption() {
     return { rm: rmProcessed, pm: pmProcessed };
   };
 
+  // তারিখ পরিবর্তন করলে শুধু ফিল্টারিং হবে, ডেটা লোড হবে না
   const applyDateFilter = (date) => {
     setDate(date.toString());
-    const processedProduct = processProductsData(products, date);
-    const processed = processMaterialsData(materials, date);
-    setFilteredProducts(processedProduct);
-    setFilteredMaterials(processed);
+
+    // শুধু ফিল্টারিং করুন
+    if (products) {
+      const processedProduct = processProductsData(products, date);
+      setFilteredProducts(processedProduct);
+    }
+
+    if (materials.rm.length > 0 || materials.pm.length > 0) {
+      const processed = processMaterialsData(materials, date);
+      setFilteredMaterials(processed);
+    }
+
     setDateModalVisible(false);
   };
 
-  // useCallback দিয়ে loadMaterials function তৈরি করুন
-  const loadMaterials = useCallback(async () => {
-    if (!section) return;
+  // useCallback দিয়ে loadData function তৈরি করুন (শুধু একবার কল হবে)
+  const loadData = useCallback(async () => {
+    if (!section || !user?.current_period) return;
 
     setLoading(true);
     setError(null);
     try {
-      const [products, rmData, pmData] = await Promise.all([
+      const [productsData, rmData, pmData] = await Promise.all([
         fetchFromFirestore(period_products_collection_name),
         fetchFromFirestore(period_rm_collection_name),
         fetchFromFirestore(period_pm_collection_name),
       ]);
 
-      if (products.length === 0) {
+      if (productsData.length === 0) {
         setError("No Products Found. Reload this screen");
       }
 
@@ -229,32 +235,35 @@ export default function DailyConsumption() {
         setError("No materials found for this section and period.");
       }
 
-      const processProducts = processProductsData(products, Number(date));
+      // মূল ডেটা সেট করুন (সম্পূর্ণ মাসের ডেটা)
+      setProducts(productsData);
+      setMaterials({ rm: rmData, pm: pmData });
+
+      // বর্তমান তারিখ অনুযায়ী ফিল্টারড ডেটা সেট করুন
+      const processProducts = processProductsData(productsData, Number(date));
       const processedData = processMaterialsData(
         { rm: rmData, pm: pmData },
         Number(date)
       );
 
-      // Batch state updates
-      setProducts(products);
       setFilteredProducts(processProducts);
-      setMaterials({ rm: rmData, pm: pmData });
       setFilteredMaterials(processedData);
 
-      console.log("Loaded materials from Firestore successfully");
+      console.log("Loaded all data from Firestore successfully");
     } catch (err) {
       setError("Error fetching materials: " + err.message);
       console.error(err);
     } finally {
       setLoading(false);
     }
-  }, [
-    section,
-    period_products_collection_name,
-    period_rm_collection_name,
-    period_pm_collection_name,
-    date,
-  ]);
+  }, [section, user?.current_period, date]); // date dependency রাখুন যাতে প্রথম লোডে সঠিক ডেটা ফিল্টার হয়
+
+  // শুধুমাত্র প্রথমবার এবং section/user পরিবর্তন হলে ডেটা লোড করুন
+  useEffect(() => {
+    if (section && user?.current_period) {
+      loadData();
+    }
+  }, [section, user?.current_period, loadData]);
 
   function formatMonthNumber(num) {
     return num < 10 ? "0" + num : num.toString();
@@ -270,61 +279,6 @@ export default function DailyConsumption() {
       section: section,
     };
   };
-
-  // Effect কে fix করুন
-  useEffect(() => {
-    if (section && user?.current_period) {
-      // setTimeout ব্যবহার করে next tick এ loadMaterials call করুন
-      const timer = setTimeout(() => {
-        loadMaterials();
-      }, 0);
-
-      return () => clearTimeout(timer);
-    }
-  }, [section, user?.current_period, loadMaterials]);
-
-  // Alternative solution: useEffect কে separate করুন
-  useEffect(() => {
-    if (section && user?.current_period) {
-      const loadData = async () => {
-        setLoading(true);
-        setError(null);
-        try {
-          const [products, rmData, pmData] = await Promise.all([
-            fetchFromFirestore(period_products_collection_name),
-            fetchFromFirestore(period_rm_collection_name),
-            fetchFromFirestore(period_pm_collection_name),
-          ]);
-
-          if (products.length === 0) {
-            setError("No Products Found. Reload this screen");
-          }
-
-          if (rmData.length === 0 && pmData.length === 0) {
-            setError("No materials found for this section and period.");
-          }
-
-          const processProducts = processProductsData(products, Number(date));
-          const processedData = processMaterialsData(
-            { rm: rmData, pm: pmData },
-            Number(date)
-          );
-
-          // Single batch update
-          setProducts(products);
-          setFilteredProducts(processProducts);
-          setMaterials({ rm: rmData, pm: pmData });
-          setFilteredMaterials(processedData);
-        } catch (err) {
-          setError("Error fetching materials: " + err.message);
-        } finally {
-          setLoading(false);
-        }
-      };
-
-      loadData();
-    }
-  }, [section, user?.current_period, date]);
 
   // Render section selector if no section is selected
   if (!section) {
@@ -355,7 +309,7 @@ export default function DailyConsumption() {
   const renderMaterialSection = (title, items, type) => (
     <>
       <h3 className="text-lg font-bold text-gray-800 mb-3 mt-6">{title}</h3>
-      <div className="w-full">
+      <div className="w-full text-xs sm:text-sm md:text-sm">
         <table className="w-full bg-white">
           <thead>
             <tr className="bg-blue-600 text-white">
@@ -389,7 +343,7 @@ export default function DailyConsumption() {
   const renderProductSection = (title, items) => (
     <>
       <h3 className="text-lg font-bold text-gray-800 mb-3 mt-6">{title}</h3>
-      <div className="w-full">
+      <div className="w-full text-xs sm:text-sm md:text-sm">
         <table className="w-full bg-white">
           <thead>
             <tr className="bg-blue-600 text-white">
@@ -451,116 +405,83 @@ export default function DailyConsumption() {
     <ProtectedRoute>
       <div className="min-h-screen bg-gray-50">
         {/* Header */}
-        <div className="bg-white shadow-sm border-b border-gray-200">
-          <div className="max-w-7xl mx-auto px-2 sm:px-6 lg:px-8">
-            <div className="flex flex-col sm:flex-row sm:justify-between md:justify-between md:items-center py-2">
-              <div className="flex items-center space-x-4">
-                <button
-                  onClick={() => router.back()}
-                  className="p-2 hover:bg-gray-100 rounded-lg transition-colors"
-                >
-                  <FaArrowLeft className="text-gray-600" />
-                </button>
-                <div>
-                  <h1 className="sm:text-base md:text-lg font-bold text-gray-900">
-                    {section?.charAt(0).toUpperCase() + section?.slice(1)}{" "}
-                    Section
-                  </h1>
-                  <p className="text-sm text-gray-600">
-                    {formatMonthNumber(date)}{" "}
-                    {getPeriodText(user?.current_period)}
-                  </p>
-                </div>
-              </div>
+        <div className="flex justify-end items-center space-x-2 px-2 sm:px-6 lg:px-8">
+          <button
+            onClick={() =>
+              generateDailyExcel(
+                setGeneratingExcel,
+                processData(),
+                section,
+                user,
+                date
+              )
+            }
+            disabled={generatingExcel}
+            className="p-2 text-green-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            title="Export to Excel"
+          >
+            {generatingExcel ? (
+              <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FaFileExcel size={18} />
+            )}
+          </button>
 
-              <div className="flex justify-end items-center space-x-2">
-                <button
-                  onClick={() =>
-                    generateDailyExcel(
-                      setGeneratingExcel,
-                      processData(),
-                      section,
-                      user,
-                      date
-                    )
-                  }
-                  disabled={generatingExcel}
-                  className="p-2 text-green-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-                  title="Export to Excel"
-                >
-                  {generatingExcel ? (
-                    <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <FaFileExcel size={18} />
-                  )}
-                </button>
+          <button
+            onClick={() =>
+              generateDailyPDF(
+                setGeneratingPdf,
+                processData(),
+                section,
+                user,
+                date,
+                false
+              )
+            }
+            disabled={generatingPdf}
+            className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            title="Export to PDF"
+          >
+            {generatingPdf ? (
+              <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FaFilePdf size={18} />
+            )}
+          </button>
 
-                <button
-                  onClick={() =>
-                    generateDailyPDF(
-                      setGeneratingPdf,
-                      processData(),
-                      section,
-                      user,
-                      date,
-                      false
-                    )
-                  }
-                  disabled={generatingPdf}
-                  className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-                  title="Export to PDF"
-                >
-                  {generatingPdf ? (
-                    <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <FaFilePdf size={18} />
-                  )}
-                </button>
+          <button
+            onClick={() =>
+              generateDailyPDF(
+                setGeneratingPdf,
+                processData(),
+                section,
+                user,
+                date,
+                true
+              )
+            }
+            disabled={generatingPdf}
+            className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            title="Export to PDF"
+          >
+            {generatingPdf ? (
+              <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+            ) : (
+              <FaFileDownload size={18} />
+            )}
+          </button>
 
-                <button
-                  onClick={() =>
-                    generateDailyPDF(
-                      setGeneratingPdf,
-                      processData(),
-                      section,
-                      user,
-                      date,
-                      true
-                    )
-                  }
-                  disabled={generatingPdf}
-                  className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
-                  title="Export to PDF"
-                >
-                  {generatingPdf ? (
-                    <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
-                  ) : (
-                    <FaFileDownload size={18} />
-                  )}
-                </button>
-
-                <button
-                  onClick={() => setDateModalVisible(true)}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                  title="Select Date"
-                >
-                  <FaCalendarAlt size={18} />
-                </button>
-
-                {/* <button
-                  onClick={() => setSettingsModalVisible(true)}
-                  className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
-                  title="Settings"
-                >
-                  <FaCog size={18} />
-                </button> */}
-              </div>
-            </div>
-          </div>
+          <button
+            onClick={() => setDateModalVisible(true)}
+            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            title="Select Date"
+          >
+            <FaCalendarAlt size={18} />
+          </button>
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto  sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto -mt-6 sm:px-6 lg:px-8 py-6">
           {/* Company Header */}
           <div className="text-center mb-8">
             <Image

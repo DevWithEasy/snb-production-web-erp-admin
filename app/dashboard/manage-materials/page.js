@@ -396,9 +396,6 @@ export default function ManageMaterials() {
                   <option value="kg">Kg</option>
                   <option value="pcs">Pcs</option>
                   <option value="rim">Rim</option>
-                  <option value="ltr">Ltr</option>
-                  <option value="gm">Gm</option>
-                  <option value="ml">Ml</option>
                 </select>
               </div>
             </div>
