@@ -94,7 +94,7 @@ export default function Recieved() {
     return (
       item?.recieved_days
         ?.find((i) => i.date.toString() === selectedDate)
-        ?.qty?.toString() || "0"
+        ?.qty?.toString() || ""
     );
   }
 
