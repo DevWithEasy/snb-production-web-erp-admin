@@ -284,10 +284,10 @@ export default function DailyConsumption() {
   if (!section) {
     return (
       <ProtectedRoute>
-        <div className="h-[calc(100vh-65px)] bg-gray-50 py-8">
+        <div className="h-[calc(100vh-65px)] bg-gray-50 dark:bg-gray-900 py-8 transition-colors duration-300">
           <div className="max-w-4xl mx-auto px-4">
-            <div className="bg-white rounded-lg shadow-md p-6">
-              <h1 className="text-2xl font-bold text-gray-800 mb-6 text-center">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
+              <h1 className="text-2xl font-bold text-gray-800 dark:text-white mb-6 text-center">
                 Daily Consumption Report
               </h1>
               <SectionSelector
@@ -308,30 +308,47 @@ export default function DailyConsumption() {
 
   const renderMaterialSection = (title, items, type) => (
     <>
-      <h3 className="text-lg font-bold text-gray-800 mb-3 mt-6">{title}</h3>
-      <div className="w-full text-xs sm:text-sm md:text-sm">
-        <table className="w-full bg-white">
+      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-3 mt-6">{title}</h3>
+      <div className="w-full text-xs sm:text-sm md:text-sm overflow-x-auto">
+        <table className="w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm transition-colors duration-300">
           <thead>
-            <tr className="bg-blue-600 text-white">
-              <td className="p-2 text-center">Name</td>
-              <td className="p-2 text-right">Opening</td>
-              <td className="p-2 text-right">Recieved</td>
-              <td className="p-2 text-right">Consumption</td>
-              <td className="p-2 text-right">Stock</td>
+            <tr className="bg-blue-600 dark:bg-blue-700 text-white">
+              <td className="p-2 text-center font-medium">Name</td>
+              {columnVisibility.opening && (
+                <td className="p-2 text-right font-medium">Opening</td>
+              )}
+              {columnVisibility.received && (
+                <td className="p-2 text-right font-medium">Received</td>
+              )}
+              {columnVisibility.consumption && (
+                <td className="p-2 text-right font-medium">Consumption</td>
+              )}
+              {columnVisibility.stock && (
+                <td className="p-2 text-right font-medium">Stock</td>
+              )}
             </tr>
           </thead>
           <tbody>
             {items &&
               items.length > 0 &&
               items.map((item, index) => (
-                <tr key={index} className="border-b border-gray-200">
-                  <td className="p-2">{item.name || ""}</td>
-                  <td className="p-2 text-right">{item.opening || 0}</td>
-                  <td className="p-2 text-right">{item.recieved_total || 0}</td>
-                  <td className="p-2 text-right">
-                    {item.consumption_total || 0}
-                  </td>
-                  <td className="p-2 text-right">{item.stock || 0}</td>
+                <tr 
+                  key={index} 
+                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  <td className="p-2 text-gray-900 dark:text-gray-100">{item.name || ""}</td>
+                  {columnVisibility.opening && (
+                    <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.opening || 0}</td>
+                  )}
+                  {columnVisibility.received && (
+                    <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.recieved_total || 0}</td>
+                  )}
+                  {columnVisibility.consumption && (
+                    <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.consumption_total || 0}</td>
+                  )}
+                  {columnVisibility.stock && (
+                    <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.stock || 0}</td>
+                  )}
                 </tr>
               ))}
           </tbody>
@@ -342,28 +359,31 @@ export default function DailyConsumption() {
 
   const renderProductSection = (title, items) => (
     <>
-      <h3 className="text-lg font-bold text-gray-800 mb-3 mt-6">{title}</h3>
-      <div className="w-full text-xs sm:text-sm md:text-sm">
-        <table className="w-full bg-white">
+      <h3 className="text-lg font-bold text-gray-800 dark:text-white mb-3 mt-6">{title}</h3>
+      <div className="w-full text-xs sm:text-sm md:text-sm overflow-x-auto">
+        <table className="w-full bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm transition-colors duration-300">
           <thead>
-            <tr className="bg-blue-600 text-white">
-              <td className="p-2 text-center">Product name</td>
-              <td className="p-2 text-right">Carton Weight (kg)</td>
-              <td className="p-2 text-right">Batch</td>
-              <td className="p-2 text-right">Carton</td>
-              <td className="p-2 text-right">Output (Kg)</td>
+            <tr className="bg-blue-600 dark:bg-blue-700 text-white">
+              <td className="p-2 text-center font-medium">Product name</td>
+              <td className="p-2 text-right font-medium">Carton Weight (kg)</td>
+              <td className="p-2 text-right font-medium">Batch</td>
+              <td className="p-2 text-right font-medium">Carton</td>
+              <td className="p-2 text-right font-medium">Output (Kg)</td>
             </tr>
           </thead>
           <tbody>
             {items &&
               items.length > 0 &&
               items.map((item, index) => (
-                <tr key={index} className="border-b border-gray-200">
-                  <td className="p-2">{item.name || ""}</td>
-                  <td className="p-2 text-right">{item.carton_weight || 0}</td>
-                  <td className="p-2 text-right">{item.batch || 0}</td>
-                  <td className="p-2 text-right">{item.carton || 0}</td>
-                  <td className="p-2 text-right">{item.output || 0}</td>
+                <tr 
+                  key={index} 
+                  className="border-b border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors duration-200"
+                >
+                  <td className="p-2 text-gray-900 dark:text-gray-100">{item.name || ""}</td>
+                  <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.carton_weight || 0}</td>
+                  <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.batch || 0}</td>
+                  <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.carton || 0}</td>
+                  <td className="p-2 text-right text-gray-700 dark:text-gray-300">{item.output || 0}</td>
                 </tr>
               ))}
           </tbody>
@@ -375,9 +395,9 @@ export default function DailyConsumption() {
   if (loading) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-          <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-          <div className="text-gray-600">Loading sections...</div>
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors duration-300">
+          <div className="w-8 h-8 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+          <div className="text-gray-600 dark:text-gray-400">Loading sections...</div>
         </div>
       </ProtectedRoute>
     );
@@ -386,12 +406,12 @@ export default function DailyConsumption() {
   if (error) {
     return (
       <ProtectedRoute>
-        <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+        <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
           <div className="text-center">
-            <div className="text-red-600 text-lg mb-4">{error}</div>
+            <div className="text-red-600 dark:text-red-400 text-lg mb-4">{error}</div>
             <button
               onClick={() => window.location.reload()}
-              className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+              className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
             >
               Reload
             </button>
@@ -403,9 +423,9 @@ export default function DailyConsumption() {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         {/* Header */}
-        <div className="flex justify-end items-center space-x-2 px-2 sm:px-6 lg:px-8">
+        <div className="flex justify-end items-center space-x-2 p-4 sm:px-6 lg:px-8">
           <button
             onClick={() =>
               generateDailyExcel(
@@ -417,11 +437,11 @@ export default function DailyConsumption() {
               )
             }
             disabled={generatingExcel}
-            className="p-2 text-green-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 text-green-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
             title="Export to Excel"
           >
             {generatingExcel ? (
-              <div className="w-5 h-5 border-2 border-green-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-green-600 dark:border-green-400 border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <FaFileExcel size={18} />
             )}
@@ -439,11 +459,11 @@ export default function DailyConsumption() {
               )
             }
             disabled={generatingPdf}
-            className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
             title="Export to PDF"
           >
             {generatingPdf ? (
-              <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-red-600 dark:border-red-400 border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <FaFilePdf size={18} />
             )}
@@ -461,11 +481,11 @@ export default function DailyConsumption() {
               )
             }
             disabled={generatingPdf}
-            className="p-2 text-red-600 hover:bg-gray-100 rounded-lg transition-colors disabled:opacity-50"
+            className="p-2 text-red-600 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors disabled:opacity-50"
             title="Export to PDF"
           >
             {generatingPdf ? (
-              <div className="w-5 h-5 border-2 border-red-600 border-t-transparent rounded-full animate-spin"></div>
+              <div className="w-5 h-5 border-2 border-red-600 dark:border-red-400 border-t-transparent rounded-full animate-spin"></div>
             ) : (
               <FaFileDownload size={18} />
             )}
@@ -473,7 +493,7 @@ export default function DailyConsumption() {
 
           <button
             onClick={() => setDateModalVisible(true)}
-            className="p-2 text-gray-600 hover:bg-gray-100 rounded-lg transition-colors"
+            className="p-2 text-gray-600 dark:text-gray-400 hover:bg-gray-100 dark:hover:bg-gray-700 rounded-lg transition-colors"
             title="Select Date"
           >
             <FaCalendarAlt size={18} />
@@ -481,7 +501,7 @@ export default function DailyConsumption() {
         </div>
 
         {/* Main Content */}
-        <div className="max-w-7xl mx-auto -mt-6 sm:px-6 lg:px-8 py-6">
+        <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-6">
           {/* Company Header */}
           <div className="text-center mb-8">
             <Image
@@ -491,13 +511,13 @@ export default function DailyConsumption() {
               height={80}
               className="mx-auto mb-4 rounded-full"
             />
-            <h2 className="text-2xl font-bold text-red-600 mb-2">
+            <h2 className="text-2xl font-bold text-red-600 dark:text-red-500 mb-2">
               S&B Nice Nice Food Valley Ltd.
             </h2>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               {section.charAt(0).toUpperCase() + section.slice(1)} Section
             </p>
-            <p className="text-gray-600">
+            <p className="text-gray-600 dark:text-gray-400">
               Daily Consumption of {formatMonthNumber(date)}{" "}
               {user?.current_period}
             </p>
@@ -522,7 +542,7 @@ export default function DailyConsumption() {
           {filteredProducts?.length === 0 &&
             filteredMaterials.rm.length === 0 &&
             filteredMaterials.pm.length === 0 && (
-              <div className="text-center py-12 text-gray-500">
+              <div className="text-center py-12 text-gray-500 dark:text-gray-400">
                 No data available for the selected date
               </div>
             )}
@@ -547,7 +567,7 @@ export default function DailyConsumption() {
         {/* Tooltip */}
         {tooltipVisible && (
           <div
-            className="fixed bg-gray-900 text-white px-3 py-2 rounded-lg text-sm max-w-xs z-50 shadow-lg"
+            className="fixed bg-gray-900 dark:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm max-w-xs z-50 shadow-lg transition-colors duration-300"
             style={{
               top: tooltipPosition.y - 50,
               left: Math.max(10, tooltipPosition.x - 150),

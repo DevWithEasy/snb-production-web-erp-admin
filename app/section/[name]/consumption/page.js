@@ -170,7 +170,7 @@ export default function Consumption() {
     // Check if there are any expression errors before saving
     const hasErrors = Object.values(expressionErrors).some(error => error);
     if (hasErrors) {
-      alert(
+      toast.error(
         "Expression Error", 
         "Some fields contain invalid expressions. Please fix them before saving."
       );
@@ -307,10 +307,11 @@ export default function Consumption() {
 
       setConsumption([]);
       setExpressionErrors({});
+      toast.success("Success", "All changes saved successfully");
       console.log("All changes saved to Firestore successfully");
     } catch (error) {
       console.log("Error updating documents:", error);
-      alert("Error", "Failed to save changes: " + error.message);
+      toast.error("Error", "Failed to save changes: " + error.message);
     } finally {
       setUpdating(false);
     }
@@ -365,50 +366,38 @@ export default function Consumption() {
   }
 
   function addConsumption() {
-    if (!product) return toast.error("No Product", "Please select a product");
+    if (!product) return toast.error("Please select a product");
     const exist = consumption.find((i) => i.id === product.id);
     if (exist)
-      return toast.error("Exist", "This product is already in the list");
+      return toast.error("This product is already in the list");
 
     if (!batch && !carton)
-      return toast.error(
-        "Batch and Carton Empty",
-        "Batch and Carton cannot be empty"
-      );
+      return toast.error("Batch and Carton cannot be empty");
 
     // Check for expression errors in batch and carton
     const batchHasError = !isValidExpression(batch);
     const cartonHasError = !isValidExpression(carton);
     
     if (batchHasError || cartonHasError) {
-      alert(
-        "Invalid Expression",
-        "Please fix the mathematical expressions in batch or carton fields."
-      );
+      toast.error("Invalid Expression", "Please fix the mathematical expressions in batch or carton fields.");
       return;
     }
 
     if (!batch || !carton) {
-      return alert(
+      toast.error(
         !batch ? "Batch Empty" : "Carton Empty",
-        `${
-          !batch ? "Batch" : "Carton"
-        } input is empty.Are you are only want to ${
-          !batch ? "Batch" : "Carton"
-        } consumption`,
-        [
-          {
-            text: "Cancel",
-            style: "cancel",
+        `${!batch ? "Batch" : "Carton"} input is empty. Are you sure you want to add consumption with only ${!batch ? "carton" : "batch"}?`,
+        {
+          action: {
+            label: "Submit",
+            onClick: () => addConsumptionCalculation(batch, carton)
           },
-          {
-            text: "Submit",
-            onPress: () => {
-              addConsumptionCalculation(batch, carton);
-            },
-          },
-        ]
+          cancel: {
+            label: "Cancel"
+          }
+        }
       );
+      return;
     }
 
     addConsumptionCalculation(batch, carton);
@@ -477,10 +466,10 @@ export default function Consumption() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading products and materials...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products and materials...</p>
         </div>
       </div>
     );
@@ -488,12 +477,12 @@ export default function Consumption() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <p className="text-red-600 text-lg mb-4">{error}</p>
+          <p className="text-red-600 dark:text-red-400 text-lg mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             Reload
           </button>
@@ -505,15 +494,18 @@ export default function Consumption() {
   const sectionName = section.charAt(0).toUpperCase() + section.slice(1);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-       <div className="container mx-auto md:p-6 lg:p-8 pb-16 md:pb-0">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+       <div className="container mx-auto p-4 md:p-6 lg:p-8 pb-16 md:pb-0">
         {/* Header */}
         <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
             {sectionName} Consumption
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-400 mt-2">
             Manage production and consumption data
+          </p>
+          <p className="text-gray-500 dark:text-gray-500 text-xs md:text-sm mt-1">
+            Current Period: {user?.current_period}
           </p>
         </div>
 

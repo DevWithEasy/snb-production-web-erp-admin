@@ -126,10 +126,10 @@ export default function ConsumptionUpdate() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600">Loading materials...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400">Loading materials...</p>
         </div>
       </div>
     );
@@ -137,12 +137,12 @@ export default function ConsumptionUpdate() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center transition-colors duration-300">
         <div className="text-center">
-          <p className="text-red-600 text-lg mb-4">{error}</p>
+          <p className="text-red-600 dark:text-red-400 text-lg mb-4">{error}</p>
           <button
             onClick={() => window.location.reload()}
-            className="bg-blue-600 text-white px-6 py-2 rounded-lg hover:bg-blue-700 transition-colors"
+            className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
           >
             Reload
           </button>
@@ -154,28 +154,31 @@ export default function ConsumptionUpdate() {
   const sectionName = section?.charAt(0).toUpperCase() + section?.slice(1);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-4xl mx-auto sm:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="max-w-4xl mx-auto p-4 sm:p-6 lg:p-8">
         {/* Header */}
-        <div className="mb-6">
-          <h1 className="text-2xl font-bold text-gray-900">
+        <div className="mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">
             {sectionName} Consumption Update
           </h1>
-          <p className="text-gray-600 mt-2">
+          <p className="text-gray-600 dark:text-gray-400 mt-2 text-sm md:text-base">
             Update daily consumption values for materials
+          </p>
+          <p className="text-gray-500 dark:text-gray-500 text-xs md:text-sm mt-1">
+            Current Period: {user?.current_period}
           </p>
         </div>
 
         {/* Date Picker and Save Button */}
         <div className="flex flex-col sm:flex-row gap-4 items-start sm:items-center mb-6">
           <div className="flex-1 w-full">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Select Date
             </label>
             <select
               value={selectedDate}
               onChange={(e) => setSelectedDate(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
             >
               <option value="">Select a Date</option>
               {Array.from({ length: 31 }, (_, i) => i + 1).map((day) => (
@@ -194,7 +197,7 @@ export default function ConsumptionUpdate() {
               <button
                 onClick={handleChangeSave}
                 disabled={updating}
-                className="w-full sm:w-auto bg-blue-600 hover:bg-blue-700 text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+                className="w-full sm:w-auto bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white px-6 py-2 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
               >
                 {updating ? (
                   <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -207,98 +210,156 @@ export default function ConsumptionUpdate() {
 
         {/* Loading Indicator */}
         {updating && (
-          <div className="flex items-center gap-2 mb-4 p-3 bg-blue-50 rounded-lg">
-            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600"></div>
-            <span className="text-blue-700 text-sm">Updating changes...</span>
+          <div className="flex items-center gap-2 mb-4 p-3 bg-blue-50 dark:bg-blue-900/20 rounded-lg">
+            <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-blue-600 dark:border-blue-400"></div>
+            <span className="text-blue-700 dark:text-blue-300 text-sm">Updating changes...</span>
           </div>
         )}
 
         {/* Materials Sections */}
         {selectedDate !== "" && (
-          <div className="space-y-6">
+          <div className="grid grid-cols-1 lg:grid-cols-2 gap-4 md:gap-6">
             {/* Raw Materials Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Raw Materials</h2>
-                <p className="text-sm text-gray-600 mt-1">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+              <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                  <span className="w-3 h-3 bg-blue-500 rounded-full mr-3"></span>
+                  Raw Materials
+                  <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                    {materials.rm?.length || 0} items
+                  </span>
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                   Update consumption for {selectedDate} {user?.current_period}
                 </p>
               </div>
-              <div className="p-4">
+              <div className="p-4 md:p-6 max-h-96 overflow-y-auto">
                 {materials.rm && materials.rm.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {materials.rm.map((item) => (
-                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg">
+                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                         <div className="flex-1">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {item.name.toString()}
                           </label>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
                             Current: {getFieldValue(item)}
                           </p>
                         </div>
                         <div className="w-full sm:w-48">
-                          <input
-                            type="number"
-                            value={getFieldValue(item)}
-                            onChange={(e) => handleDateChange(e.target.value, item, "rm")}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
-                            placeholder="Enter consumption"
-                            step="0.01"
-                            min="0"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={getFieldValue(item)}
+                              onChange={(e) => handleDateChange(e.target.value, item, "rm")}
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 dark:focus:ring-blue-400 focus:border-blue-500 text-right bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                              placeholder="Enter consumption"
+                              step="0.01"
+                              min="0"
+                            />
+                            <span className="text-xs text-gray-500 dark:text-gray-400 w-8 text-center hidden sm:block">
+                              kg
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    No raw materials available
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 dark:text-gray-500 mb-2">
+                      <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M20 13V6a2 2 0 00-2-2H6a2 2 0 00-2 2v7m16 0v5a2 2 0 01-2 2H6a2 2 0 01-2-2v-5m16 0h-2.586a1 1 0 00-.707.293l-2.414 2.414a1 1 0 01-.707.293h-3.172a1 1 0 01-.707-.293l-2.414-2.414A1 1 0 006.586 13H4" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                      No raw materials available
+                    </p>
                   </div>
                 )}
               </div>
             </div>
 
             {/* Packaging Materials Section */}
-            <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-              <div className="p-4 border-b border-gray-200">
-                <h2 className="text-lg font-semibold text-gray-900">Packaging Materials</h2>
-                <p className="text-sm text-gray-600 mt-1">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+              <div className="p-4 md:p-6 border-b border-gray-200 dark:border-gray-700">
+                <h2 className="text-lg md:text-xl font-semibold text-gray-900 dark:text-white flex items-center">
+                  <span className="w-3 h-3 bg-green-500 rounded-full mr-3"></span>
+                  Packaging Materials
+                  <span className="ml-2 text-sm font-normal text-gray-500 dark:text-gray-400 bg-gray-100 dark:bg-gray-700 px-2 py-1 rounded">
+                    {materials.pm?.length || 0} items
+                  </span>
+                </h2>
+                <p className="text-sm text-gray-600 dark:text-gray-400 mt-2">
                   Update consumption for {selectedDate} {user?.current_period}
                 </p>
               </div>
-              <div className="p-4">
+              <div className="p-4 md:p-6 max-h-96 overflow-y-auto">
                 {materials.pm && materials.pm.length > 0 ? (
-                  <div className="space-y-4">
+                  <div className="space-y-3">
                     {materials.pm.map((item) => (
-                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-4 bg-gray-50 rounded-lg">
+                      <div key={item.id} className="flex flex-col sm:flex-row sm:items-center justify-between gap-3 p-3 rounded-lg border border-gray-100 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200">
                         <div className="flex-1">
-                          <label className="block text-sm font-medium text-gray-700 mb-1">
+                          <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                             {item.name.toString()}
                           </label>
-                          <p className="text-xs text-gray-500">
+                          <p className="text-xs text-gray-500 dark:text-gray-400">
                             Current: {getFieldValue(item)}
                           </p>
                         </div>
                         <div className="w-full sm:w-48">
-                          <input
-                            type="number"
-                            value={getFieldValue(item)}
-                            onChange={(e) => handleDateChange(e.target.value, item, "pm")}
-                            className="w-full px-3 py-2 border border-gray-300 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-blue-500 text-right"
-                            placeholder="Enter consumption"
-                            step="0.01"
-                            min="0"
-                          />
+                          <div className="flex items-center gap-2">
+                            <input
+                              type="number"
+                              value={getFieldValue(item)}
+                              onChange={(e) => handleDateChange(e.target.value, item, "pm")}
+                              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-md shadow-sm focus:outline-none focus:ring-2 focus:ring-green-500 dark:focus:ring-green-400 focus:border-green-500 text-right bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                              placeholder="Enter consumption"
+                              step="0.01"
+                              min="0"
+                            />
+                            <span className="text-xs text-gray-500 dark:text-gray-400 w-8 text-center hidden sm:block">
+                              pcs
+                            </span>
+                          </div>
                         </div>
                       </div>
                     ))}
                   </div>
                 ) : (
-                  <div className="text-center py-8 text-gray-500">
-                    No packaging materials available
+                  <div className="text-center py-8">
+                    <div className="text-gray-400 dark:text-gray-500 mb-2">
+                      <svg className="w-12 h-12 mx-auto" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1} d="M9 12h6m-6 4h6m2 5H7a2 2 0 01-2-2V5a2 2 0 012-2h5.586a1 1 0 01.707.293l5.414 5.414a1 1 0 01.293.707V19a2 2 0 01-2 2z" />
+                      </svg>
+                    </div>
+                    <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
+                      No packaging materials available
+                    </p>
                   </div>
                 )}
+              </div>
+            </div>
+          </div>
+        )}
+
+        {/* Mobile Stats */}
+        {selectedDate !== "" && (
+          <div className="lg:hidden mt-6 grid grid-cols-2 gap-4">
+            <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-blue-600 dark:text-blue-400">
+                {materials.rm?.length || 0}
+              </div>
+              <div className="text-sm text-blue-600 dark:text-blue-400 mt-1">
+                Raw Materials
+              </div>
+            </div>
+            <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 text-center">
+              <div className="text-2xl font-bold text-green-600 dark:text-green-400">
+                {materials.pm?.length || 0}
+              </div>
+              <div className="text-sm text-green-600 dark:text-green-400 mt-1">
+                Packaging Materials
               </div>
             </div>
           </div>
@@ -306,13 +367,13 @@ export default function ConsumptionUpdate() {
 
         {/* Empty State when no date selected */}
         {selectedDate === "" && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-8 text-center">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 md:p-8 lg:p-12 text-center transition-colors duration-300">
             <div className="max-w-md mx-auto">
-              <svg className="w-16 h-16 text-gray-400 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+              <svg className="w-12 h-12 text-gray-400 dark:text-gray-500 mx-auto mb-4" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                 <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M8 7V3m8 4V3m-9 8h10M5 21h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2-2v12a2 2 0 002 2z" />
               </svg>
-              <h3 className="text-lg font-medium text-gray-900 mb-2">Select a Date</h3>
-              <p className="text-gray-500">
+              <h3 className="text-lg md:text-xl font-medium text-gray-900 dark:text-white mb-2">Select a Date</h3>
+              <p className="text-gray-500 dark:text-gray-400 text-sm md:text-base">
                 Please select a date from the dropdown above to view and update consumption values.
               </p>
             </div>
@@ -321,11 +382,11 @@ export default function ConsumptionUpdate() {
 
         {/* Mobile Save Button (sticky at bottom for mobile) */}
         {selectedDate !== "" && (
-          <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white border-t border-gray-200 shadow-lg">
+          <div className="lg:hidden fixed bottom-0 left-0 right-0 p-4 bg-white dark:bg-gray-800 border-t border-gray-200 dark:border-gray-700 shadow-lg safe-area-bottom transition-colors duration-300">
             <button
               onClick={handleChangeSave}
               disabled={updating}
-              className="w-full bg-blue-600 hover:bg-blue-700 text-white py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
+              className="w-full bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 text-white py-3 rounded-lg transition-colors disabled:opacity-50 disabled:cursor-not-allowed flex items-center justify-center gap-2"
             >
               {updating ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -333,6 +394,11 @@ export default function ConsumptionUpdate() {
               {updating ? "Saving..." : "Save Changes"}
             </button>
           </div>
+        )}
+
+        {/* Extra spacing for mobile when save button is visible */}
+        {selectedDate !== "" && (
+          <div className="lg:hidden h-16"></div>
         )}
       </div>
     </div>

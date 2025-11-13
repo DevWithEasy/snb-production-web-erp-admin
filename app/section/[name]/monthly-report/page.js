@@ -274,34 +274,40 @@ export default function MonthlyReport() {
 
   if (loading) {
     return (
-      <div className="flex-1 flex justify-center items-center p-5">
-        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500"></div>
-        <p className="mt-4 text-gray-600">Loading products and materials...</p>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-5 transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-blue-400"></div>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products and materials...</p>
       </div>
     );
   }
 
   if (error) {
     return (
-      <div className="flex-1 flex justify-center items-center p-5">
-        <p className="text-red-500 text-center">{error}</p>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-5 transition-colors duration-300">
+        <p className="text-red-500 dark:text-red-400 text-center mb-4">{error}</p>
+        <button
+          onClick={() => window.location.reload()}
+          className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
+        >
+          Reload
+        </button>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="container mx-auto p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="container mx-auto p-4 md:p-6 lg:p-8">
         {/* Header with Export Buttons */}
-        <div className="flex justify-between items-center mb-6">
-          <h1 className="text-2xl font-bold text-gray-800">
+        <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
+          <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">
             {section && `${section.charAt(0).toUpperCase() + section.slice(1)} Monthly Report`}
           </h1>
-          <div className="flex gap-4">
+          <div className="flex gap-2 md:gap-4">
             <button
               onClick={handleGenerateExcel}
               disabled={generatingExcel}
-              className="flex items-center gap-2 bg-green-500 hover:bg-green-600 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 bg-green-500 dark:bg-green-600 hover:bg-green-600 dark:hover:bg-green-700 text-white px-3 md:px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-sm md:text-base"
             >
               {generatingExcel ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -313,7 +319,7 @@ export default function MonthlyReport() {
             <button
               onClick={handleGeneratePDF}
               disabled={generatingPdf}
-              className="flex items-center gap-2 bg-red-500 hover:bg-red-600 text-white px-4 py-2 rounded-lg transition-colors disabled:opacity-50"
+              className="flex items-center gap-2 bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white px-3 md:px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-sm md:text-base"
             >
               {generatingPdf ? (
                 <div className="animate-spin rounded-full h-4 w-4 border-b-2 border-white"></div>
@@ -326,23 +332,23 @@ export default function MonthlyReport() {
         </div>
 
         {/* Company Header */}
-        <div className="text-center mb-8 bg-white rounded-lg shadow-sm p-6">
-          <div className="w-20 h-20 mx-auto mb-4 rounded-full overflow-hidden">
+        <div className="text-center mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-300">
+          <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full overflow-hidden">
             <Image 
               src="/logo.png" 
               alt="Company Logo" 
               width={80}
               height={80}
-              className="object-cover"
+              className="object-cover w-full h-full"
             />
           </div>
-          <h2 className="text-xl font-bold text-red-600 mb-2">
+          <h2 className="text-lg md:text-xl lg:text-2xl font-bold text-red-600 dark:text-red-500 mb-2">
             S&B Nice Nice Food Valley Ltd.
           </h2>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
             {section && `${section.charAt(0).toUpperCase() + section.slice(1)} Section`}
           </p>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
             Monthly Consumption of {user?.current_period}
           </p>
         </div>

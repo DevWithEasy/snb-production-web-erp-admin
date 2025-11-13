@@ -240,19 +240,19 @@ export default function StockInventory() {
       onClick={() =>
         router.push(`/section/${section}/stock-inventory/${item.id}?type=${type}`)
       }
-      className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-3 cursor-pointer hover:shadow-md transition-all duration-200 active:scale-[0.98]"
+      className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-3 cursor-pointer hover:shadow-md dark:hover:shadow-gray-900 transition-all duration-200 active:scale-[0.98]"
     >
       {/* Header */}
       <div className="flex items-center justify-between mb-3">
         <div className="flex items-center space-x-2 flex-1 min-w-0">
-          <div className="w-8 h-8 bg-blue-100 rounded-full flex items-center justify-center flex-shrink-0">
-            <FaCube className="text-blue-600 text-sm" />
+          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center flex-shrink-0">
+            <FaCube className="text-blue-600 dark:text-blue-400 text-sm" />
           </div>
           <div className="min-w-0 flex-1">
-            <h3 className="font-medium text-gray-900 text-sm truncate">
+            <h3 className="font-medium text-gray-900 dark:text-white text-sm truncate">
               {item.name}
             </h3>
-            <p className="text-xs text-gray-500 truncate">ID: {item.id}</p>
+            <p className="text-xs text-gray-500 dark:text-gray-400 truncate">ID: {item.id}</p>
           </div>
         </div>
       </div>
@@ -261,8 +261,8 @@ export default function StockInventory() {
       <div className="grid grid-cols-2 gap-3">
         {columnVisibility.opening && (
           <div className="text-center">
-            <div className="text-xs text-gray-500 mb-1">Opening</div>
-            <div className="font-semibold text-gray-700">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Opening</div>
+            <div className="font-semibold text-gray-700 dark:text-gray-300">
               {formatNumber(item.opening) || 0}
             </div>
           </div>
@@ -270,8 +270,8 @@ export default function StockInventory() {
         
         {columnVisibility.received && (
           <div className="text-center">
-            <div className="text-xs text-gray-500 mb-1">Received</div>
-            <div className="font-semibold text-blue-600">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Received</div>
+            <div className="font-semibold text-blue-600 dark:text-blue-400">
               {formatNumber(item.recieved_total) || 0}
             </div>
           </div>
@@ -279,8 +279,8 @@ export default function StockInventory() {
         
         {columnVisibility.consumption && (
           <div className="text-center">
-            <div className="text-xs text-gray-500 mb-1">Consumption</div>
-            <div className="font-semibold text-red-600">
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Consumption</div>
+            <div className="font-semibold text-red-600 dark:text-red-400">
               {formatNumber(item.consumption_total || 0)}
             </div>
           </div>
@@ -288,13 +288,13 @@ export default function StockInventory() {
         
         {columnVisibility.stock && (
           <div className="text-center">
-            <div className="text-xs text-gray-500 mb-1">Stock</div>
+            <div className="text-xs text-gray-500 dark:text-gray-400 mb-1">Stock</div>
             <div className={`font-semibold ${
               (item.stock || 0) > 0
-                ? "text-green-600"
+                ? "text-green-600 dark:text-green-400"
                 : (item.stock || 0) < 0
-                ? "text-red-600"
-                : "text-gray-600"
+                ? "text-red-600 dark:text-red-400"
+                : "text-gray-600 dark:text-gray-400"
             }`}>
               {formatNumber(item.stock || 0)}
             </div>
@@ -305,18 +305,18 @@ export default function StockInventory() {
   );
 
   const renderMaterialSection = (title, items, type, icon) => (
-    <div className="bg-white rounded-lg shadow-sm border border-gray-200 overflow-hidden mb-6">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 overflow-hidden mb-6 transition-colors duration-300">
       {/* Table Header */}
-      <div className="bg-linear-to-r from-blue-600 to-blue-700 text-white p-4">
+      <div className="bg-linear-to-r from-blue-600 to-blue-700 dark:from-blue-700 dark:to-blue-800 text-white p-4">
         <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-2">
           <div className="flex items-center space-x-3">
             {icon}
             <h2 className="text-lg sm:text-xl font-bold">{title}</h2>
-            <span className="bg-blue-500 text-white px-2 py-1 rounded-full text-xs sm:text-sm">
+            <span className="bg-blue-500 dark:bg-blue-600 text-white px-2 py-1 rounded-full text-xs sm:text-sm">
               {items.length} items
             </span>
           </div>
-          <div className="text-blue-100 text-xs sm:text-sm">
+          <div className="text-blue-100 dark:text-blue-200 text-xs sm:text-sm">
             Period: {startDate}-{endDate}
           </div>
         </div>
@@ -324,16 +324,16 @@ export default function StockInventory() {
 
       {/* Mobile View Toggle */}
       {isMobile && (
-        <div className="bg-gray-50 border-b border-gray-200 px-4 py-2">
+        <div className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600 px-4 py-2">
           <div className="flex justify-between items-center">
-            <span className="text-sm text-gray-600">View:</span>
-            <div className="flex bg-white rounded-lg border border-gray-300 p-1">
+            <span className="text-sm text-gray-600 dark:text-gray-300">View:</span>
+            <div className="flex bg-white dark:bg-gray-600 rounded-lg border border-gray-300 dark:border-gray-500 p-1">
               <button
                 onClick={() => setMobileView("card")}
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                   mobileView === "card"
                     ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:text-gray-800"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
                 }`}
               >
                 Cards
@@ -343,7 +343,7 @@ export default function StockInventory() {
                 className={`px-3 py-1 rounded text-xs font-medium transition-colors ${
                   mobileView === "table"
                     ? "bg-blue-600 text-white"
-                    : "text-gray-600 hover:text-gray-800"
+                    : "text-gray-600 dark:text-gray-300 hover:text-gray-800 dark:hover:text-white"
                 }`}
               >
                 Table
@@ -363,8 +363,8 @@ export default function StockInventory() {
               ))}
             </div>
           ) : (
-            <div className="text-center py-8 text-gray-500">
-              <FaBox className="text-gray-300 text-3xl mx-auto mb-2" />
+            <div className="text-center py-8 text-gray-500 dark:text-gray-400">
+              <FaBox className="text-gray-300 dark:text-gray-600 text-3xl mx-auto mb-2" />
               <div>No {title.toLowerCase()} found</div>
             </div>
           )}
@@ -375,34 +375,34 @@ export default function StockInventory() {
       {(!isMobile || mobileView === "table") && (
         <div className="overflow-x-auto">
           <table className="w-full">
-            <thead className="bg-gray-50 border-b border-gray-200">
+            <thead className="bg-gray-50 dark:bg-gray-700 border-b border-gray-200 dark:border-gray-600">
               <tr>
-                <th className="text-left p-3 sm:p-4 font-semibold text-gray-700 min-w-[200px] sm:min-w-[300px] text-sm sm:text-base">
+                <th className="text-left p-3 sm:p-4 font-semibold text-gray-700 dark:text-gray-300 min-w-[200px] sm:min-w-[300px] text-xs sm:text-sm">
                   Material Name
                 </th>
                 {columnVisibility.opening && (
-                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 min-w-20 sm:min-w-[120px] text-sm sm:text-base">
+                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 dark:text-gray-300 min-w-20 sm:min-w-[120px] text-xs sm:text-sm">
                     Opening
                   </th>
                 )}
                 {columnVisibility.received && (
-                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 min-w-20 sm:min-w-[120px] text-sm sm:text-base">
+                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 dark:text-gray-300 min-w-20 sm:min-w-[120px] text-xs sm:text-sm">
                     Received
                   </th>
                 )}
                 {columnVisibility.consumption && (
-                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 min-w-20 sm:min-w-[120px] text-sm sm:text-base">
+                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 dark:text-gray-300 min-w-20 sm:min-w-[120px] text-xs sm:text-sm">
                     Consumption
                   </th>
                 )}
                 {columnVisibility.stock && (
-                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 min-w-20 sm:min-w-[120px] text-sm sm:text-base">
+                  <th className="text-center p-3 sm:p-4 font-semibold text-gray-700 dark:text-gray-300 min-w-20 sm:min-w-[120px] text-xs sm:text-sm">
                     Stock
                   </th>
                 )}
               </tr>
             </thead>
-            <tbody className="divide-y divide-gray-100">
+            <tbody className="divide-y divide-gray-100 dark:divide-gray-600">
               {items && items.length > 0 ? (
                 items.map((item, index) => (
                   <tr
@@ -412,7 +412,7 @@ export default function StockInventory() {
                         `/section/${section}/stock-inventory/${item.id}?type=${type}`
                       )
                     }
-                    className="hover:bg-blue-50 cursor-pointer transition-colors duration-200 group"
+                    className="hover:bg-blue-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-200 group"
                   >
                     {/* Material Name */}
                     <td className="px-3 py-2 sm:px-4 sm:py-3">
@@ -421,10 +421,10 @@ export default function StockInventory() {
                         onMouseEnter={(e) => showTooltip(item.name, e)}
                         onMouseLeave={hideTooltip}
                       >
-                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 rounded-full flex items-center justify-center group-hover:bg-blue-200 transition-colors shrink-0">
-                          <FaCube className="text-blue-600 text-xs sm:text-sm" />
+                        <div className="w-6 h-6 sm:w-8 sm:h-8 bg-blue-100 dark:bg-blue-900 rounded-full flex items-center justify-center group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors shrink-0">
+                          <FaCube className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm" />
                         </div>
-                        <div className="font-medium text-gray-900 group-hover:text-blue-700 transition-colors text-sm sm:text-base truncate min-w-0">
+                        <div className="font-medium text-gray-900 dark:text-white group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors text-xs sm:text-sm truncate min-w-0">
                           {item.name}
                         </div>
                       </div>
@@ -433,7 +433,7 @@ export default function StockInventory() {
                     {/* Opening */}
                     {columnVisibility.opening && (
                       <td className="px-2 py-2 sm:px-4 sm:py-3 text-center">
-                        <span className="text-gray-700 text-sm sm:text-base">
+                        <span className="text-gray-700 dark:text-gray-300 text-xs sm:text-sm">
                           {formatNumber(item.opening) || 0}
                         </span>
                       </td>
@@ -442,7 +442,7 @@ export default function StockInventory() {
                     {/* Received */}
                     {columnVisibility.received && (
                       <td className="px-2 py-2 sm:px-4 sm:py-3 text-center">
-                        <span className="text-blue-600 text-sm sm:text-base">
+                        <span className="text-blue-600 dark:text-blue-400 text-xs sm:text-sm">
                           {formatNumber(item.recieved_total) || 0}
                         </span>
                       </td>
@@ -451,7 +451,7 @@ export default function StockInventory() {
                     {/* Consumption */}
                     {columnVisibility.consumption && (
                       <td className="px-2 py-2 sm:px-4 sm:py-3 text-center">
-                        <span className="text-red-600 text-sm sm:text-base">
+                        <span className="text-red-600 dark:text-red-400 text-xs sm:text-sm">
                           {formatNumber(item.consumption_total || 0)}
                         </span>
                       </td>
@@ -461,12 +461,12 @@ export default function StockInventory() {
                     {columnVisibility.stock && (
                       <td className="px-2 py-2 sm:px-4 sm:py-3 text-center">
                         <span
-                          className={`text-sm sm:text-base ${
+                          className={`text-xs sm:text-sm ${
                             (item.stock || 0) > 0
-                              ? "text-green-600"
+                              ? "text-green-600 dark:text-green-400"
                               : (item.stock || 0) < 0
-                              ? "text-red-600"
-                              : "text-gray-600"
+                              ? "text-red-600 dark:text-red-400"
+                              : "text-gray-600 dark:text-gray-400"
                           }`}
                         >
                           {formatNumber(item.stock || 0)}
@@ -481,14 +481,14 @@ export default function StockInventory() {
                     colSpan={
                       Object.values(columnVisibility).filter(Boolean).length + 1
                     }
-                    className="p-6 sm:p-8 text-center text-gray-500"
+                    className="p-6 sm:p-8 text-center text-gray-500 dark:text-gray-400"
                   >
                     <div className="flex flex-col items-center justify-center">
-                      <FaBox className="text-gray-300 text-3xl sm:text-4xl mb-2 sm:mb-3" />
-                      <div className="text-base sm:text-lg font-medium text-gray-400">
+                      <FaBox className="text-gray-300 dark:text-gray-600 text-3xl sm:text-4xl mb-2 sm:mb-3" />
+                      <div className="text-base sm:text-lg font-medium text-gray-400 dark:text-gray-500">
                         No {title.toLowerCase()} found
                       </div>
-                      <div className="text-xs sm:text-sm text-gray-500 mt-1">
+                      <div className="text-xs sm:text-sm text-gray-500 dark:text-gray-400 mt-1">
                         {startDate !== "1" || endDate !== "31"
                           ? "Try adjusting your date filter"
                           : "No materials available for this period"}
@@ -504,8 +504,8 @@ export default function StockInventory() {
 
       {/* Table Footer */}
       {items && items.length > 0 && !isMobile && (
-        <div className="bg-gray-50 border-t border-gray-200 px-4 py-3">
-          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm text-gray-600 gap-2">
+        <div className="bg-gray-50 dark:bg-gray-700 border-t border-gray-200 dark:border-gray-600 px-4 py-3">
+          <div className="flex flex-col sm:flex-row sm:justify-between sm:items-center text-sm text-gray-600 dark:text-gray-400 gap-2">
             <div>
               Showing <span className="font-semibold">{items.length}</span>{" "}
               materials
@@ -532,12 +532,12 @@ export default function StockInventory() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-500 mb-4"></div>
-        <p className="text-gray-600 text-base sm:text-lg text-center">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+        <div className="animate-spin rounded-full h-12 w-12 sm:h-16 sm:w-16 border-b-2 border-blue-500 dark:border-blue-400 mb-4"></div>
+        <p className="text-gray-600 dark:text-gray-400 text-base sm:text-lg text-center">
           Loading materials inventory...
         </p>
-        <p className="text-gray-400 text-sm mt-2 text-center">
+        <p className="text-gray-400 dark:text-gray-500 text-sm mt-2 text-center">
           Please wait while we fetch your data
         </p>
       </div>
@@ -546,18 +546,18 @@ export default function StockInventory() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center p-4">
-        <div className="bg-red-50 border border-red-200 rounded-lg p-4 sm:p-6 max-w-md w-full text-center">
-          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-            <FaBox className="text-red-600 text-lg sm:text-xl" />
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-4 transition-colors duration-300">
+        <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 sm:p-6 max-w-md w-full text-center">
+          <div className="w-10 h-10 sm:w-12 sm:h-12 bg-red-100 dark:bg-red-800 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+            <FaBox className="text-red-600 dark:text-red-400 text-lg sm:text-xl" />
           </div>
-          <h3 className="text-base sm:text-lg font-semibold text-red-800 mb-2">
+          <h3 className="text-base sm:text-lg font-semibold text-red-800 dark:text-red-400 mb-2">
             Loading Error
           </h3>
-          <p className="text-red-600 text-sm sm:text-base mb-4">{error}</p>
+          <p className="text-red-600 dark:text-red-300 text-xs sm:text-sm mb-4">{error}</p>
           <button
             onClick={loadMaterials}
-            className="bg-red-600 text-white px-4 py-2 rounded-lg hover:bg-red-700 transition-colors text-sm sm:text-base w-full sm:w-auto"
+            className="bg-red-600 dark:bg-red-700 text-white px-4 py-2 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors text-xs sm:text-sm w-full sm:w-auto"
           >
             Try Again
           </button>
@@ -567,22 +567,22 @@ export default function StockInventory() {
   }
 
   return (
-    <div className="min-h-screen bg-gray-50">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="container mx-auto sm:p-4 lg:p-6">
         {/* Header */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 sm:p-6 mb-4 sm:mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 sm:p-6 mb-4 sm:mb-6 transition-colors duration-300">
           <div className="flex flex-col lg:flex-row lg:items-center lg:justify-between gap-3 sm:gap-4">
             <div className="flex-1 min-w-0">
-              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 truncate">
+              <h1 className="text-xl sm:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white truncate">
                 {section &&
                   `${
                     section.charAt(0).toUpperCase() + section.slice(1)
                   } Inventory`}
               </h1>
-              <p className="text-gray-600 mt-1 text-sm sm:text-base">
+              <p className="text-gray-600 dark:text-gray-400 mt-1 text-xs sm:text-sm">
                 Manage and track your materials inventory
                 {(startDate !== "1" || endDate !== "31") && (
-                  <span className="text-blue-600 font-medium ml-1 sm:ml-2">
+                  <span className="text-blue-600 dark:text-blue-400 font-medium ml-1 sm:ml-2">
                     (Date Range: {startDate}-{endDate})
                   </span>
                 )}
@@ -591,7 +591,7 @@ export default function StockInventory() {
             <div className="flex gap-2 sm:gap-3 shrink-0">
               <button
                 onClick={() => setDateModalVisible(true)}
-                className="flex items-center space-x-1 sm:space-x-2 bg-blue-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
+                className="flex items-center space-x-1 sm:space-x-2 bg-blue-600 dark:bg-blue-700 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-xs sm:text-sm w-full sm:w-auto justify-center"
                 title="Date Filter"
               >
                 <FaCalendarAlt size={14} className="sm:w-4" />
@@ -600,7 +600,7 @@ export default function StockInventory() {
               </button>
               <button
                 onClick={() => setSettingsModalVisible(true)}
-                className="flex items-center space-x-1 sm:space-x-2 bg-gray-600 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base w-full sm:w-auto justify-center"
+                className="flex items-center space-x-1 sm:space-x-2 bg-gray-600 dark:bg-gray-700 text-white px-3 sm:px-4 py-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors text-xs sm:text-sm w-full sm:w-auto justify-center"
                 title="Column Settings"
               >
                 <FaCog size={14} className="sm:w-4" />
@@ -634,14 +634,14 @@ export default function StockInventory() {
         {/* Tooltip */}
         {tooltipVisible && (
           <div
-            className="fixed z-50 bg-gray-900 text-white px-3 py-2 rounded-lg text-sm max-w-xs shadow-lg"
+            className="fixed z-50 bg-gray-900 dark:bg-gray-700 text-white px-3 py-2 rounded-lg text-sm max-w-xs shadow-lg"
             style={{
               top: tooltipPosition.y - 50,
               left: Math.max(10, tooltipPosition.x - 150),
             }}
           >
             {tooltipContent}
-            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full border-8 border-transparent border-t-gray-900"></div>
+            <div className="absolute bottom-0 left-1/2 transform -translate-x-1/2 translate-y-full border-8 border-transparent border-t-gray-900 dark:border-t-gray-700"></div>
           </div>
         )}
 
@@ -662,27 +662,27 @@ export default function StockInventory() {
             )}
           </div>
         ) : (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-6 sm:p-8 lg:p-12 text-center">
-            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
-              <FaBox className="text-gray-400 text-xl sm:text-2xl" />
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-6 sm:p-8 lg:p-12 text-center transition-colors duration-300">
+            <div className="w-12 h-12 sm:w-16 sm:h-16 bg-gray-100 dark:bg-gray-700 rounded-full flex items-center justify-center mx-auto mb-3 sm:mb-4">
+              <FaBox className="text-gray-400 dark:text-gray-500 text-xl sm:text-2xl" />
             </div>
-            <h3 className="text-lg sm:text-xl font-semibold text-gray-700 mb-2">
+            <h3 className="text-lg sm:text-xl font-semibold text-gray-700 dark:text-gray-300 mb-2">
               No Materials Found
             </h3>
-            <p className="text-gray-500 text-sm sm:text-base mb-4 sm:mb-6">
+            <p className="text-gray-500 dark:text-gray-400 text-xs sm:text-sm mb-4 sm:mb-6">
               No materials data available for the current filters. Try adjusting
               your date range or check your data.
             </p>
             <div className="flex flex-col sm:flex-row justify-center space-y-2 sm:space-y-0 sm:space-x-3">
               <button
                 onClick={resetDateFilter}
-                className="bg-blue-600 text-white px-4 py-2 rounded-lg hover:bg-blue-700 transition-colors text-sm sm:text-base"
+                className="bg-blue-600 dark:bg-blue-700 text-white px-4 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors text-xs sm:text-sm"
               >
                 Reset Date Filter
               </button>
               <button
                 onClick={loadMaterials}
-                className="bg-gray-600 text-white px-4 py-2 rounded-lg hover:bg-gray-700 transition-colors text-sm sm:text-base"
+                className="bg-gray-600 dark:bg-gray-700 text-white px-4 py-2 rounded-lg hover:bg-gray-700 dark:hover:bg-gray-600 transition-colors text-xs sm:text-sm"
               >
                 Reload Data
               </button>
