@@ -83,10 +83,10 @@ export default function Dashboard() {
   const NavigationItem = ({ route, title, Icon }) => (
     <Link
       href={route}
-      className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 group border-b border-gray-100 last:border-b-0"
+      className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 group border-b border-gray-100 dark:border-gray-700 last:border-b-0"
     >
       <Icon
-        className="text-gray-500 group-hover:text-blue-600 transition-colors flex-shrink-0"
+        className="text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-shrink-0"
         size={16}
       />
       <span className="ml-3 font-medium">{title}</span>
@@ -94,17 +94,21 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="h-[calc(100vh-65px)]">
-      <CurrentPeriod user={user} onUserUpdate={updateUserData} />
-      <div className="pb-10">
-        {routes.map((route) => (
-          <NavigationItem
-            key={route.route}
-            route={route.route}
-            title={route.title}
-            Icon={route.icon}
-          />
-        ))}
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-300 overflow-auto">
+      <div className="p-6">
+        <CurrentPeriod user={user} onUserUpdate={updateUserData} />
+        <div className="pb-10 mt-6">
+          <nav className="space-y-2">
+            {routes.map((route) => (
+              <NavigationItem
+                key={route.route}
+                route={route.route}
+                title={route.title}
+                Icon={route.icon}
+              />
+            ))}
+          </nav>
+        </div>
       </div>
     </div>
   );

@@ -1,19 +1,5 @@
-import { Poppins, Roboto_Mono } from "next/font/google";
-import "./globals.css";
 import { Toaster } from "sonner";
-
-const poppins = Poppins({
-  variable: "--font-poppins",
-  subsets: ["latin"],
-  weight: ["300", "400", "500", "600", "700"],
-  display: 'swap',
-});
-
-const robotoMono = Roboto_Mono({
-  variable: "--font-roboto-mono",
-  subsets: ["latin"],
-  display: 'swap',
-});
+import "./globals.css";
 
 export const metadata = {
   title: "S&B Production ERP",
@@ -23,9 +9,7 @@ export const metadata = {
 export default function RootLayout({ children }) {
   return (
     <html lang="en">
-      <body
-        className={`${poppins.variable} ${robotoMono.variable} text-sm font-sans antialiased`}
-      >
+      <body className="text-sm font-sans antialiased bg-white text-black dark:bg-gray-900 dark:text-white transition-colors duration-300">
         {children}
         <Toaster />
       </body>

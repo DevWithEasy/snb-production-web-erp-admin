@@ -87,15 +87,15 @@ export default function RecipeDetails() {
         <div
           key={batchItem.id}
           className={`flex border-b ${
-            isLast ? "border-b-0" : "border-gray-200"
-          } py-2 md:py-3 px-2 md:px-4 items-center`}
+            isLast ? "border-b-0" : "border-gray-200 dark:border-gray-700"
+          } py-2 md:py-3 px-2 md:px-4 items-center hover:bg-gray-50 dark:hover:bg-gray-700/50 transition-colors duration-200`}
         >
-          <div className="flex-1 text-gray-700 text-xs md:text-sm pr-2">{name}</div>
-          <div className="w-12 md:w-16 text-center text-gray-600 text-xs md:text-sm">
+          <div className="flex-1 text-gray-700 dark:text-gray-300 text-xs md:text-sm pr-2">{name}</div>
+          <div className="w-12 md:w-16 text-center text-gray-600 dark:text-gray-400 text-xs md:text-sm">
             {batchItem.unit || "-"}
           </div>
-          <div className="w-20 md:w-24 text-right text-gray-700 text-xs md:text-sm">{batchItem.qty}</div>
-          <div className="w-20 md:w-24 text-right text-gray-700 text-xs md:text-sm">
+          <div className="w-20 md:w-24 text-right text-gray-700 dark:text-gray-300 text-xs md:text-sm">{batchItem.qty}</div>
+          <div className="w-20 md:w-24 text-right text-gray-700 dark:text-gray-300 text-xs md:text-sm">
             {cartonItem ? cartonItem.qty : "-"}
           </div>
         </div>
@@ -105,10 +105,10 @@ export default function RecipeDetails() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 transition-colors duration-300">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 mx-auto"></div>
-          <p className="mt-4 text-gray-600 text-xs md:text-base">Loading recipe details...</p>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-600 dark:border-blue-400 mx-auto"></div>
+          <p className="mt-4 text-gray-600 dark:text-gray-400 text-xs md:text-base">Loading recipe details...</p>
         </div>
       </div>
     );
@@ -116,9 +116,9 @@ export default function RecipeDetails() {
 
   if (error) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 transition-colors duration-300">
         <div className="text-center">
-          <p className="text-red-600 text-xs md:text-lg break-words">{error}</p>
+          <p className="text-red-600 dark:text-red-400 text-xs md:text-lg break-words">{error}</p>
         </div>
       </div>
     );
@@ -126,9 +126,9 @@ export default function RecipeDetails() {
 
   if (!recipeData) {
     return (
-      <div className="min-h-screen bg-gray-50 flex items-center justify-center px-4">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex items-center justify-center px-4 transition-colors duration-300">
         <div className="text-center">
-          <p className="text-gray-600 text-xs md:text-lg">Recipe not found</p>
+          <p className="text-gray-600 dark:text-gray-400 text-xs md:text-lg">Recipe not found</p>
         </div>
       </div>
     );
@@ -137,8 +137,8 @@ export default function RecipeDetails() {
   const sectionName = section.charAt(0).toUpperCase() + section.slice(1);
 
   return (
-    <div className="min-h-screen bg-gray-50">
-      <div className="max-w-6xl mx-auto md:p-6">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
+      <div className="max-w-6xl mx-auto p-4 md:p-6">
         {/* Header */}
         <div className="text-center mb-6 md:mb-8">
           <Image
@@ -148,15 +148,15 @@ export default function RecipeDetails() {
             height={60}
             className="mx-auto mb-3 md:mb-4 rounded-full"
           />
-          <h1 className="text-lg md:text-2xl font-bold text-red-600 mb-2 text-xs md:text-xl">
+          <h1 className="text-lg md:text-2xl font-bold text-red-600 dark:text-red-500 mb-2 text-xs md:text-xl">
             S&B Nice Nice Food Valley Ltd.
           </h1>
 
           <div className="flex flex-col mb-4 space-y-1">
-            <p className="text-gray-600 text-xs md:text-base">
+            <p className="text-gray-600 dark:text-gray-400 text-xs md:text-base">
               <span className="font-semibold">Section:</span> {sectionName}
             </p>
-            <p className="text-gray-600 text-xs md:text-base">
+            <p className="text-gray-600 dark:text-gray-400 text-xs md:text-base">
               <span className="font-semibold">Product:</span> {recipeData.name}
             </p>
           </div>
@@ -171,8 +171,8 @@ export default function RecipeDetails() {
 
         {/* Product Information */}
         {recipeData.info && (
-          <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 md:p-6 mb-4 md:mb-6">
-            <h2 className="text-base md:text-lg font-bold text-gray-900 mb-3 md:mb-4 pb-2 border-b border-gray-200 text-xs md:text-base">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 md:p-6 mb-4 md:mb-6 transition-colors duration-300">
+            <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white mb-3 md:mb-4 pb-2 border-b border-gray-200 dark:border-gray-700 text-xs md:text-base">
               Product Information
             </h2>
             <div className="space-y-2 md:space-y-3">
@@ -184,10 +184,10 @@ export default function RecipeDetails() {
                 return (
                   <div
                     key={index}
-                    className="flex justify-between items-center py-1 md:py-2 border-b border-gray-100 last:border-b-0"
+                    className="flex justify-between items-center py-1 md:py-2 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                   >
-                    <span className="text-gray-600 text-xs md:text-sm flex-1 pr-4">{formattedKey}:</span>
-                    <span className="font-semibold text-gray-900 text-xs md:text-sm text-right min-w-[80px]">
+                    <span className="text-gray-600 dark:text-gray-400 text-xs md:text-sm flex-1 pr-4">{formattedKey}:</span>
+                    <span className="font-semibold text-gray-900 dark:text-white text-xs md:text-sm text-right min-w-[80px]">
                       {value} {getInfoUnit(key)}
                     </span>
                   </div>
@@ -198,15 +198,15 @@ export default function RecipeDetails() {
         )}
 
         {/* Raw Materials Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-4 md:mb-6">
-          <div className="p-3 md:p-4 border-b border-gray-200">
-            <h2 className="text-base md:text-lg font-bold text-gray-900 text-xs md:text-base">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-4 md:mb-6 transition-colors duration-300">
+          <div className="p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white text-xs md:text-base">
               Raw Materials
             </h2>
           </div>
           <div className="p-2 md:p-4">
             {/* Table Header */}
-            <div className="flex font-semibold text-gray-700 bg-gray-50 rounded-lg py-2 md:py-3 px-2 md:px-4 mb-1 md:mb-2 text-xs items-center">
+            <div className="flex font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg py-2 md:py-3 px-2 md:px-4 mb-1 md:mb-2 text-xs items-center">
               <div className="flex-1 pr-2">Name</div>
               <div className="w-12 md:w-16 text-center">Unit</div>
               <div className="w-20 md:w-24 text-right">Batch</div>
@@ -223,15 +223,15 @@ export default function RecipeDetails() {
         </div>
 
         {/* Packaging Materials Table */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200">
-          <div className="p-3 md:p-4 border-b border-gray-200">
-            <h2 className="text-base md:text-lg font-bold text-gray-900 text-xs md:text-base">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
+          <div className="p-3 md:p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-base md:text-lg font-bold text-gray-900 dark:text-white text-xs md:text-base">
               Packaging Materials
             </h2>
           </div>
           <div className="p-2 md:p-4">
             {/* Table Header */}
-            <div className="flex font-semibold text-gray-700 bg-gray-50 rounded-lg py-2 md:py-3 px-2 md:px-4 mb-1 md:mb-2 text-xs items-center">
+            <div className="flex font-semibold text-gray-700 dark:text-gray-300 bg-gray-50 dark:bg-gray-700 rounded-lg py-2 md:py-3 px-2 md:px-4 mb-1 md:mb-2 text-xs items-center">
               <div className="flex-1 pr-2">Name</div>
               <div className="w-12 md:w-16 text-center">Unit</div>
               <div className="w-20 md:w-24 text-right">Batch</div>

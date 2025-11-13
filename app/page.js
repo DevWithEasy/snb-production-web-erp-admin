@@ -42,16 +42,17 @@ export default function Home() {
 
   if (loading) {
     return (
-      <div className="min-h-screen flex items-center justify-center bg-gray-50">
+      <div className="min-h-screen flex items-center justify-center bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
         <div className="text-center">
-          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 mx-auto"></div>
+          <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-indigo-600 dark:border-indigo-400 mx-auto"></div>
+          <p className="mt-3 text-gray-600 dark:text-gray-300">Loading...</p>
         </div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 flex items-center justify-center p-4">
+    <div className="min-h-screen bg-gradient-to-br from-blue-50 to-purple-100 dark:from-gray-900 dark:to-gray-800 flex items-center justify-center p-4 transition-colors duration-300">
       {/* Mobile App Splash Screen Container */}
       <div className="w-full max-w-md mx-auto flex flex-col items-center justify-center min-h-screen">
         
@@ -70,12 +71,12 @@ export default function Home() {
           </div>
 
           {/* App Name */}
-          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 mb-6 text-center">
+          <h1 className="text-2xl md:text-3xl lg:text-4xl font-bold text-gray-900 dark:text-white mb-6 text-center">
             S&B Production ERP
           </h1>
 
           {/* Developer Info */}
-          <p className="text-lg md:text-xl text-gray-600 mb-12 text-center">
+          <p className="text-lg md:text-xl text-gray-600 dark:text-gray-300 mb-12 text-center">
             Developed By - Robi App Lab
           </p>
         </div>
@@ -83,11 +84,11 @@ export default function Home() {
         {/* Loading Indicator - Bottom positioned like mobile apps */}
         <div className="w-full px-6 pb-8">
           <div className="flex justify-center items-center space-x-2">
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse"></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
-            <div className="w-2 h-2 bg-blue-500 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
+            <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse"></div>
+            <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.2s' }}></div>
+            <div className="w-2 h-2 bg-blue-500 dark:bg-blue-400 rounded-full animate-pulse" style={{ animationDelay: '0.4s' }}></div>
           </div>
-          <p className="text-center text-gray-500 text-sm mt-3">
+          <p className="text-center text-gray-500 dark:text-gray-400 text-sm mt-3">
             Loading...
           </p>
         </div>

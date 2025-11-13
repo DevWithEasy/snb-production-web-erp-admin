@@ -27,10 +27,10 @@ const NavigationItem = ({ route, title, Icon, onClick }) => (
   <Link
     href={route}
     onClick={onClick}
-    className="flex items-center px-4 py-3 text-gray-700 hover:bg-blue-50 hover:text-blue-600 rounded-lg transition-all duration-200 group border-b border-gray-100 last:border-b-0"
+    className="flex items-center px-4 py-3 text-gray-700 dark:text-gray-300 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:text-blue-600 dark:hover:text-blue-400 rounded-lg transition-all duration-200 group border-b border-gray-100 dark:border-gray-700 last:border-b-0"
   >
     <Icon
-      className="text-gray-500 group-hover:text-blue-600 transition-colors flex-shrink-0"
+      className="text-gray-500 dark:text-gray-400 group-hover:text-blue-600 dark:group-hover:text-blue-400 transition-colors flex-shrink-0"
       size={16}
     />
     <span className="ml-3 font-medium">{title}</span>
@@ -50,26 +50,26 @@ const MobileSidebar = ({
     {/* Backdrop */}
     {mobileMenuOpen && (
       <div 
-        className="fixed inset-0 bg-gray-500/50 bg-opacity-50 z-40 lg:hidden"
+        className="fixed inset-0 bg-gray-500/50 dark:bg-gray-900/80 bg-opacity-50 z-40 lg:hidden"
         onClick={closeMobileMenu}
       />
     )}
     
     {/* Sidebar */}
     <div className={`
-      fixed top-0 left-0 h-full bg-white shadow-xl z-50 transform transition-transform duration-300 ease-in-out
+      fixed top-0 left-0 h-full bg-white dark:bg-gray-800 shadow-xl z-50 transform transition-transform duration-300 ease-in-out
       ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
       w-80 lg:hidden
     `}>
       {/* Mobile Sidebar Header */}
-      <div className="flex items-center justify-between p-4 border-b border-gray-200 bg-green-600 text-white">
+      <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-green-600 dark:bg-green-700 text-white">
         <div>
           <h2 className="text-xl font-bold">{getSectionName(sectionName)} Section</h2>
-          <p className="text-green-100 text-sm">Welcome, {user?.name || user?.username}</p>
+          <p className="text-green-100 dark:text-green-200 text-sm">Welcome, {user?.name || user?.username}</p>
         </div>
         <button
           onClick={closeMobileMenu}
-          className="p-2 rounded-md hover:bg-green-700 transition"
+          className="p-2 rounded-md hover:bg-green-700 dark:hover:bg-green-600 transition"
         >
           <FaTimes size={20} />
         </button>
@@ -89,10 +89,10 @@ const MobileSidebar = ({
           ))}
         </nav>
         {/* Logout Button */}
-        <div className="mt-2 p-4 border-t border-gray-200">
+        <div className="mt-2 p-4 border-t border-gray-200 dark:border-gray-700">
           <button
             onClick={handleLogout}
-            className="w-full bg-red-600 text-white py-3 rounded-lg hover:bg-red-700 transition font-medium flex items-center justify-center"
+            className="w-full bg-red-600 dark:bg-red-700 text-white py-3 rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition font-medium flex items-center justify-center"
           >
             <span>Log Out</span>
           </button>
@@ -214,9 +214,9 @@ export default function SectionLayout({ children }) {
 
   return (
     <ProtectedRoute>
-      <div className="min-h-screen bg-gray-50 relative">
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 relative">
         {/* Navigation - Fixed at top */}
-        <nav className="bg-white shadow-sm h-16 lg:h-[65px] fixed top-0 left-0 right-0 z-30">
+        <nav className="bg-white dark:bg-gray-800 shadow-sm h-16 lg:h-[65px] fixed top-0 left-0 right-0 z-30 transition-colors duration-300">
           <div className="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 h-full">
             <div className="flex justify-between items-center h-full">
               {/* Left Section */}
@@ -224,7 +224,7 @@ export default function SectionLayout({ children }) {
                 {/* Mobile Menu Button */}
                 <button
                   onClick={toggleMobileMenu}
-                  className="p-2 rounded-md hover:bg-gray-100 transition text-gray-600 lg:hidden"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 dark:text-gray-300 lg:hidden"
                   title="Open Menu"
                 >
                   <FaBars size={20} />
@@ -233,20 +233,20 @@ export default function SectionLayout({ children }) {
                 {/* Desktop Sidebar Toggle */}
                 <button
                   onClick={toggleSidebar}
-                  className="p-2 rounded-md hover:bg-gray-100 transition text-gray-600 hidden lg:block"
+                  className="p-2 rounded-md hover:bg-gray-100 dark:hover:bg-gray-700 transition text-gray-600 dark:text-gray-300 hidden lg:block"
                   title={sidebarOpen ? "Hide Sidebar" : "Show Sidebar"}
                 >
                   {sidebarOpen ? <FaTimes size={18} /> : <FaBars size={18} />}
                 </button>
 
                 <div className="flex flex-col">
-                  <h1 className="text-lg lg:text-xl font-semibold text-gray-900">
+                  <h1 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
                     {getSectionName(name)} Section
                     {deviceType === "tablet" && (
-                      <span className="text-sm text-gray-500 ml-2">(Tablet)</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">(Tablet)</span>
                     )}
                   </h1>
-                  <p className="text-xs text-gray-500 hidden sm:block">
+                  <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
                     Section Management Dashboard
                   </p>
                 </div>
@@ -254,14 +254,14 @@ export default function SectionLayout({ children }) {
 
               {/* Right Section */}
               <div className="flex items-center space-x-4">
-                <span className="text-gray-700 text-sm lg:text-base hidden sm:inline">
+                <span className="text-gray-700 dark:text-gray-300 text-sm lg:text-base hidden sm:inline">
                   Welcome, {user?.name || user?.username}
                 </span>
                 
                 {/* Back to Dashboard - Desktop */}
                 {user?.role === 'admin' && <Link
                   href="/dashboard"
-                  className="bg-gray-600 text-white px-3 py-2 rounded-md hover:bg-gray-700 transition text-sm whitespace-nowrap hidden lg:flex items-center"
+                  className="bg-gray-600 dark:bg-gray-700 text-white px-3 py-2 rounded-md hover:bg-gray-700 dark:hover:bg-gray-600 transition text-sm whitespace-nowrap hidden lg:flex items-center"
                 >
                   <FaArrowLeft className="mr-2" size={14} />
                   Dashboard
@@ -269,7 +269,7 @@ export default function SectionLayout({ children }) {
                 
                 <button
                   onClick={handleLogout}
-                  className="bg-red-600 text-white px-3 py-2 rounded-md hover:bg-red-700 transition text-sm whitespace-nowrap"
+                  className="bg-red-600 dark:bg-red-700 text-white px-3 py-2 rounded-md hover:bg-red-700 dark:hover:bg-red-600 transition text-sm whitespace-nowrap"
                 >
                   Log Out
                 </button>
@@ -293,7 +293,7 @@ export default function SectionLayout({ children }) {
           {/* Desktop/Tablet Sidebar */}
           <div
             className={`
-              bg-white border-r border-gray-200 overflow-y-auto transition-all duration-300 ease-in-out 
+              bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto transition-all duration-300 ease-in-out 
               hidden lg:block
               ${sidebarOpen ? (deviceType === "tablet" ? "w-48" : "w-64") : "w-0"}
             `}
@@ -301,7 +301,7 @@ export default function SectionLayout({ children }) {
             <div className={`p-4 ${sidebarOpen ? "block" : "hidden"}`}>
               {/* Device Indicator - শুধুমাত্র development এর জন্য */}
               {process.env.NODE_ENV === "development" && (
-                <div className="mb-4 px-3 py-2 bg-green-100 text-green-700 text-xs rounded text-center">
+                <div className="mb-4 px-3 py-2 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-300 text-xs rounded text-center">
                   {deviceType.toUpperCase()} MODE - {name?.toUpperCase()}
                 </div>
               )}
@@ -330,7 +330,7 @@ export default function SectionLayout({ children }) {
             `}
           >
             {/* Main Content */}
-            <div className="p-4 lg:p-6">
+            <div className="p-4 lg:p-6 bg-gray-50 dark:bg-gray-900 min-h-full transition-colors duration-300">
               {children}
             </div>
           </div>
