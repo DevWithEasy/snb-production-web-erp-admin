@@ -437,20 +437,20 @@ export default function ManageProducts() {
   const isAddCheck = addProductsView || addInfoView;
 
   return (
-    <div className="min-h-screen bg-gray-50 p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Main Container */}
-        <div className={`${isAddCheck ? 'bg-white border border-gray-300 rounded-lg p-4 mb-4 shadow-sm' : 'mb-4'}`}>
+        <div className={`${isAddCheck ? 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 mb-4 shadow-sm' : 'mb-4'} transition-colors duration-300`}>
           
           {/* Section Selection */}
           <div className="mb-4">
-            <label className="block text-sm font-medium text-gray-700 mb-2">
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
               Section
             </label>
             <select
               value={section || ""}
               onChange={(e) => setSection(e.target.value)}
-              className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white"
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
             >
               {sections.map(({ label, value }) => (
                 <option key={value} value={value}>
@@ -465,7 +465,7 @@ export default function ManageProducts() {
             <div>
               <button
                 onClick={() => setShowInfoField(!showInfoField)}
-                className="text-blue-600 hover:text-blue-800 text-sm font-medium self-end mb-4"
+                className="text-blue-600 dark:text-blue-400 hover:text-blue-800 dark:hover:text-blue-300 text-sm font-medium self-end mb-4 transition-colors"
               >
                 {showInfoField ? "Hide" : "Show"} Product Info fields
               </button>
@@ -474,7 +474,7 @@ export default function ManageProducts() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4 mb-4">
                   {Object.keys(info).map((key) => (
                     <div key={key} className="mb-3">
-                      <label className="block text-sm font-medium text-gray-700 mb-1">
+                      <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-1">
                         {formatFieldName(key)}
                       </label>
                       <input
@@ -483,7 +483,7 @@ export default function ManageProducts() {
                         onChange={(e) => handleChangeInfo(key, e.target.value)}
                         placeholder={key}
                         disabled={loading}
-                        className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                        className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-600 transition-colors duration-200"
                       />
                     </div>
                   ))}
@@ -491,7 +491,7 @@ export default function ManageProducts() {
               )}
 
               <div className="mb-4">
-                <label className="block text-sm font-medium text-gray-700 mb-2">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                   Product Name
                 </label>
                 <input
@@ -500,24 +500,24 @@ export default function ManageProducts() {
                   onChange={(e) => setName(e.target.value)}
                   placeholder="Enter Product name"
                   disabled={loading}
-                  className="w-full px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent disabled:bg-gray-100"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-600 transition-colors duration-200"
                 />
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setAddProductsView(false)}
-                  className="flex-1 py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+                  className="flex-1 py-2 px-4 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-colors duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={handleSubmit}
                   disabled={loading}
-                  className={`flex-1 py-2 px-4 rounded-lg font-medium text-white ${
+                  className={`flex-1 py-2 px-4 rounded-lg font-medium text-white transition-colors duration-200 ${
                     loading 
-                      ? "bg-gray-400 cursor-not-allowed" 
-                      : "bg-blue-600 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500"
+                      ? "bg-gray-400 dark:bg-gray-600 cursor-not-allowed" 
+                      : "bg-blue-600 dark:bg-blue-700 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500"
                   }`}
                 >
                   {loading ? (
@@ -542,27 +542,27 @@ export default function ManageProducts() {
                   value={newFieldName}
                   onChange={(e) => setNewFieldName(e.target.value)}
                   placeholder="Field name"
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                 />
                 <input
                   type="text"
                   value={newFieldValue}
                   onChange={(e) => setNewFieldValue(e.target.value)}
                   placeholder="Field value"
-                  className="px-3 py-2 border border-gray-300 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+                  className="px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                 />
               </div>
 
               <div className="flex gap-3">
                 <button
                   onClick={() => setAddInfoView(false)}
-                  className="flex-1 py-2 px-4 bg-red-600 text-white rounded-lg hover:bg-red-700 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium"
+                  className="flex-1 py-2 px-4 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 font-medium transition-colors duration-200"
                 >
                   Cancel
                 </button>
                 <button
                   onClick={addInfoField}
-                  className="flex-1 py-2 px-4 bg-green-600 text-white rounded-lg hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 font-medium"
+                  className="flex-1 py-2 px-4 bg-green-600 dark:bg-green-700 text-white rounded-lg hover:bg-green-700 dark:hover:bg-green-600 focus:outline-none focus:ring-2 focus:ring-green-500 font-medium transition-colors duration-200"
                 >
                   + Add Field
                 </button>
@@ -572,7 +572,7 @@ export default function ManageProducts() {
         </div>
 
         {/* View Toggle Buttons */}
-        <div className="flex mb-6 bg-white rounded-lg overflow-hidden shadow-sm border border-gray-200">
+        <div className="flex mb-6 bg-white dark:bg-gray-800 rounded-lg overflow-hidden shadow-sm border border-gray-200 dark:border-gray-700 transition-colors duration-300">
           <button
             onClick={() => {
               setProductsView(true);
@@ -582,7 +582,7 @@ export default function ManageProducts() {
             className={`flex-1 py-3 font-medium transition-colors ${
               productsView 
                 ? "bg-blue-600 text-white" 
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             }`}
           >
             Products
@@ -596,7 +596,7 @@ export default function ManageProducts() {
             className={`flex-1 py-3 font-medium transition-colors ${
               !productsView 
                 ? "bg-blue-600 text-white" 
-                : "bg-white text-gray-700 hover:bg-gray-50"
+                : "bg-white dark:bg-gray-800 text-gray-700 dark:text-gray-300 hover:bg-gray-50 dark:hover:bg-gray-700"
             }`}
           >
             Info Manage
@@ -630,8 +630,8 @@ export default function ManageProducts() {
 
         {/* Error Display */}
         {error && (
-          <div className="bg-red-50 border border-red-200 rounded-lg p-4 mt-4">
-            <div className="text-red-700 text-center">{error}</div>
+          <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 mt-4 transition-colors duration-300">
+            <div className="text-red-700 dark:text-red-400 text-center">{error}</div>
           </div>
         )}
 

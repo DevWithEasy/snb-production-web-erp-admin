@@ -47,22 +47,22 @@ export default function UsersSection() {
 
   if (loading) {
     return (
-      <div className="min-h-screen bg-gray-50 flex flex-col items-center justify-center">
-        <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <div className="text-gray-600">Loading sections...</div>
+      <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors duration-300">
+        <div className="w-8 h-8 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
+        <div className="text-gray-600 dark:text-gray-400">Loading sections...</div>
       </div>
     );
   }
 
   return (
-    <div className="min-h-screen bg-gray-50 md:p-4">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 md:p-4 transition-colors duration-300">
       <div className="max-w-7xl mx-auto">
         {/* Header */}
-        <div className="mb-8">
-          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 mb-2">
+        <div className="mb-8 p-4 md:p-0">
+          <h1 className="text-2xl md:text-3xl font-bold text-gray-800 dark:text-white mb-2">
             Sections Management
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Manage and navigate to different production sections
           </p>
         </div>
@@ -91,18 +91,19 @@ export default function UsersSection() {
             }
             console.log("Complete Update");
           }}
+          className="hidden" // Hide the action button
         >
           ACTION
         </button>
 
         {/* Search and Stats Bar */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 p-4 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 p-4 mb-6 transition-colors duration-300">
           <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
             <div className="flex items-center space-x-4">
-              <div className="bg-blue-100 text-blue-800 px-3 py-1 rounded-full text-sm font-medium">
+              <div className="bg-blue-100 dark:bg-blue-900/30 text-blue-800 dark:text-blue-300 px-3 py-1 rounded-full text-sm font-medium transition-colors">
                 Total: {sections.length} sections
               </div>
-              <div className="bg-green-100 text-green-800 px-3 py-1 rounded-full text-sm font-medium">
+              <div className="bg-green-100 dark:bg-green-900/30 text-green-800 dark:text-green-300 px-3 py-1 rounded-full text-sm font-medium transition-colors">
                 Showing: {filteredSections.length} sections
               </div>
             </div>
@@ -117,16 +118,16 @@ export default function UsersSection() {
                 placeholder="Search sections..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="w-full pl-10 pr-4 py-2 border border-gray-300 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 transition-colors"
+                className="w-full pl-10 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:ring-2 focus:ring-blue-500 focus:border-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
               />
             </div>
           </div>
         </div>
 
         {/* Sections Grid */}
-        <div className="bg-white rounded-lg shadow-sm border border-gray-200 mb-20">
-          <div className="p-4 border-b border-gray-200">
-            <h2 className="text-lg font-semibold text-gray-800">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm border border-gray-200 dark:border-gray-700 mb-20 transition-colors duration-300">
+          <div className="p-4 border-b border-gray-200 dark:border-gray-700">
+            <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
               Available Sections
             </h2>
           </div>
@@ -142,32 +143,41 @@ export default function UsersSection() {
                       href={`/section/${item.value}`}
                       className="group block"
                     >
-                      <div className="flex flex-row md:flex-col space-x-2 items-center md:space-x-0 bg-white border border-gray-200 rounded-xl p-6 hover:shadow-lg hover:border-blue-500 transition-all duration-300 transform hover:-translate-y-1 group-hover:bg-blue-50">
+                      <div className="flex flex-row md:flex-col space-x-2 md:space-x-0 items-center bg-white dark:bg-gray-800 border border-gray-200 dark:border-gray-700 rounded-xl p-4 md:p-6 hover:shadow-lg hover:border-blue-500 dark:hover:border-blue-400 transition-all duration-300 transform hover:-translate-y-1 group-hover:bg-blue-50 dark:group-hover:bg-gray-700">
                         {/* Icon */}
-                        <div className="flex justify-center mb-4">
-                          <div className="bg-blue-100 p-3 rounded-full group-hover:bg-blue-200 transition-colors">
+                        <div className="flex justify-center mb-2 md:mb-4">
+                          <div className="bg-blue-100 dark:bg-blue-900/30 p-3 rounded-full group-hover:bg-blue-200 dark:group-hover:bg-blue-800 transition-colors">
                             <IconComponent
-                              className="text-blue-600 group-hover:text-blue-700"
+                              className="text-blue-600 dark:text-blue-400 group-hover:text-blue-700 dark:group-hover:text-blue-300"
                               size={20}
                             />
                           </div>
                         </div>
 
                         {/* Section Name */}
-                        <h3 className="text-sm sm:text-lg md:text-lg font-semibold text-gray-800 text-center mb-2 group-hover:text-blue-700 transition-colors line-clamp-2">
-                          {item.label}
-                        </h3>
+                        <div className="flex-1 md:text-center">
+                          <h3 className="text-sm md:text-lg font-semibold text-gray-800 dark:text-white mb-1 md:mb-2 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors line-clamp-2">
+                            {item.label}
+                          </h3>
 
-                        {/* Section Code */}
-                        <div className="text-center hidden md:block">
-                          <span className="inline-block bg-gray-100 text-gray-600 text-sm px-3 py-1 rounded-full group-hover:bg-blue-100 group-hover:text-blue-700 transition-colors">
-                            {item.value}
-                          </span>
+                          {/* Section Code - Mobile */}
+                          <div className="md:hidden">
+                            <span className="inline-block bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-xs px-2 py-1 rounded-full group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
+                              {item.value}
+                            </span>
+                          </div>
+
+                          {/* Section Code - Desktop */}
+                          <div className="hidden md:block">
+                            <span className="inline-block bg-gray-100 dark:bg-gray-700 text-gray-600 dark:text-gray-400 text-sm px-3 py-1 rounded-full group-hover:bg-blue-100 dark:group-hover:bg-blue-900/30 group-hover:text-blue-700 dark:group-hover:text-blue-400 transition-colors">
+                              {item.value}
+                            </span>
+                          </div>
                         </div>
 
                         {/* Hover Indicator */}
-                        <div className="flex-1 mt-4 text-center">
-                          <span className="text-blue-600 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
+                        <div className="hidden md:flex mt-4 text-center">
+                          <span className="text-blue-600 dark:text-blue-400 text-sm font-medium opacity-0 group-hover:opacity-100 transition-opacity">
                             Click to open →
                           </span>
                         </div>
@@ -178,13 +188,13 @@ export default function UsersSection() {
               </div>
             ) : (
               <div className="text-center py-12">
-                <div className="bg-gray-100 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaIndustry className="text-gray-400" size={24} />
+                <div className="bg-gray-100 dark:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
+                  <FaIndustry className="text-gray-400 dark:text-gray-500" size={24} />
                 </div>
-                <h3 className="text-lg font-medium text-gray-900 mb-2">
+                <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                   No sections found
                 </h3>
-                <p className="text-gray-500 mb-4">
+                <p className="text-gray-500 dark:text-gray-400 mb-4">
                   {searchTerm
                     ? "No sections match your search."
                     : "No sections available."}
@@ -192,7 +202,7 @@ export default function UsersSection() {
                 {searchTerm && (
                   <button
                     onClick={() => setSearchTerm("")}
-                    className="text-blue-600 hover:text-blue-700 font-medium"
+                    className="text-blue-600 dark:text-blue-400 hover:text-blue-700 dark:hover:text-blue-300 font-medium transition-colors"
                   >
                     Clear search
                   </button>
@@ -204,8 +214,8 @@ export default function UsersSection() {
 
         {/* Quick Stats */}
         {sections.length > 0 && (
-          <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-            <div className="text-center text-blue-800 text-sm">
+          <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 transition-colors duration-300">
+            <div className="text-center text-blue-800 dark:text-blue-300 text-sm">
               💡 <strong>Tip:</strong> Click on any section card to navigate to
               its dashboard
             </div>

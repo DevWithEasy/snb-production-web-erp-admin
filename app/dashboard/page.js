@@ -92,7 +92,7 @@ export default function Dashboard() {
   );
 
   return (
-    <div className="h-[calc(100vh-65px)] bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-300">
+    <div className="bg-white dark:bg-gray-800 rounded-lg shadow-sm transition-colors duration-300">
       <div className="p-6">
         <CurrentPeriod user={user} onUserUpdate={updateUserData} />
         <div className="pb-10 mt-6">

@@ -1,12 +1,11 @@
 "use client";
+import ImportRecipeModal from "@/components/ImportRecipeModal";
 import Firebase from "@/utils/firebase";
 import formatNumberExcel from "@/utils/formatNumberExcel";
-import React, { useState, useRef, useEffect } from "react";
+import { useEffect, useRef, useState } from "react";
 import { FaSearch } from "react-icons/fa";
-import * as XLSX from "xlsx";
-import ImportRecipeModal from "@/components/ImportRecipeModal";
 import { FaRegCircleCheck } from "react-icons/fa6";
-import { isEqual } from "lodash";
+import * as XLSX from "xlsx";
 
 export default function ImportRecipe() {
   const [excelFile, setExcelFile] = useState(null);
