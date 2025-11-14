@@ -16,7 +16,7 @@ export default function UsersSection() {
       try {
         setLoading(true);
         const sectionsData = await Firebase.getDocuments("sections");
-        setSections(sectionsData || []);
+        setSections(sectionsData.sort((a,b)=>a?.label.localeCompare(b?.label)) || []);
       } catch (error) {
         console.error("Error fetching sections:", error);
         alert("Failed to load sections");

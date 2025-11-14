@@ -495,7 +495,7 @@ export default function Consumption() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-       <div className="container mx-auto p-4 md:p-6 lg:p-8 pb-16 md:pb-0">
+       <div className="container mx-auto md:p-4 lg:p-6 pb-16 md:pb-0">
         {/* Header */}
         <div className="mb-6">
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-900 dark:text-white">

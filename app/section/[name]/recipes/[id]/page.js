@@ -138,7 +138,7 @@ export default function RecipeDetails() {
 
   return (
     <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
-      <div className="max-w-6xl mx-auto p-4 md:p-6">
+      <div className="max-w-6xl mx-auto md:p-4">
         {/* Header */}
         <div className="text-center mb-6 md:mb-8">
           <Image
@@ -148,7 +148,7 @@ export default function RecipeDetails() {
             height={60}
             className="mx-auto mb-3 md:mb-4 rounded-full"
           />
-          <h1 className="text-lg md:text-2xl font-bold text-red-600 dark:text-red-500 mb-2 text-xs md:text-xl">
+          <h1 className="font-bold text-red-600 dark:text-red-500 mb-2 text-lg md:text-xl">
             S&B Nice Nice Food Valley Ltd.
           </h1>
 

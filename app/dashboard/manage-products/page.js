@@ -437,7 +437,7 @@ export default function ManageProducts() {
   const isAddCheck = addProductsView || addInfoView;
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 p-4 transition-colors duration-300">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-4xl mx-auto">
         {/* Main Container */}
         <div className={`${isAddCheck ? 'bg-white dark:bg-gray-800 border border-gray-300 dark:border-gray-700 rounded-lg p-4 mb-4 shadow-sm' : 'mb-4'} transition-colors duration-300`}>

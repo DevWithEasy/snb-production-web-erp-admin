@@ -126,9 +126,9 @@ export default function DailyConsumption() {
     }
 
     const recieved_total =
-      item.recieved_days.find((day) => day.date === findDate)?.qty || 0;
+      item.recieved_days?.find((day) => day.date === findDate)?.qty || 0;
     const consumption_total =
-      item.consumption_days.find((day) => day.date === findDate)?.qty || 0;
+      item.consumption_days?.find((day) => day.date === findDate)?.qty || 0;
 
     if (date > 1) {
       const prev_recieved_total = getTotal(item.recieved_days, findDate);

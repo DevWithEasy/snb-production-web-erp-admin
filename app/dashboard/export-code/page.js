@@ -420,7 +420,7 @@ export default function ExportProductsMaterialsCode() {
   };
 
   return (
-    <div className="h-[calc(100vh-65px)] bg-gray-50 dark:bg-gray-900 p-6 transition-colors duration-300">
+    <div className="h-[calc(100vh-65px)] bg-gray-50 dark:bg-gray-900 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">

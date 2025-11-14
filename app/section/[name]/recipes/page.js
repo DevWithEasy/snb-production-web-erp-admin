@@ -63,7 +63,7 @@ export default function Products() {
   const sectionName = section?.charAt(0).toUpperCase() + section?.slice(1) || 'Products';
 
   return (
-    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 p-4 md:p-6 lg:p-8">
+    <div className="min-h-screen bg-gray-50 dark:bg-gray-900 transition-colors duration-300 md:p-4 lg:p-6">
       <div className="max-w-4xl mx-auto">
         <Header sectionName={sectionName} productsCount={products.length} />
         
