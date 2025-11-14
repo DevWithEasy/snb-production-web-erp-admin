@@ -5,6 +5,7 @@ import LoadingScreen from "@/components/LoadingScreen";
 import { useAuth } from "@/hooks/useAuth";
 import { db } from "@/utils/firebaseConfig";
 import getPeriodPath from "@/utils/getPeriodPath";
+import { toast } from "sonner";
 
 export default function ManageMaterials() {
   const { user } = useAuth();
@@ -18,6 +19,8 @@ export default function ManageMaterials() {
   const [selectedMaterial, setSelectedMaterial] = useState(null);
   const [editName, setEditName] = useState("");
   const [editUnit, setEditUnit] = useState("");
+  const [editType, setEditType] = useState("");
+  const [editPrice, setEditPrice] = useState("");
   const [sectionLoading, setSectionLoading] = useState(false);
 
   // Long press state management
@@ -27,6 +30,20 @@ export default function ManageMaterials() {
   const fields = [
     { label: "Raw Materials (RM)", value: "rm" },
     { label: "Packaging Materials (PM)", value: "pm" },
+  ];
+
+  const materialTypes = [
+    { value: "rm", label: "RM" },
+    { value: "carton", label: "Carton" },
+    { value: "wrapper", label: "Wrapper" },
+    { value: "tray", label: "Tray" },
+    { value: "atc", label: "ATC Box" },
+    { value: "gum_tape", label: "Gum Tape" },
+    { value: "poly", label: "Poly (Inner/Master)" },
+    { value: "paper", label: "Paper" },
+    { value: "board", label: "Board" },
+    { value: "sticker", label: "Sticker" },
+    { value: "print", label: "Print Ink/Additive" },
   ];
 
   const periodId = getPeriodPath(user?.current_period);
@@ -155,8 +172,10 @@ export default function ManageMaterials() {
     if (now - lastTapTime < DOUBLE_TAP_DELAY) {
       // Double tap - edit material
       setSelectedMaterial(material);
-      setEditName(material.name);
-      setEditUnit(material.unit);
+      setEditName(material.name || "");
+      setEditUnit(material.unit || "");
+      setEditType(material.type || "");
+      setEditPrice(material.price ? material.price.toString() : "");
       setEditModalVisible(true);
       setLastTapTime(0);
     } else {
@@ -178,27 +197,28 @@ export default function ManageMaterials() {
 
     setLoading(true);
     try {
+      const updateData = {
+        name: editName,
+        unit: editUnit,
+        type: editType,
+        ...(editPrice && { price: parseFloat(editPrice) || 0 })
+      };
+
       const updatedMaterials = materials.map((material) =>
         material.id === selectedMaterial.id
-          ? { ...material, name: editName, unit: editUnit }
+          ? { ...material, ...updateData }
           : material
       );
 
       // Update Firestore
-      await updateDocument(main_material_collection_name, selectedMaterial.id, {
-        name: editName,
-        unit: editUnit
-      });
-      await updateDocument(period_material_collection_name, selectedMaterial.id, {
-        name: editName,
-        unit: editUnit
-      });
+      await updateDocument(main_material_collection_name, selectedMaterial.id, updateData);
+      await updateDocument(period_material_collection_name, selectedMaterial.id, updateData);
 
       // Update local state
       setMaterials(updatedMaterials);
       setEditModalVisible(false);
 
-      alert("Success: Material updated successfully!");
+      toast.success("Material updated successfully!");
     } catch (err) {
       console.error("Error updating material:", err);
       alert("Error: Could not update material: " + err.message);
@@ -307,20 +327,34 @@ export default function ManageMaterials() {
                       onClick={() => handleMaterialInteraction(material)}
                       className="px-6 py-4 hover:bg-gray-50 dark:hover:bg-gray-700 cursor-pointer transition-colors duration-150 flex items-center justify-between group select-none"
                     >
-                      <div className="flex items-center space-x-4">
-                        <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-medium text-sm transition-colors">
-                          {i + 1}
+                      <div className="flex-1">
+                        <div className="flex items-center space-x-4 mb-2">
+                          <div className="w-8 h-8 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center text-blue-600 dark:text-blue-400 font-medium text-sm transition-colors">
+                            {i + 1}
+                          </div>
+                          <span className="text-gray-800 dark:text-white font-medium">
+                            {material.name}
+                          </span>
                         </div>
-                        <span className="text-gray-800 dark:text-white font-medium">
-                          {material.name}
-                        </span>
+                        
+                        <div className="flex items-center space-x-4 ml-12">
+                          {material.type && (
+                            <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs rounded-full font-medium">
+                              {material.type}
+                            </span>
+                          )}
+                          {material.unit && (
+                            <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full font-medium">
+                              {material.unit}
+                            </span>
+                          )}
+                          {material.price && (
+                            <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-full font-medium">
+                              ৳{material.price}
+                            </span>
+                          )}
+                        </div>
                       </div>
-                      
-                      {material.unit && (
-                        <span className="px-3 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-sm rounded-full font-medium transition-colors">
-                          {material.unit}
-                        </span>
-                      )}
                     </div>
                   ))}
                 </div>
@@ -404,6 +438,41 @@ export default function ManageMaterials() {
                   <option value="pcs">Pcs</option>
                   <option value="rim">Rim</option>
                 </select>
+              </div>
+
+              {/* Type Select */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Type
+                </label>
+                <select
+                  value={editType}
+                  onChange={(e) => setEditType(e.target.value)}
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white transition-colors duration-200"
+                >
+                  <option value="">Select Type</option>
+                  {materialTypes.map((type) => (
+                    <option key={type.value} value={type.value}>
+                      {type.label}
+                    </option>
+                  ))}
+                </select>
+              </div>
+
+              {/* Price Input */}
+              <div>
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+                  Price
+                </label>
+                <input
+                  type="number"
+                  value={editPrice}
+                  onChange={(e) => setEditPrice(e.target.value)}
+                  placeholder="Enter price"
+                  step="0.01"
+                  min="0"
+                  className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
+                />
               </div>
             </div>
 

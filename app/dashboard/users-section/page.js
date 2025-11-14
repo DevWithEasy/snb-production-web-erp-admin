@@ -16,7 +16,9 @@ export default function UsersSection() {
       try {
         setLoading(true);
         const sectionsData = await Firebase.getDocuments("sections");
-        setSections(sectionsData.sort((a,b)=>a?.label.localeCompare(b?.label)) || []);
+        setSections(
+          sectionsData.sort((a, b) => a?.label.localeCompare(b?.label)) || []
+        );
       } catch (error) {
         console.error("Error fetching sections:", error);
         alert("Failed to load sections");
@@ -49,7 +51,9 @@ export default function UsersSection() {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center transition-colors duration-300">
         <div className="w-8 h-8 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin mb-4"></div>
-        <div className="text-gray-600 dark:text-gray-400">Loading sections...</div>
+        <div className="text-gray-600 dark:text-gray-400">
+          Loading sections...
+        </div>
       </div>
     );
   }
@@ -70,25 +74,47 @@ export default function UsersSection() {
         <button
           onClick={async () => {
             console.log("Start Update");
-            for (const section of sections) {
-              const fields = ["rm", "pm"];
-              for (const field of fields) {
-                const periods = ["september", "october", "november"];
-                for (const period of periods) {
-                  const collection_name = `${section.value}_${field}_period_${period}_2025`;
-                  console.log(collection_name + " Update Starting");
-                  const items = await Firebase.getDocuments(collection_name);
-                  for (const item of items) {
-                    const docRef = doc(db, collection_name, item.id);
-                    await updateDoc(docRef, {
-                      price: 0,
-                      type: field == 'rm' ? "rm" : item.unit==='pcs' ? 'carton' : 'wrapper',
-                    });
-                    console.log(item.name + " Updated");
-                  }
-                }
+            const collection_name = `biscuit_pm_period_october_2025`;
+            await Firebase.createDocWithName(
+              collection_name,
+              "rc6LIcn4BLi80oGMGU7h",
+              {
+                name: "Cream Club Fruit Plus Pineapple 25 gm Wrapper",
+                unit: "kg",
+                opening: 0,
+                recieved_total: 0,
+                recieved_days: Array.from({ length: 31 }, (_, i) => ({
+                  date: i + 1,
+                  qty: 0,
+                })),
+                consumption_total: 0,
+                consumption_days: Array.from({ length: 31 }, (_, i) => ({
+                  date: i + 1,
+                  qty: 0,
+                })),
+                closing: 0,
               }
-            }
+            );
+
+            // for (const section of sections) {
+            //   const fields = ["rm", "pm"];
+            //   for (const field of fields) {
+            //     const periods = ["september", "october", "november"];
+            //     for (const period of periods) {
+            //       const collection_name = `${section.value}_${field}_period_${period}_2025`;
+            //       console.log(collection_name + " Update Starting");
+            //       const items = await Firebase.getDocuments(collection_name);
+            //       for (const item of items) {
+            //         const docRef = doc(db, collection_name, item.id);
+            //         await updateDoc(docRef, {
+            //           price: 0,
+            //           type: field == 'rm' ? "rm" : item.unit==='pcs' ? 'carton' : 'wrapper',
+            //         });
+            //         console.log(item.name + " Updated");
+            //       }
+            //     }
+            //   }
+            // }
             console.log("Complete Update");
           }}
           className="hidden" // Hide the action button
@@ -189,7 +215,10 @@ export default function UsersSection() {
             ) : (
               <div className="text-center py-12">
                 <div className="bg-gray-100 dark:bg-gray-700 w-16 h-16 rounded-full flex items-center justify-center mx-auto mb-4">
-                  <FaIndustry className="text-gray-400 dark:text-gray-500" size={24} />
+                  <FaIndustry
+                    className="text-gray-400 dark:text-gray-500"
+                    size={24}
+                  />
                 </div>
                 <h3 className="text-lg font-medium text-gray-900 dark:text-white mb-2">
                   No sections found

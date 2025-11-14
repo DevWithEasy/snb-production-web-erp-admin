@@ -201,6 +201,16 @@ export default function DashboardLayout({ children }) {
       route: "/dashboard/export-code",
       icon: FaFileExport,
     },
+            {
+      title: "Export Material Sheet",
+      route: "/dashboard/export-price-sheet",
+      icon: FaFileExport,
+    },
+        {
+      title: "Update Material Price",
+      route: "/dashboard/update-material-price",
+      icon: FaFileExport,
+    },
     {
       title: "Period Opening Copy",
       route: "/dashboard/period-opening-copy",
