@@ -282,30 +282,30 @@ export default function ImportRecipe() {
   };
 
   return (
-    <div className="h-[calc(100vh-65px)] flex bg-gray-50 overflow-hidden">
+    <div className="h-[calc(100vh-65px)] flex bg-gray-50 dark:bg-gray-900 overflow-hidden transition-colors duration-300">
       {/* Left Panel - Excel Import */}
-      <div className="w-1/2 h-[calc(100vh-65px)] overflow-y-auto p-2 [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-scrollbar]:hidden border-r border-gray-200">
+      <div className="w-1/2 h-[calc(100vh-65px)] overflow-y-auto p-2 [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-scrollbar]:hidden border-r border-gray-200 dark:border-gray-700 transition-colors duration-300">
         {/* Section Selection for Excel Import */}
         {!sectionSelected && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
             <div className="text-center mb-6">
-              <h2 className="text-2xl font-bold text-gray-900 mb-2">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-2">
                 Select Section First
               </h2>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Please select a section to enable Excel import functionality
               </p>
             </div>
 
             <div className="max-w-md mx-auto">
-              <label className="block text-sm font-medium text-gray-700 mb-3">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                 Choose Section
               </label>
               <div className="flex">
                 <select
                   value={section}
                   onChange={(e) => setSection(e.target.value)}
-                  className="flex-1 h-12 px-3 border border-gray-300 rounded-l-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
                   disabled={productLoading}
                 >
                   <option value="">Select a section</option>
@@ -318,7 +318,7 @@ export default function ImportRecipe() {
                 <button
                   onClick={handleFind}
                   disabled={!section || productLoading}
-                  className="flex items-center justify-center bg-blue-600 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center bg-blue-600 dark:bg-blue-700 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Load Section Data"
                 >
                   {productLoading ? (
@@ -330,8 +330,8 @@ export default function ImportRecipe() {
               </div>
 
               {error && (
-                <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex items-center text-red-700">
+                <div className="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 transition-colors duration-300">
+                  <div className="flex items-center text-red-700 dark:text-red-400">
                     <svg
                       className="w-5 h-5 mr-2"
                       fill="none"
@@ -359,31 +359,31 @@ export default function ImportRecipe() {
             {/* Header */}
             <div className="text-center mb-8">
               <div className="flex items-center justify-between mb-4">
-                <h1 className="text-3xl font-bold text-gray-900">
+                <h1 className="text-3xl font-bold text-gray-900 dark:text-white">
                   Import Recipe from Excel
                 </h1>
                 <button
                   onClick={handleResetSection}
-                  className="px-4 py-2 bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-500 dark:bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
                   Change Section
                 </button>
               </div>
-              <p className="text-gray-600">
+              <p className="text-gray-600 dark:text-gray-400">
                 Upload your Excel file and specify required Format
               </p>
-              <div className="mt-2 text-sm text-blue-600 bg-blue-50 px-3 py-1 rounded-full inline-block">
+              <div className="mt-2 text-sm text-blue-600 dark:text-blue-400 bg-blue-50 dark:bg-blue-900/30 px-3 py-1 rounded-full inline-block transition-colors">
                 Section: {sections.find((s) => s.value === section)?.label}
               </div>
             </div>
 
             {/* Main Form */}
-            <div className="bg-white rounded-lg shadow-md p-6">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
               <form className="space-y-6">
                 {/* File Upload Section */}
                 <div className="space-y-4">
-                  <div className="border-b border-gray-200 pb-2 flex justify-between items-center">
-                    <h3 className="text-lg font-semibold text-gray-800">
+                  <div className="border-b border-gray-200 dark:border-gray-700 pb-2 flex justify-between items-center">
+                    <h3 className="text-lg font-semibold text-gray-800 dark:text-white">
                       📄 Excel File Upload
                     </h3>
                     {/* Clear file button - শুধু যখন ফাইল সিলেক্টেড থাকে */}
@@ -391,7 +391,7 @@ export default function ImportRecipe() {
                       <button
                         type="button"
                         onClick={handleClearFile}
-                        className="px-4 py-2 bg-red-500 text-white text-sm rounded-lg hover:bg-red-600 transition-colors duration-200"
+                        className="px-4 py-2 bg-red-500 dark:bg-red-600 text-white text-sm rounded-lg hover:bg-red-600 dark:hover:bg-red-700 transition-colors duration-200"
                       >
                         Clear File
                       </button>
@@ -399,7 +399,7 @@ export default function ImportRecipe() {
                   </div>
 
                   {!excelData && (
-                    <div className="border-2 border-dashed border-gray-300 rounded-lg p-6 text-center hover:border-blue-400 transition-colors duration-200">
+                    <div className="border-2 border-dashed border-gray-300 dark:border-gray-600 rounded-lg p-6 text-center hover:border-blue-400 dark:hover:border-blue-500 transition-colors duration-200">
                       <input
                         type="file"
                         accept=".xlsx, .xls"
@@ -414,9 +414,9 @@ export default function ImportRecipe() {
                         className="cursor-pointer block"
                       >
                         <div className="flex flex-col items-center justify-center space-y-3">
-                          <div className="w-12 h-12 bg-blue-100 rounded-full flex items-center justify-center">
+                          <div className="w-12 h-12 bg-blue-100 dark:bg-blue-900/30 rounded-full flex items-center justify-center transition-colors">
                             <svg
-                              className="w-6 h-6 text-blue-600"
+                              className="w-6 h-6 text-blue-600 dark:text-blue-400"
                               fill="none"
                               stroke="currentColor"
                               viewBox="0 0 24 24"
@@ -431,10 +431,10 @@ export default function ImportRecipe() {
                           </div>
 
                           <div>
-                            <p className="text-lg font-medium text-gray-700">
+                            <p className="text-lg font-medium text-gray-700 dark:text-gray-300">
                               {excelFile ? excelFile.name : "Choose Excel File"}
                             </p>
-                            <p className="text-sm text-gray-500 mt-1">
+                            <p className="text-sm text-gray-500 dark:text-gray-400 mt-1">
                               {excelFile
                                 ? "File selected"
                                 : "Click to upload .xlsx or .xls file"}
@@ -446,15 +446,15 @@ export default function ImportRecipe() {
                   )}
 
                   {loading && (
-                    <div className="flex items-center justify-center space-x-2 text-blue-600">
-                      <div className="w-5 h-5 border-2 border-blue-600 border-t-transparent rounded-full animate-spin"></div>
+                    <div className="flex items-center justify-center space-x-2 text-blue-600 dark:text-blue-400">
+                      <div className="w-5 h-5 border-2 border-blue-600 dark:border-blue-400 border-t-transparent rounded-full animate-spin"></div>
                       <span>Reading Excel file...</span>
                     </div>
                   )}
 
                   {excelData && (
-                    <div className="bg-green-50 border border-green-200 rounded-lg p-4">
-                      <div className="flex items-center space-x-2 text-green-700">
+                    <div className="bg-green-50 dark:bg-green-900/20 border border-green-200 dark:border-green-800 rounded-lg p-4 transition-colors duration-300">
+                      <div className="flex items-center space-x-2 text-green-700 dark:text-green-400">
                         <svg
                           className="w-5 h-5"
                           fill="none"
@@ -472,8 +472,8 @@ export default function ImportRecipe() {
                           Excel file loaded successfully!
                         </span>
                       </div>
-                      <p className="text-gray-700">{excelFile.name}</p>
-                      <p className="text-green-600 text-sm mt-1">
+                      <p className="text-gray-700 dark:text-gray-300">{excelFile.name}</p>
+                      <p className="text-green-600 dark:text-green-400 text-sm mt-1">
                         Recipe Found: {excelData.length}
                       </p>
                     </div>
@@ -483,8 +483,8 @@ export default function ImportRecipe() {
             </div>
 
             {excelData && (
-              <div className="bg-white rounded-lg shadow-md p-6 mt-4 space-y-2">
-                <p className="text-lg font-medium border-b border-gray-200">
+              <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mt-4 space-y-2 transition-colors duration-300">
+                <p className="text-lg font-medium border-b border-gray-200 dark:border-gray-700 text-gray-800 dark:text-white">
                   Products from Excel
                 </p>
                 <table className="w-full">
@@ -494,15 +494,15 @@ export default function ImportRecipe() {
                       return(
                       <tr
                         key={product.id}
-                        className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${find ? 'bg-green-50' : ''}`}
+                        className={`cursor-pointer border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${find ? 'bg-green-50 dark:bg-green-900/20' : ''}`}
                         onClick={() => {
                           setVisible(true);
                           setProduct(product);
                           setProductArea("local");
                         }}
                       >
-                        <td className="p-3">{product?.id?.slice(-4)}</td>
-                        <td className="p-3">{product?.name}</td>
+                        <td className="p-3 text-gray-800 dark:text-white">{product?.id?.slice(-4)}</td>
+                        <td className="p-3 text-gray-800 dark:text-white">{product?.name}</td>
                       </tr>
                     )})}
                   </tbody>
@@ -512,11 +512,11 @@ export default function ImportRecipe() {
 
             {/* Instructions */}
             {!excelData && (
-              <div className="mt-8 bg-blue-50 rounded-lg p-6">
-                <h3 className="text-lg font-semibold text-blue-800 mb-3">
+              <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 transition-colors duration-300">
+                <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
                   💡 How to use:
                 </h3>
-                <ul className="space-y-2 text-blue-700 text-sm">
+                <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-sm">
                   <li>• Upload your Excel file containing the recipe data</li>
                   <li>• Click on any product to view and import materials</li>
                   <li>
@@ -545,24 +545,24 @@ export default function ImportRecipe() {
       <div className="w-1/2 h-[calc(100vh-65px)] overflow-y-auto p-2 [-ms-overflow-style:none] [scrollbar-width:none] [-webkit-scrollbar]:hidden">
         {/* Section Selection for Firebase */}
         {!sectionSelected ? (
-          <div className="bg-white rounded-lg shadow-md p-6">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
             <div className="text-center">
-              <h2 className="text-2xl font-bold text-gray-900 mb-4">
+              <h2 className="text-2xl font-bold text-gray-900 dark:text-white mb-4">
                 View Products from Database
               </h2>
-              <p className="text-gray-600 mb-6">
+              <p className="text-gray-600 dark:text-gray-400 mb-6">
                 Select a section to view products and materials from Firebase
               </p>
 
               <div className="max-w-md mx-auto">
-                <label className="block text-sm font-medium text-gray-700 mb-3">
+                <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-3">
                   Choose Section
                 </label>
                 <div className="flex">
                   <select
                     value={section}
                     onChange={(e) => setSection(e.target.value)}
-                    className="flex-1 h-12 px-3 border border-gray-300 rounded-l-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                    className="flex-1 h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
                     disabled={productLoading}
                   >
                     <option value="">Select a section</option>
@@ -575,7 +575,7 @@ export default function ImportRecipe() {
                   <button
                     onClick={handleFind}
                     disabled={!section || productLoading}
-                    className="flex items-center justify-center bg-blue-600 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                    className="flex items-center justify-center bg-blue-600 dark:bg-blue-700 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                     title="Load Products & Materials"
                   >
                     {productLoading ? (
@@ -591,19 +591,19 @@ export default function ImportRecipe() {
         ) : (
           <>
             {/* Search Section Header */}
-            <div className="bg-white rounded-lg shadow-md p-6 mb-4">
+            <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-4 transition-colors duration-300">
               <div className="flex items-center justify-between mb-4">
                 <div>
-                  <h2 className="text-xl font-bold text-gray-900">
+                  <h2 className="text-xl font-bold text-gray-900 dark:text-white">
                     Products from Database
                   </h2>
-                  <p className="text-sm text-gray-600">
+                  <p className="text-sm text-gray-600 dark:text-gray-400">
                     Section: {sections.find((s) => s.value === section)?.label}
                   </p>
                 </div>
                 <button
                   onClick={handleResetSection}
-                  className="px-4 py-2 bg-gray-500 text-white text-sm rounded-lg hover:bg-gray-600 transition-colors duration-200"
+                  className="px-4 py-2 bg-gray-500 dark:bg-gray-600 text-white text-sm rounded-lg hover:bg-gray-600 dark:hover:bg-gray-700 transition-colors duration-200"
                 >
                   Change Section
                 </button>
@@ -611,8 +611,8 @@ export default function ImportRecipe() {
 
               {/* Error Message */}
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-4">
-                  <div className="flex items-center text-red-700">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 transition-colors duration-300">
+                  <div className="flex items-center text-red-700 dark:text-red-400">
                     <svg
                       className="w-5 h-5 mr-2"
                       fill="none"
@@ -635,8 +635,8 @@ export default function ImportRecipe() {
             {/* Products List */}
             {products.length > 0 && (
               <div className="space-y-2">
-                <div className="bg-white rounded-lg shadow-md p-6">
-                  <p className="text-lg font-medium border-b border-gray-200 pb-2">
+                <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
+                  <p className="text-lg font-medium border-b border-gray-200 dark:border-gray-700 pb-2 text-gray-800 dark:text-white">
                     Available Products ({products.length})
                   </p>
                   <table className="w-full mt-4">
@@ -648,8 +648,8 @@ export default function ImportRecipe() {
                         return (
                           <tr
                             key={product.id}
-                            className={`cursor-pointer border border-gray-200 hover:bg-gray-50 ${
-                              find ? "bg-green-50" : "bg-red-50"
+                            className={`cursor-pointer border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                              find ? "bg-green-50 dark:bg-green-900/20" : "bg-red-50 dark:bg-red-900/20"
                             }`}
                             onClick={() => {
                               setVisible(true);
@@ -661,14 +661,14 @@ export default function ImportRecipe() {
                               <td className="p-3">
                                 <FaRegCircleCheck
                                   size={18}
-                                  className="text-green-500"
+                                  className="text-green-500 dark:text-green-400"
                                 />
                               </td>
                             )}
-                            <td className="p-3 font-medium">
+                            <td className="p-3 font-medium text-gray-800 dark:text-white">
                               {product?.id?.slice(-4)}
                             </td>
-                            <td className="p-3">{product?.name}</td>
+                            <td className="p-3 text-gray-800 dark:text-white">{product?.name}</td>
                           </tr>
                         );
                       })}

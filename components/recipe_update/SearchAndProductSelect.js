@@ -1,7 +1,6 @@
 import { FaSearch } from "react-icons/fa";
 
 export default function SearchAndProductSelect({
-  // SearchProduct props
   sections,
   section,
   setSection,
@@ -28,15 +27,15 @@ export default function SearchAndProductSelect({
     <div className="mb-2">
       {/* Labels Row */}
       <div className="grid grid-cols-1 md:grid-cols-4 gap-4 mb-3">
-        <label className="text-sm font-semibold text-gray-800 flex items-center">
+        <label className="text-sm font-semibold text-gray-800 dark:text-white flex items-center">
           Section & Search
         </label>
         {products.length > 0 && (
           <>
-            <label className="text-sm font-semibold text-gray-800 flex items-center">
+            <label className="text-sm font-semibold text-gray-800 dark:text-white flex items-center">
               Select Product
             </label>
-            <label className="text-sm font-semibold text-gray-800 flex items-center">
+            <label className="text-sm font-semibold text-gray-800 dark:text-white flex items-center">
               Material Type
             </label>
           </>
@@ -56,7 +55,7 @@ export default function SearchAndProductSelect({
                 setSelectProduct({});
                 setSelectRefProduct({});
               }}
-              className="w-full h-12 px-3 border border-gray-300 rounded-l-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+              className="w-full h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 text-gray-900 dark:text-white transition-colors duration-300"
             >
               {sections.map((sectionItem) => (
                 <option key={sectionItem.value} value={sectionItem.value}>
@@ -67,7 +66,7 @@ export default function SearchAndProductSelect({
           </div>
           <button
             onClick={handleFind}
-            className="flex items-center justify-center bg-blue-600 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2"
+            className="flex items-center justify-center bg-blue-600 dark:bg-blue-700 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800"
             title="Find Recipes"
           >
             <FaSearch className="text-base" />
@@ -88,7 +87,7 @@ export default function SearchAndProductSelect({
                   setSelectProduct(selectedProduct);
                   setSelectRefProduct(selectedProduct);
                 }}
-                className="w-full h-12 px-3 border border-gray-300 rounded-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                className="w-full h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer text-gray-900 dark:text-white transition-colors duration-300"
                 disabled={products.length === 0}
               >
                 <option value="">Select Product</option>
@@ -109,7 +108,7 @@ export default function SearchAndProductSelect({
                   setField(selectedField);
                   loadSelectMaterials(selectedField);
                 }}
-                className="w-full h-12 px-3 border border-gray-300 rounded-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer"
+                className="w-full h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-lg bg-white dark:bg-gray-700 text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 cursor-pointer text-gray-900 dark:text-white transition-colors duration-300"
                 disabled={products.length === 0}
               >
                 {fields.map((fieldItem) => (

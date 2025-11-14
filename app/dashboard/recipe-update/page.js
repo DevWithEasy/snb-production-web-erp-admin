@@ -413,14 +413,14 @@ export default function UpdateRecipe() {
   }
 
   return (
-    <div className="bg-gray-50 min-h-screen">
+    <div className="bg-gray-50 dark:bg-gray-900 min-h-screen transition-colors duration-300">
       <ServerLoading visible={updating} message="Recipe updating" />
       
       {/* Mobile Materials Toggle Button */}
       <div className="lg:hidden fixed top-16 right-4 z-30">
         <button
           onClick={toggleMaterialsPanel}
-          className="bg-blue-600 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 transition-colors"
+          className="bg-blue-600 dark:bg-blue-700 text-white p-3 rounded-full shadow-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
         >
           <span className="text-sm font-medium">
             {showMaterialsPanel ? "Hide" : "Show"} Materials
@@ -431,9 +431,9 @@ export default function UpdateRecipe() {
       {/* Main Container with Responsive Layout */}
       <div className="flex flex-col lg:flex-row h-[calc(100vh-65px)]">
         {/* Left Section - Recipe Editor */}
-        <div className="w-full lg:w-8/12 h-full flex flex-col border-r border-gray-200 bg-white">
+        <div className="w-full lg:w-8/12 h-full flex flex-col border-r border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 transition-colors duration-300">
           {/* Fixed Header Section */}
-          <div className="flex-shrink-0 bg-white p-4 lg:p-6 border-b border-gray-200">
+          <div className="flex-shrink-0 bg-white dark:bg-gray-800 p-4 lg:p-6 border-b border-gray-200 dark:border-gray-700 transition-colors duration-300">
             <SearchAndProductSelect
               sections={sections}
               section={section}
@@ -454,8 +454,10 @@ export default function UpdateRecipe() {
 
           {/* Scrollable Content Area with Drop Zone */}
           <div
-            className={`flex-1 overflow-y-auto ${
-              isDragOver ? "bg-blue-100" : ""
+            className={`flex-1 overflow-y-auto transition-colors duration-300 ${
+              isDragOver 
+                ? "bg-blue-100 dark:bg-blue-900/30" 
+                : "bg-white dark:bg-gray-800"
             }`}
             onDragOver={handleDragOver}
             onDragLeave={handleDragLeave}
@@ -501,7 +503,7 @@ export default function UpdateRecipe() {
                 </>
               ) : (
                 <div className="text-center py-8 lg:py-12">
-                  <div className="text-gray-500 text-base lg:text-lg">
+                  <div className="text-gray-500 dark:text-gray-400 text-base lg:text-lg">
                     No products found. Please search for recipes.
                   </div>
                 </div>
@@ -509,15 +511,15 @@ export default function UpdateRecipe() {
 
               {loading && (
                 <div className="flex flex-col items-center justify-center py-6 lg:py-8">
-                  <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin mb-2"></div>
-                  <div className="text-gray-600 text-sm lg:text-base">
+                  <div className="w-8 h-8 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin mb-2"></div>
+                  <div className="text-gray-600 dark:text-gray-300 text-sm lg:text-base">
                     Loading recipes and materials...
                   </div>
                 </div>
               )}
 
               {error && (
-                <div className="bg-red-50 border border-red-200 rounded-lg p-3 lg:p-4 text-red-700 text-center text-sm lg:text-base">
+                <div className="bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-3 lg:p-4 text-red-700 dark:text-red-400 text-center text-sm lg:text-base">
                   {error}
                 </div>
               )}
@@ -528,23 +530,23 @@ export default function UpdateRecipe() {
         {/* Right Section - Materials List */}
         {materials.length > 0 && (
           <div className={`
-            w-full lg:w-4/12 h-full flex flex-col bg-white border-t lg:border-t-0 border-gray-200
+            w-full lg:w-4/12 h-full flex flex-col bg-white dark:bg-gray-800 border-t lg:border-t-0 border-gray-200 dark:border-gray-700
             fixed lg:relative inset-0 z-20 transform transition-transform duration-300 ease-in-out
             ${showMaterialsPanel ? 'translate-x-0' : 'translate-x-full lg:translate-x-0'}
           `}>
             {/* Mobile Header with Close Button */}
-            <div className="flex-shrink-0 p-4 lg:p-6 border-b border-gray-200 bg-white flex justify-between items-center lg:block">
+            <div className="flex-shrink-0 p-4 lg:p-6 border-b border-gray-200 dark:border-gray-700 bg-white dark:bg-gray-800 flex justify-between items-center lg:block transition-colors duration-300">
               <div>
-                <h2 className="text-lg font-semibold text-gray-800">
+                <h2 className="text-lg font-semibold text-gray-800 dark:text-white">
                   Available Materials ({materials.length})
                 </h2>
-                <p className="text-sm text-gray-600 mt-1">
+                <p className="text-sm text-gray-600 dark:text-gray-300 mt-1">
                   All materials for {section} section
                 </p>
               </div>
               <button
                 onClick={toggleMaterialsPanel}
-                className="lg:hidden text-gray-500 hover:text-gray-700"
+                className="lg:hidden text-gray-500 dark:text-gray-400 hover:text-gray-700 dark:hover:text-gray-200"
               >
                 <svg className="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24">
                   <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M6 18L18 6M6 6l12 12" />
@@ -561,12 +563,12 @@ export default function UpdateRecipe() {
             )}
 
             {/* Scrollable Materials List */}
-            <div className="flex-1 overflow-y-auto bg-white relative z-20">
+            <div className="flex-1 overflow-y-auto bg-white dark:bg-gray-800 relative z-20 transition-colors duration-300">
               <div className="p-3 lg:p-4 space-y-2 lg:space-y-3">
                 {materials.map((material, i) => (
                   <div
                     key={material?.id || i}
-                    className="p-3 lg:p-4 bg-gray-50 rounded-lg border border-gray-200 hover:bg-blue-50 hover:border-blue-200 transition-colors duration-200 cursor-pointer touch-manipulation"
+                    className="p-3 lg:p-4 bg-gray-50 dark:bg-gray-700 rounded-lg border border-gray-200 dark:border-gray-600 hover:bg-blue-50 dark:hover:bg-blue-900/30 hover:border-blue-200 dark:hover:border-blue-500 transition-colors duration-200 cursor-pointer touch-manipulation"
                     draggable="true"
                     onDragStart={(e) => handleDragStart(e, material)}
                     onTouchStart={(e) => {
@@ -581,11 +583,11 @@ export default function UpdateRecipe() {
                     }}
                     title={`${window.innerWidth < 1024 ? 'Tap to add' : 'Drag to add'} ${material.name} to recipe`}
                   >
-                    <div className="flex justify-between items-center text-sm text-gray-600">
-                      <span className="font-medium text-gray-800 text-xs lg:text-sm">
+                    <div className="flex justify-between items-center text-sm text-gray-600 dark:text-gray-300">
+                      <span className="font-medium text-gray-800 dark:text-white text-xs lg:text-sm">
                         {material?.name}
                       </span>
-                      <span className="bg-blue-100 text-blue-800 px-2 py-1 rounded text-xs">
+                      <span className="bg-blue-100 dark:bg-blue-900 text-blue-800 dark:text-blue-200 px-2 py-1 rounded text-xs">
                         {material?.unit}
                       </span>
                     </div>

@@ -420,24 +420,24 @@ export default function ExportProductsMaterialsCode() {
   };
 
   return (
-    <div className="h-[calc(100vh-65px)] bg-gray-50 p-6">
+    <div className="h-[calc(100vh-65px)] bg-gray-50 dark:bg-gray-900 p-6 transition-colors duration-300">
       <div className="max-w-6xl mx-auto">
         {/* Header */}
         <div className="text-center mb-8">
-          <h1 className="text-3xl font-bold text-gray-900 mb-2">
+          <h1 className="text-3xl font-bold text-gray-900 dark:text-white mb-2">
             Export Products & Materials
           </h1>
-          <p className="text-gray-600">
+          <p className="text-gray-600 dark:text-gray-400">
             Select a section and fetch products with their materials
           </p>
         </div>
 
         {/* Search Section */}
-        <div className="bg-white rounded-lg shadow-md p-6 mb-6">
+        <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
           <div className="flex flex-col sm:flex-row gap-4 items-end">
             {/* Section Select */}
             <div className="flex-1">
-              <label className="block text-sm font-medium text-gray-700 mb-2">
+              <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
                 Select Section
               </label>
               <div className="flex">
@@ -452,7 +452,7 @@ export default function ExportProductsMaterialsCode() {
                     setRmSearch("");
                     setPmSearch("");
                   }}
-                  className="flex-1 h-12 px-3 border border-gray-300 rounded-l-lg bg-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                  className="flex-1 h-12 px-3 border border-gray-300 dark:border-gray-600 rounded-l-lg bg-white dark:bg-gray-700 text-gray-900 dark:text-white text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 transition-colors duration-200"
                   disabled={loading}
                 >
                   <option value="">Choose a section</option>
@@ -465,7 +465,7 @@ export default function ExportProductsMaterialsCode() {
                 <button
                   onClick={handleFind}
                   disabled={loading || !section}
-                  className="flex items-center justify-center bg-blue-600 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 disabled:opacity-50 disabled:cursor-not-allowed"
+                  className="flex items-center justify-center bg-blue-600 dark:bg-blue-700 text-white h-12 w-12 border-none rounded-r-lg cursor-pointer text-sm transition-colors duration-200 hover:bg-blue-700 dark:hover:bg-blue-600 focus:outline-none focus:ring-2 focus:ring-blue-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 disabled:opacity-50 disabled:cursor-not-allowed"
                   title="Find Products & Materials"
                 >
                   {loading ? (
@@ -480,8 +480,8 @@ export default function ExportProductsMaterialsCode() {
 
           {/* Error Message */}
           {error && (
-            <div className="mt-4 bg-red-50 border border-red-200 rounded-lg p-4">
-              <div className="flex items-center text-red-700">
+            <div className="mt-4 bg-red-50 dark:bg-red-900/20 border border-red-200 dark:border-red-800 rounded-lg p-4 transition-colors duration-300">
+              <div className="flex items-center text-red-700 dark:text-red-400">
                 <svg
                   className="w-5 h-5 mr-2"
                   fill="none"
@@ -505,28 +505,28 @@ export default function ExportProductsMaterialsCode() {
         {(products?.length > 0 ||
           materials.rm?.length > 0 ||
           materials.pm?.length > 0) && (
-          <div className="bg-white rounded-lg shadow-md p-6 mb-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 mb-6 transition-colors duration-300">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               Export Data
             </h2>
             <div className="grid grid-cols-1 sm:grid-cols-3 gap-4">
               <button
                 onClick={exportToExcel}
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-green-600 text-white font-semibold rounded-lg hover:bg-green-700 transition-colors duration-200"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-green-600 dark:bg-green-700 text-white font-semibold rounded-lg hover:bg-green-700 dark:hover:bg-green-600 transition-colors duration-200"
               >
                 <FaFileExcel className="text-lg" />
                 Export to Excel
               </button>
               <button
                 onClick={exportToPDF}
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-red-600 text-white font-semibold rounded-lg hover:bg-red-700 transition-colors duration-200"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-red-600 dark:bg-red-700 text-white font-semibold rounded-lg hover:bg-red-700 dark:hover:bg-red-600 transition-colors duration-200"
               >
                 <FaFilePdf className="text-lg" />
                 Export to PDF
               </button>
               <button
                 onClick={exportToJSON}
-                className="flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 text-white font-semibold rounded-lg hover:bg-purple-700 transition-colors duration-200"
+                className="flex items-center justify-center gap-2 py-3 px-4 bg-purple-600 dark:bg-purple-700 text-white font-semibold rounded-lg hover:bg-purple-700 dark:hover:bg-purple-600 transition-colors duration-200"
               >
                 <FaFileCode className="text-lg" />
                 Export to JSON
@@ -539,34 +539,34 @@ export default function ExportProductsMaterialsCode() {
         {(products?.length > 0 ||
           materials.rm?.length > 0 ||
           materials.pm?.length > 0) && (
-          <div className="bg-white rounded-lg shadow-md p-6">
-            <h2 className="text-xl font-semibold text-gray-800 mb-4">
+          <div className="bg-white dark:bg-gray-800 rounded-lg shadow-md p-6 transition-colors duration-300">
+            <h2 className="text-xl font-semibold text-gray-800 dark:text-white mb-4">
               Results
             </h2>
 
             {/* Products Count */}
             <div className="grid grid-cols-1 md:grid-cols-3 gap-4 mb-6">
-              <div className="bg-blue-50 rounded-lg p-4 border border-blue-200">
-                <div className="text-blue-600 text-sm font-medium">
+              <div className="bg-blue-50 dark:bg-blue-900/20 rounded-lg p-4 border border-blue-200 dark:border-blue-800 transition-colors duration-300">
+                <div className="text-blue-600 dark:text-blue-400 text-sm font-medium">
                   Products
                 </div>
-                <div className="text-2xl font-bold text-blue-700">
+                <div className="text-2xl font-bold text-blue-700 dark:text-blue-300">
                   {products.length}
                 </div>
               </div>
-              <div className="bg-green-50 rounded-lg p-4 border border-green-200">
-                <div className="text-green-600 text-sm font-medium">
+              <div className="bg-green-50 dark:bg-green-900/20 rounded-lg p-4 border border-green-200 dark:border-green-800 transition-colors duration-300">
+                <div className="text-green-600 dark:text-green-400 text-sm font-medium">
                   RM Materials
                 </div>
-                <div className="text-2xl font-bold text-green-700">
+                <div className="text-2xl font-bold text-green-700 dark:text-green-300">
                   {materials.rm.length}
                 </div>
               </div>
-              <div className="bg-orange-50 rounded-lg p-4 border border-orange-200">
-                <div className="text-orange-600 text-sm font-medium">
+              <div className="bg-orange-50 dark:bg-orange-900/20 rounded-lg p-4 border border-orange-200 dark:border-orange-800 transition-colors duration-300">
+                <div className="text-orange-600 dark:text-orange-400 text-sm font-medium">
                   PM Materials
                 </div>
-                <div className="text-2xl font-bold text-orange-700">
+                <div className="text-2xl font-bold text-orange-700 dark:text-orange-300">
                   {materials.pm.length}
                 </div>
               </div>
@@ -576,9 +576,9 @@ export default function ExportProductsMaterialsCode() {
             <div className="space-y-6">
               {/* Products Preview with Search */}
               {products.length > 0 && (
-                <div className="border border-gray-100 rounded-lg overflow-hidden">
-                  <div className="bg-blue-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="text-lg font-medium text-gray-700">
+                <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden transition-colors duration-300">
+                  <div className="bg-blue-50 dark:bg-blue-900/20 px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center transition-colors duration-300">
+                    <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
                       Products ({filteredProducts.length} of {products.length})
                     </h3>
                     <div className="relative w-64">
@@ -587,18 +587,18 @@ export default function ExportProductsMaterialsCode() {
                         value={productSearch}
                         onChange={(e) => setProductSearch(e.target.value)}
                         placeholder="Search products by name or ID..."
-                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500"
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-blue-500 focus:ring-1 focus:ring-blue-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                       />
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm" />
                     </div>
                   </div>
-                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                  <div className="bg-gray-50 dark:bg-gray-900 p-4 max-h-60 overflow-y-auto transition-colors duration-300">
                     {filteredProducts.length > 0 ? (
-                      <pre className="text-sm text-gray-600">
+                      <pre className="text-sm text-gray-600 dark:text-gray-400">
                         {JSON.stringify(filteredProducts, null, 2)}
                       </pre>
                     ) : (
-                      <div className="text-center py-4 text-gray-500">
+                      <div className="text-center py-4 text-gray-500 dark:text-gray-400">
                         No products match your search
                       </div>
                     )}
@@ -608,9 +608,9 @@ export default function ExportProductsMaterialsCode() {
 
               {/* RM Materials Preview with Search */}
               {materials.rm.length > 0 && (
-                <div className="border border-gray-100 rounded-lg overflow-hidden">
-                  <div className="bg-green-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="text-lg font-medium text-gray-700">
+                <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden transition-colors duration-300">
+                  <div className="bg-green-50 dark:bg-green-900/20 px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center transition-colors duration-300">
+                    <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
                       RM Materials ({filteredRmMaterials.length} of {materials.rm.length})
                     </h3>
                     <div className="relative w-64">
@@ -619,18 +619,18 @@ export default function ExportProductsMaterialsCode() {
                         value={rmSearch}
                         onChange={(e) => setRmSearch(e.target.value)}
                         placeholder="Search RM materials by name or ID..."
-                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500"
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-green-500 focus:ring-1 focus:ring-green-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                       />
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm" />
                     </div>
                   </div>
-                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                  <div className="bg-gray-50 dark:bg-gray-900 p-4 max-h-60 overflow-y-auto transition-colors duration-300">
                     {filteredRmMaterials.length > 0 ? (
-                      <pre className="text-sm text-gray-600">
+                      <pre className="text-sm text-gray-600 dark:text-gray-400">
                         {JSON.stringify(filteredRmMaterials, null, 2)}
                       </pre>
                     ) : (
-                      <div className="text-center py-4 text-gray-500">
+                      <div className="text-center py-4 text-gray-500 dark:text-gray-400">
                         No RM materials match your search
                       </div>
                     )}
@@ -640,9 +640,9 @@ export default function ExportProductsMaterialsCode() {
 
               {/* PM Materials Preview with Search */}
               {materials.pm.length > 0 && (
-                <div className="border border-gray-100 rounded-lg overflow-hidden">
-                  <div className="bg-orange-50 px-4 py-3 border-b border-gray-100 flex justify-between items-center">
-                    <h3 className="text-lg font-medium text-gray-700">
+                <div className="border border-gray-100 dark:border-gray-700 rounded-lg overflow-hidden transition-colors duration-300">
+                  <div className="bg-orange-50 dark:bg-orange-900/20 px-4 py-3 border-b border-gray-100 dark:border-gray-700 flex justify-between items-center transition-colors duration-300">
+                    <h3 className="text-lg font-medium text-gray-700 dark:text-gray-300">
                       PM Materials ({filteredPmMaterials.length} of {materials.pm.length})
                     </h3>
                     <div className="relative w-64">
@@ -651,18 +651,18 @@ export default function ExportProductsMaterialsCode() {
                         value={pmSearch}
                         onChange={(e) => setPmSearch(e.target.value)}
                         placeholder="Search PM materials by name or ID..."
-                        className="w-full pl-9 pr-4 py-2 border border-gray-300 rounded-lg text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500"
+                        className="w-full pl-9 pr-4 py-2 border border-gray-300 dark:border-gray-600 rounded-lg text-sm outline-none focus:border-orange-500 focus:ring-1 focus:ring-orange-500 bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 transition-colors duration-200"
                       />
-                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 text-sm" />
+                      <FaSearch className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 dark:text-gray-500 text-sm" />
                     </div>
                   </div>
-                  <div className="bg-gray-50 p-4 max-h-60 overflow-y-auto">
+                  <div className="bg-gray-50 dark:bg-gray-900 p-4 max-h-60 overflow-y-auto transition-colors duration-300">
                     {filteredPmMaterials.length > 0 ? (
-                      <pre className="text-sm text-gray-600">
+                      <pre className="text-sm text-gray-600 dark:text-gray-400">
                         {JSON.stringify(filteredPmMaterials, null, 2)}
                       </pre>
                     ) : (
-                      <div className="text-center py-4 text-gray-500">
+                      <div className="text-center py-4 text-gray-500 dark:text-gray-400">
                         No PM materials match your search
                       </div>
                     )}
@@ -677,18 +677,18 @@ export default function ExportProductsMaterialsCode() {
         {loading && (
           <div className="flex justify-center items-center py-8">
             <div className="flex flex-col items-center space-y-3">
-              <div className="w-8 h-8 border-4 border-blue-500 border-t-transparent rounded-full animate-spin"></div>
-              <div className="text-gray-600">Loading data...</div>
+              <div className="w-8 h-8 border-4 border-blue-500 dark:border-blue-400 border-t-transparent rounded-full animate-spin"></div>
+              <div className="text-gray-600 dark:text-gray-400">Loading data...</div>
             </div>
           </div>
         )}
 
         {/* Instructions */}
-        <div className="mt-8 bg-blue-50 rounded-lg p-6">
-          <h3 className="text-lg font-semibold text-blue-800 mb-3">
+        <div className="mt-8 bg-blue-50 dark:bg-blue-900/20 rounded-lg p-6 transition-colors duration-300">
+          <h3 className="text-lg font-semibold text-blue-800 dark:text-blue-300 mb-3">
             💡 How to use:
           </h3>
-          <ul className="space-y-2 text-blue-700 text-sm">
+          <ul className="space-y-2 text-blue-700 dark:text-blue-400 text-sm">
             <li>• Select a section from the dropdown</li>
             <li>• Click the search button to fetch products and materials</li>
             <li>• Use individual search boxes to filter each section</li>
