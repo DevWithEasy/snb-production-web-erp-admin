@@ -15,6 +15,8 @@ export default function AddMaterials() {
   const [section, setSection] = useState("");
   const [name, setName] = useState("");
   const [unit, setUnit] = useState("kg");
+  const [type, setType] = useState("rm");
+  const [price, setPrice] = useState("");
   const [opening, setOpening] = useState("");
   const [materialsData, setMaterialsData] = useState([]);
   const [loading, setLoading] = useState(false);
@@ -29,7 +31,21 @@ export default function AddMaterials() {
   const units = [
     { label: "Kg", value: "kg" },
     { label: "Pcs", value: "pcs" },
-    { label: "Rim", value: "rim" }
+    { label: "Rim", value: "rim" },
+  ];
+
+  const materialTypes = [
+    { value: "rm", label: "RM" },
+    { value: "carton", label: "Carton" },
+    { value: "wrapper", label: "Wrapper" },
+    { value: "tray", label: "Tray" },
+    { value: "atc", label: "ATC Box" },
+    { value: "gum_tape", label: "Gum Tape" },
+    { value: "poly", label: "Poly (Inner/Master)" },
+    { value: "paper", label: "Paper" },
+    { value: "board", label: "Board" },
+    { value: "sticker", label: "Sticker" },
+    { value: "print", label: "Print Ink/Additive" },
   ];
 
   // Firebase collection reference for current section and field
@@ -121,6 +137,8 @@ export default function AddMaterials() {
         const newMaterial = {
           name: name.trim(),
           unit,
+          type,
+          price: parseFloat(price) || 0,
           opening: parseFloat(opening) || 0,
           recieved_total: 0,
           recieved_days: Array.from({ length: 31 }, (_, i) => ({
@@ -155,7 +173,9 @@ export default function AddMaterials() {
         // Reset form
         setName("");
         setOpening("");
+        setPrice("");
         setUnit("kg");
+        setType("rm");
 
         resolve(savedMaterial);
       } catch (error) {
@@ -279,6 +299,42 @@ export default function AddMaterials() {
             </select>
           </div>
 
+          {/* Material Type Selection */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Material Category
+            </label>
+            <select
+              value={type}
+              onChange={(e) => setType(e.target.value)}
+              disabled={loading}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors duration-200"
+            >
+              {materialTypes.map((typeItem) => (
+                <option key={typeItem.value} value={typeItem.value}>
+                  {typeItem.label}
+                </option>
+              ))}
+            </select>
+          </div>
+
+          {/* Price Input */}
+          <div>
+            <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
+              Price
+            </label>
+            <input
+              type="number"
+              value={price}
+              onChange={(e) => setPrice(e.target.value)}
+              placeholder="Enter price"
+              step="0.01"
+              min="0"
+              disabled={loading}
+              className="w-full px-3 py-2 border border-gray-300 dark:border-gray-600 rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent bg-white dark:bg-gray-700 text-gray-900 dark:text-white placeholder-gray-500 dark:placeholder-gray-400 disabled:bg-gray-100 dark:disabled:bg-gray-600 disabled:cursor-not-allowed transition-colors duration-200"
+            />
+          </div>
+
           {/* Opening Stock Input */}
           <div>
             <label className="block text-sm font-medium text-gray-700 dark:text-gray-300 mb-2">
@@ -344,12 +400,28 @@ export default function AddMaterials() {
                         key={item.id}
                         className="flex justify-between items-center py-3 border-b border-gray-100 dark:border-gray-700 last:border-b-0"
                       >
-                        <span className="font-medium text-gray-800 dark:text-white">
-                          {item.name}
-                        </span>
-                        <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full font-medium">
-                          {item.unit}
-                        </span>
+                        <div className="flex-1">
+                          <div className="font-medium text-gray-800 dark:text-white mb-1">
+                            {item.name}
+                          </div>
+                          <div className="flex items-center space-x-2">
+                            {item.type && (
+                              <span className="px-2 py-1 bg-purple-100 dark:bg-purple-900/30 text-purple-700 dark:text-purple-400 text-xs rounded-full">
+                                {item.type}
+                              </span>
+                            )}
+                            {item.unit && (
+                              <span className="px-2 py-1 bg-gray-100 dark:bg-gray-700 text-gray-700 dark:text-gray-300 text-xs rounded-full">
+                                {item.unit}
+                              </span>
+                            )}
+                            {item.price > 0 && (
+                              <span className="px-2 py-1 bg-green-100 dark:bg-green-900/30 text-green-700 dark:text-green-400 text-xs rounded-full">
+                                ৳{item.price}
+                              </span>
+                            )}
+                          </div>
+                        </div>
                       </div>
                     ))}
                   </div>
@@ -379,6 +451,7 @@ export default function AddMaterials() {
           <ul className="text-sm text-blue-600 dark:text-blue-400 space-y-1">
             <li>• Materials are automatically saved to both main and period collections</li>
             <li>• Opening stock will be set to 0 if left empty</li>
+            <li>• Price will be set to 0 if left empty</li>
             <li>• Materials are sorted alphabetically by name</li>
             <li>• Use &quot;View Materials&quot; to see all materials in the selected section</li>
           </ul>
