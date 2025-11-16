@@ -20,7 +20,10 @@ export default function PmMateView({ materials }) {
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Closing</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Carton Consumption</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Difference</th>
-              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Process Loss</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">P.Loss</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">L.G Qty</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">L.G Value</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Status</th>
             </tr>
           </thead>
           <tbody>
@@ -37,6 +40,9 @@ export default function PmMateView({ materials }) {
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(pm?.actual_pm_carton_consumption)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(pm?.pm_carton_diff)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(pm?.loss_percent)}%</td>
+                  <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(pm?.lgQty)}</td>
+                  <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(pm?.lgValue)}</td>
+                  <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{pm?.status ? '✘' : '✔'}</td>
                 </tr>
               ))
             ) : (

@@ -20,8 +20,10 @@ export default function RawMateView({ materials }) {
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Closing</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Batch Consumption</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Difference</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Value</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Carton Consumption</th>
               <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Difference</th>
+              <th className="p-3 text-center font-semibold text-blue-800 dark:text-blue-300 text-sm">Value</th>
             </tr>
           </thead>
           <tbody>
@@ -37,8 +39,10 @@ export default function RawMateView({ materials }) {
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.closing)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.actual_rm_batch_consumption)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.rm_bacth_diff)}</td>
+                  <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.rm_bacth_diff_value)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.actual_rm_carton_consumption)}</td>
                   <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.rm_carton_diff)}</td>
+                  <td className="p-3 text-center text-gray-600 dark:text-gray-400 text-sm">{formatNumber(rm?.rm_carton_diff_value)}</td>
                 </tr>
               ))
             ) : (

@@ -7,6 +7,46 @@ import { db } from "@/utils/firebaseConfig";
 import getPeriodPath from "@/utils/getPeriodPath";
 import { toast } from "sonner";
 
+// Custom Confirmation Modal Component
+const CustomConfirmationModal = ({ 
+  isOpen, 
+  onClose, 
+  onConfirm, 
+  title, 
+  message 
+}) => {
+  if (!isOpen) return null;
+
+  return (
+    <div className="fixed inset-0 bg-gray-500/50 dark:bg-gray-900/80 bg-opacity-50 flex justify-center items-center z-50 p-4 transition-colors duration-300">
+      <div className="bg-white dark:bg-gray-800 rounded-xl shadow-lg w-full max-w-md transition-colors duration-300">
+        <div className="px-6 py-4 border-b border-gray-200 dark:border-gray-700">
+          <h2 className="text-xl font-semibold text-gray-800 dark:text-white">{title}</h2>
+        </div>
+        <div className="p-6">
+          <p className="text-gray-600 dark:text-gray-300">{message}</p>
+        </div>
+        <div className="px-6 py-4 border-t border-gray-200 dark:border-gray-700 bg-gray-50 dark:bg-gray-700 rounded-b-xl">
+          <div className="flex gap-3">
+            <button
+              onClick={onClose}
+              className="flex-1 py-2 px-4 bg-gray-300 dark:bg-gray-600 text-gray-700 dark:text-gray-300 rounded-lg hover:bg-gray-400 dark:hover:bg-gray-500 focus:outline-none focus:ring-2 focus:ring-gray-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 font-medium"
+            >
+              Cancel
+            </button>
+            <button
+              onClick={onConfirm}
+              className="flex-1 py-2 px-4 bg-red-600 dark:bg-red-700 text-white rounded-lg hover:bg-red-700 dark:hover:bg-red-600 focus:outline-none focus:ring-2 focus:ring-red-500 focus:ring-offset-2 dark:focus:ring-offset-gray-800 transition-colors duration-200 font-medium"
+            >
+              Delete
+            </button>
+          </div>
+        </div>
+      </div>
+    </div>
+  );
+};
+
 export default function ManageMaterials() {
   const { user } = useAuth();
   const [field, setField] = useState("rm");
@@ -27,6 +67,10 @@ export default function ManageMaterials() {
   const [longPressTimer, setLongPressTimer] = useState(null);
   const [lastTapTime, setLastTapTime] = useState(0);
 
+  // Delete modal state
+  const [deleteModalVisible, setDeleteModalVisible] = useState(false);
+  const [materialToDelete, setMaterialToDelete] = useState(null);
+
   const fields = [
     { label: "Raw Materials (RM)", value: "rm" },
     { label: "Packaging Materials (PM)", value: "pm" },
@@ -36,12 +80,15 @@ export default function ManageMaterials() {
     { value: "rm", label: "RM" },
     { value: "carton", label: "Carton" },
     { value: "wrapper", label: "Wrapper" },
+    { value: "pouch", label: "Pouch" },
     { value: "tray", label: "Tray" },
     { value: "atc", label: "ATC Box" },
+    { value: "jar", label: "Jar" },
     { value: "gum_tape", label: "Gum Tape" },
     { value: "poly", label: "Poly (Inner/Master)" },
     { value: "paper", label: "Paper" },
-    { value: "board", label: "Board" },
+    { value: "alloy_paper", label: "Alloy Paper" },
+    { value: "board", label: "Paper Board" },
     { value: "sticker", label: "Sticker" },
     { value: "print", label: "Print Ink/Additive" },
   ];
@@ -68,7 +115,7 @@ export default function ManageMaterials() {
       if (!section && sortedSections.length > 0)
         setSection(sortedSections[0].value);
     } catch (error) {
-      alert("Error: Failed to load sections");
+      toast.error("Error: Failed to load sections");
       console.error("Failed to load sections:", error);
     } finally {
       setSectionLoading(false);
@@ -137,24 +184,29 @@ export default function ManageMaterials() {
 
       // Update local state
       setMaterials(updatedMaterials);
-
-      alert("Success: Material deleted successfully!");
+      
+      toast.success("Material deleted successfully!");
     } catch (err) {
       console.error("Error deleting material:", err);
-      alert("Error: Could not delete material: " + err.message);
+      toast.error("Error: Could not delete material: " + err.message);
     } finally {
       setLoading(false);
+      setDeleteModalVisible(false);
+      setMaterialToDelete(null);
     }
+  };
+
+  // Handle long press
+  const handleLongPress = (material) => {
+    setMaterialToDelete(material);
+    setDeleteModalVisible(true);
   };
 
   // Handle mouse/touch events for long press and double click
   const handleMouseDown = (material) => {
     const timer = setTimeout(() => {
-      // Long press - delete material
-      if (window.confirm(`Are you sure you want to delete "${material.name}"?`)) {
-        deleteMaterial(material.id);
-      }
-    }, 500); // 500ms for long press
+      handleLongPress(material);
+    }, 1000); // 500ms for long press
     setLongPressTimer(timer);
   };
 
@@ -192,7 +244,7 @@ export default function ManageMaterials() {
   // Update material function
   const updateMaterial = async () => {
     if (!editName.trim()) {
-      return alert("Error: Material name cannot be empty");
+      return toast.error("Error: Material name cannot be empty");
     }
 
     setLoading(true);
@@ -221,7 +273,7 @@ export default function ManageMaterials() {
       toast.success("Material updated successfully!");
     } catch (err) {
       console.error("Error updating material:", err);
-      alert("Error: Could not update material: " + err.message);
+      toast.error("Error: Could not update material: " + err.message);
     } finally {
       setLoading(false);
     }
@@ -504,6 +556,18 @@ export default function ManageMaterials() {
           </div>
         </div>
       )}
+
+      {/* Delete Confirmation Modal */}
+      <CustomConfirmationModal
+        isOpen={deleteModalVisible}
+        onClose={() => {
+          setDeleteModalVisible(false);
+          setMaterialToDelete(null);
+        }}
+        onConfirm={() => materialToDelete && deleteMaterial(materialToDelete.id)}
+        title="Delete Material"
+        message={`Are you sure you want to delete "${materialToDelete?.name}"? This action cannot be undone.`}
+      />
     </div>
   );
 }
