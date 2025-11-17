@@ -1,27 +1,34 @@
-'use client';
+"use client";
 
-import { useParams } from 'next/navigation';
-import { collection, getDocs } from 'firebase/firestore';
-import { useEffect, useState } from 'react';
-import { FaFileExcel, FaPrint, FaIndustry, FaBoxes, FaDownload, FaFilePdf } from 'react-icons/fa';
-import PmMateView from '@/components/monthly_report/PmMateView';
-import ProductView from '@/components/monthly_report/ProductView';
-import RawMateView from '@/components/monthly_report/RawMateView';
-import SummaryView from '@/components/monthly_report/SummaryView';
-import { useAuth } from '@/hooks/useAuth';
-import { db } from '@/utils/firebaseConfig';
-import formatNumber from '@/utils/formatNumber';
-import generateMonthlyExcel from '@/utils/generateMonthlyExcel';
-import { generateMonthlyPDF } from '@/utils/generateMonthlyPdf';
-import getPeriodPath from '@/utils/getPeriodPath';
-import Image from 'next/image';
-import getPercenteage from '@/utils/getPercentage';
+import { useParams } from "next/navigation";
+import { collection, getDocs } from "firebase/firestore";
+import { useEffect, useState } from "react";
+import {
+  FaFileExcel,
+  FaPrint,
+  FaIndustry,
+  FaBoxes,
+  FaDownload,
+  FaFilePdf,
+} from "react-icons/fa";
+import PmMateView from "@/components/monthly_report/PmMateView";
+import ProductView from "@/components/monthly_report/ProductView";
+import RawMateView from "@/components/monthly_report/RawMateView";
+import SummaryView from "@/components/monthly_report/SummaryView";
+import { useAuth } from "@/hooks/useAuth";
+import { db } from "@/utils/firebaseConfig";
+import formatNumber from "@/utils/formatNumber";
+import generateMonthlyExcel from "@/utils/generateMonthlyExcel";
+import { generateMonthlyPDF } from "@/utils/generateMonthlyPdf";
+import getPeriodPath from "@/utils/getPeriodPath";
+import Image from "next/image";
+import getPercenteage from "@/utils/getPercentage";
 
 export default function MonthlyReport() {
   const { user } = useAuth();
   const params = useParams();
   const section = params.name;
-  
+
   const [products, setProducts] = useState(null);
   const [materials, setMaterials] = useState({ rm: [], pm: [] });
   const [loading, setLoading] = useState(true);
@@ -142,17 +149,23 @@ export default function MonthlyReport() {
     return (diff / total) * 100;
   }
 
-  function gainLoss(total, diff,type){
-    const value = (diff / total);
-    const findValue = getPercenteage(type,true)
-    return value > findValue ? true : false 
+  function gainLoss(total, diff, type) {
+    const value = diff / total;
+    const findValue = getPercenteage(type, true);
+    return value > findValue ? true : false;
   }
 
-  function lossGainQuantity(total, diff,type){
-    const findValue = getPercenteage(type,true)
-    const acceptValue = total * findValue
-    const value = acceptValue - diff
-    return value
+  function lossGainQuantity(total, diff, type) {
+    if (diff === 0) {
+      return diff;
+    } else if(diff < 0){
+      return -(diff)
+    } else {
+      const findValue = getPercenteage(type, true);
+      const acceptValue = total * findValue;
+      const value = acceptValue - diff;
+      return value;
+    }
   }
 
   function processData() {
@@ -204,12 +217,12 @@ export default function MonthlyReport() {
 
         const consumption =
           Number(item?.opening) + recieved - Number(item?.closing);
-        
-        const rm_bacth_diff = actual_rm_batch_consumption - consumption
-        const rm_carton_diff = actual_rm_carton_consumption - consumption
 
-        const rm_bacth_diff_value = rm_bacth_diff * item.price || 0
-        const rm_carton_diff_value = rm_carton_diff * item.price || 0
+        const rm_bacth_diff = actual_rm_batch_consumption - consumption;
+        const rm_carton_diff = actual_rm_carton_consumption - consumption;
+
+        const rm_bacth_diff_value = rm_bacth_diff * item.price || 0;
+        const rm_carton_diff_value = rm_carton_diff * item.price || 0;
 
         const gen_item = {
           id: item.id,
@@ -224,7 +237,7 @@ export default function MonthlyReport() {
           rm_bacth_diff,
           rm_bacth_diff_value,
           rm_carton_diff,
-          rm_carton_diff_value
+          rm_carton_diff_value,
         };
         return gen_item;
       })
@@ -246,9 +259,13 @@ export default function MonthlyReport() {
         const pm_carton_diff = consumption - actual_pm_carton_consumption;
 
         const loss_percent = processLossPercent(consumption, pm_carton_diff);
-        const status = gainLoss(consumption, pm_carton_diff,item.type)
-        const lossGainQty = lossGainQuantity(consumption, pm_carton_diff,item.type)
-        const lossGainValue = lossGainQty * Number(item.price) || 0
+        const status = gainLoss(consumption, pm_carton_diff, item.type);
+        const lossGainQty = lossGainQuantity(
+          consumption,
+          pm_carton_diff,
+          item.type
+        );
+        const lossGainValue = lossGainQty * Number(item.price) || 0;
 
         const gen_item = {
           id: item.id,
@@ -262,8 +279,8 @@ export default function MonthlyReport() {
           pm_carton_diff,
           loss_percent,
           status,
-          lgQty : lossGainQty,
-          lgValue : lossGainValue
+          lgQty: lossGainQty,
+          lgValue: lossGainValue,
         };
         return gen_item;
       })
@@ -281,13 +298,23 @@ export default function MonthlyReport() {
     const process_loss = total_input - total_output;
     const loss_percent = processLossPercent(total_input, process_loss);
 
-    const rm_batch_diff_price_value = rm_data.reduce((acc,e)=> acc+e.rm_bacth_diff_value,0)
-    const rm_carton_diff_price_value = rm_data.reduce((acc,e)=> acc+e.rm_carton_diff_value,0)
-    const pm_carton_diff_price_value = pm_data.reduce((acc,e)=> acc+e.lgValue,0)
+    const rm_batch_diff_price_value = rm_data.reduce(
+      (acc, e) => acc + e.rm_bacth_diff_value,
+      0
+    );
+    const rm_carton_diff_price_value = rm_data.reduce(
+      (acc, e) => acc + e.rm_carton_diff_value,
+      0
+    );
+    const pm_carton_diff_price_value = pm_data.reduce(
+      (acc, e) => acc + e.lgValue,
+      0
+    );
 
-    const bacth_carton_diff_total_value = rm_batch_diff_price_value + pm_carton_diff_price_value
-    const carton_diff_total_value = rm_carton_diff_price_value + pm_carton_diff_price_value
-    
+    const bacth_carton_diff_total_value =
+      rm_batch_diff_price_value + pm_carton_diff_price_value;
+    const carton_diff_total_value =
+      rm_carton_diff_price_value + pm_carton_diff_price_value;
 
     return {
       products_data,
@@ -297,29 +324,42 @@ export default function MonthlyReport() {
       total_output: formatNumber(total_output),
       process_loss: formatNumber(process_loss),
       loss_percent: formatNumber(loss_percent),
-      lossGain : {
+      lossGain: {
         rm_batch_diff_price_value,
         rm_carton_diff_price_value,
         pm_carton_diff_price_value,
         bacth_carton_diff_total_value,
-        carton_diff_total_value
-      }
+        carton_diff_total_value,
+      },
     };
   }
 
   const handleGenerateExcel = async () => {
-    await generateMonthlyExcel(setGeneratingExcel, processData(), section, user);
+    await generateMonthlyExcel(
+      setGeneratingExcel,
+      processData(),
+      section,
+      user
+    );
   };
 
-  const handleGeneratePDF = async (save=true) => {
-    await generateMonthlyPDF(setGeneratingPdf, processData(), section, user,save);
+  const handleGeneratePDF = async (save = true) => {
+    await generateMonthlyPDF(
+      setGeneratingPdf,
+      processData(),
+      section,
+      user,
+      save
+    );
   };
 
   if (loading) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-5 transition-colors duration-300">
         <div className="animate-spin rounded-full h-12 w-12 border-b-2 border-blue-500 dark:border-blue-400"></div>
-        <p className="mt-4 text-gray-600 dark:text-gray-400">Loading products and materials...</p>
+        <p className="mt-4 text-gray-600 dark:text-gray-400">
+          Loading products and materials...
+        </p>
       </div>
     );
   }
@@ -327,7 +367,9 @@ export default function MonthlyReport() {
   if (error) {
     return (
       <div className="min-h-screen bg-gray-50 dark:bg-gray-900 flex flex-col items-center justify-center p-5 transition-colors duration-300">
-        <p className="text-red-500 dark:text-red-400 text-center mb-4">{error}</p>
+        <p className="text-red-500 dark:text-red-400 text-center mb-4">
+          {error}
+        </p>
         <button
           onClick={() => window.location.reload()}
           className="bg-blue-600 dark:bg-blue-700 text-white px-6 py-2 rounded-lg hover:bg-blue-700 dark:hover:bg-blue-600 transition-colors"
@@ -344,7 +386,10 @@ export default function MonthlyReport() {
         {/* Header with Export Buttons */}
         <div className="flex flex-col sm:flex-row justify-between items-start sm:items-center gap-4 mb-6 md:mb-8">
           <h1 className="text-xl md:text-2xl lg:text-3xl font-bold text-gray-800 dark:text-white">
-            {section && `${section.charAt(0).toUpperCase() + section.slice(1)} Monthly Report`}
+            {section &&
+              `${
+                section.charAt(0).toUpperCase() + section.slice(1)
+              } Monthly Report`}
           </h1>
           <div className="flex gap-2 md:gap-4">
             <button
@@ -370,7 +415,7 @@ export default function MonthlyReport() {
               )}
             </button>
             <button
-              onClick={()=>handleGeneratePDF(false)}
+              onClick={() => handleGeneratePDF(false)}
               disabled={generatingPdf}
               className="flex items-center gap-2 bg-red-500 dark:bg-red-600 hover:bg-red-600 dark:hover:bg-red-700 text-white px-3 md:px-4 py-2 rounded-lg transition-colors disabled:opacity-50 text-sm md:text-base"
             >
@@ -386,9 +431,9 @@ export default function MonthlyReport() {
         {/* Company Header */}
         <div className="text-center mb-8 bg-white dark:bg-gray-800 rounded-lg shadow-sm p-6 transition-colors duration-300">
           <div className="w-16 h-16 md:w-20 md:h-20 mx-auto mb-4 rounded-full overflow-hidden">
-            <Image 
-              src="/logo.png" 
-              alt="Company Logo" 
+            <Image
+              src="/logo.png"
+              alt="Company Logo"
               width={80}
               height={80}
               className="object-cover"
@@ -398,7 +443,8 @@ export default function MonthlyReport() {
             S&B Nice Nice Food Valley Ltd.
           </h2>
           <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
-            {section && `${section.charAt(0).toUpperCase() + section.slice(1)} Section`}
+            {section &&
+              `${section.charAt(0).toUpperCase() + section.slice(1)} Section`}
           </p>
           <p className="text-gray-600 dark:text-gray-400 text-sm md:text-base">
             Monthly Consumption of {user?.current_period}
