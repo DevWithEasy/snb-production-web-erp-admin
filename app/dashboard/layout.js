@@ -36,33 +36,37 @@ const NavigationItem = ({ route, title, Icon, onClick }) => (
 );
 
 // Mobile Sidebar Component - Declared outside
-const MobileSidebar = ({ 
-  mobileMenuOpen, 
-  closeMobileMenu, 
-  user, 
-  routes, 
-  handleLogout 
+const MobileSidebar = ({
+  mobileMenuOpen,
+  closeMobileMenu,
+  user,
+  routes,
+  handleLogout,
 }) => (
   <>
     {/* Backdrop */}
     {mobileMenuOpen && (
-      <div 
+      <div
         className="fixed inset-0 bg-gray-500/50 dark:bg-gray-900/80 bg-opacity-50 z-40 lg:hidden"
         onClick={closeMobileMenu}
       />
     )}
-    
+
     {/* Sidebar */}
-    <div className={`
+    <div
+      className={`
       fixed top-0 left-0 h-full bg-white dark:bg-gray-800 shadow-xl z-50 transform transition-transform duration-300 ease-in-out
-      ${mobileMenuOpen ? 'translate-x-0' : '-translate-x-full'}
+      ${mobileMenuOpen ? "translate-x-0" : "-translate-x-full"}
       w-80 lg:hidden
-    `}>
+    `}
+    >
       {/* Mobile Sidebar Header */}
       <div className="flex items-center justify-between p-4 border-b border-gray-200 dark:border-gray-700 bg-blue-600 dark:bg-blue-700 text-white">
         <div>
           <h2 className="text-xl font-bold">Admin Dashboard</h2>
-          <p className="text-blue-100 dark:text-blue-200 text-sm">Welcome, {user?.name || user?.username}</p>
+          <p className="text-blue-100 dark:text-blue-200 text-sm">
+            Welcome, {user?.name || user?.username}
+          </p>
         </div>
         <button
           onClick={closeMobileMenu}
@@ -201,12 +205,12 @@ export default function DashboardLayout({ children }) {
       route: "/dashboard/export-code",
       icon: FaFileExport,
     },
-            {
+    {
       title: "Export Material Sheet",
       route: "/dashboard/export-price-sheet",
       icon: FaFileExport,
     },
-        {
+    {
       title: "Update Material Price",
       route: "/dashboard/update-material-price",
       icon: FaFileExport,
@@ -214,6 +218,11 @@ export default function DashboardLayout({ children }) {
     {
       title: "Period Opening Copy",
       route: "/dashboard/period-opening-copy",
+      icon: FaCopy,
+    },
+    {
+      title: "Data CleanUp",
+      route: "/dashboard/cleanup",
       icon: FaCopy,
     },
     {
@@ -254,7 +263,9 @@ export default function DashboardLayout({ children }) {
                   <h1 className="text-lg lg:text-xl font-semibold text-gray-900 dark:text-white">
                     Admin Dashboard
                     {deviceType === "tablet" && (
-                      <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">(Tablet)</span>
+                      <span className="text-sm text-gray-500 dark:text-gray-400 ml-2">
+                        (Tablet)
+                      </span>
                     )}
                   </h1>
                   <p className="text-xs text-gray-500 dark:text-gray-400 hidden sm:block">
@@ -280,7 +291,7 @@ export default function DashboardLayout({ children }) {
         </nav>
 
         {/* Mobile Sidebar */}
-        <MobileSidebar 
+        <MobileSidebar
           mobileMenuOpen={mobileMenuOpen}
           closeMobileMenu={closeMobileMenu}
           user={user}
@@ -295,7 +306,13 @@ export default function DashboardLayout({ children }) {
             className={`
               bg-white dark:bg-gray-800 border-r border-gray-200 dark:border-gray-700 overflow-y-auto transition-all duration-300 ease-in-out 
               hidden lg:block
-              ${sidebarOpen ? (deviceType === "tablet" ? "w-48" : "w-64") : "w-0"}
+              ${
+                sidebarOpen
+                  ? deviceType === "tablet"
+                    ? "w-48"
+                    : "w-64"
+                  : "w-0"
+              }
             `}
           >
             <div className={`p-4 ${sidebarOpen ? "block" : "hidden"}`}>
@@ -323,9 +340,12 @@ export default function DashboardLayout({ children }) {
           <div
             className={`
               flex-1 overflow-y-auto transition-all duration-300 ease-in-out
-              ${sidebarOpen && deviceType !== "mobile" ? 
-                (deviceType === "tablet" ? "lg:w-[calc(100%-12rem)]" : "lg:w-[calc(100%-16rem)]") : 
-                "w-full"
+              ${
+                sidebarOpen && deviceType !== "mobile"
+                  ? deviceType === "tablet"
+                    ? "lg:w-[calc(100%-12rem)]"
+                    : "lg:w-[calc(100%-16rem)]"
+                  : "w-full"
               }
             `}
           >
