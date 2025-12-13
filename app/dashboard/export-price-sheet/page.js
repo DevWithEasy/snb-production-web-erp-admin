@@ -111,7 +111,8 @@ export default function ExportProductsMaterials() {
             ID: material.id,
             Name: material.name,
             Unit: material.unit || "",
-            Price: "",
+            Price: material.price || "",
+            Code: material.code || "",
           });
         });
 
@@ -122,7 +123,8 @@ export default function ExportProductsMaterials() {
             ID: material.id,
             Name: material.name,
             Unit: material.unit || "",
-            Price: "",
+            Price: material.price || "",
+            Code: material.code || "",
           });
         });
 

@@ -198,7 +198,7 @@ export async function generateDailyPDF(
         yPosition += 2;
 
         const rmTableData = filteredRm.map((rm, index) => [
-          index + 1,
+          rm.code || "N/A",
           rm.name || "N/A",
           rm.opening || "0",
           rm.recieved_total || "0",
@@ -210,7 +210,7 @@ export async function generateDailyPDF(
           startY: yPosition,
           head: [
             [
-              "No",
+              "Code",
               "Material Name",
               "Opening",
               "Received",
@@ -233,7 +233,7 @@ export async function generateDailyPDF(
             ...borderStyle,
           },
           columnStyles: {
-            0: { cellWidth: 15, halign: "center" },
+            0: { cellWidth: 16, halign: "center" },
             1: { cellWidth: 80, halign: "left" },
             2: { cellWidth: 25, halign: "center" },
             3: { cellWidth: 25, halign: "center" },
@@ -260,7 +260,7 @@ export async function generateDailyPDF(
         yPosition += 2;
 
         const pmTableData = filteredPm.map((pm, index) => [
-          index + 1,
+          pm.code || "N/A",
           pm.name || "N/A",
           pm.opening || "0",
           pm.recieved_total || "0",
@@ -272,7 +272,7 @@ export async function generateDailyPDF(
           startY: yPosition,
           head: [
             [
-              "No",
+              "Code",
               "Material Name",
               "Opening",
               "Received",
@@ -295,7 +295,7 @@ export async function generateDailyPDF(
             ...borderStyle,
           },
           columnStyles: {
-            0: { cellWidth: 15, halign: "center" },
+            0: { cellWidth: 16, halign: "left" },
             1: { cellWidth: 80, halign: "left" },
             2: { cellWidth: 25, halign: "center" },
             3: { cellWidth: 25, halign: "center" },
