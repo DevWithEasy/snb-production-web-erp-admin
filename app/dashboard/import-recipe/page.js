@@ -21,7 +21,7 @@ export default function ImportRecipe() {
   const [product, setProduct] = useState(false);
   const [productArea, setProductArea] = useState("local");
   const [sectionSelected, setSectionSelected] = useState(false);
-  const [imported,setImported] = useState([])
+  const [imported, setImported] = useState([]);
 
   const products_collection_name = `${section}_products`;
   const rm_collection_name = `${section}_rm`;
@@ -166,14 +166,13 @@ export default function ImportRecipe() {
           if (jsonData.length === 0) continue;
 
           //get product info
-          const [id, name, rmStart, rmEnd, pmStart, pmEnd] = jsonData[0].filter(
-            (v) => v != null && v !== ""
-          );
+          const [fg_code, id, name, rmStart, rmEnd, pmStart, pmEnd] =
+            jsonData[0].filter((v) => v != null && v !== "");
+          
+          
 
           // Skip if essential product info is missing
           if (!id || !name) continue;
-
-          const productInfo = { id, name, rmStart, rmEnd, pmStart, pmEnd };
 
           const rawMaterials = jsonData
             .slice(rmStart - 1, rmEnd)
@@ -472,7 +471,9 @@ export default function ImportRecipe() {
                           Excel file loaded successfully!
                         </span>
                       </div>
-                      <p className="text-gray-700 dark:text-gray-300">{excelFile.name}</p>
+                      <p className="text-gray-700 dark:text-gray-300">
+                        {excelFile.name}
+                      </p>
                       <p className="text-green-600 dark:text-green-400 text-sm mt-1">
                         Recipe Found: {excelData.length}
                       </p>
@@ -490,21 +491,30 @@ export default function ImportRecipe() {
                 <table className="w-full">
                   <tbody>
                     {excelData?.map((product) => {
-                      const find = imported.find(prodId=> prodId === product.id)
-                      return(
-                      <tr
-                        key={product.id}
-                        className={`cursor-pointer border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${find ? 'bg-green-50 dark:bg-green-900/20' : ''}`}
-                        onClick={() => {
-                          setVisible(true);
-                          setProduct(product);
-                          setProductArea("local");
-                        }}
-                      >
-                        <td className="p-3 text-gray-800 dark:text-white">{product?.id?.slice(-4)}</td>
-                        <td className="p-3 text-gray-800 dark:text-white">{product?.name}</td>
-                      </tr>
-                    )})}
+                      const find = imported.find(
+                        (prodId) => prodId === product.id
+                      );
+                      return (
+                        <tr
+                          key={product.id}
+                          className={`cursor-pointer border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
+                            find ? "bg-green-50 dark:bg-green-900/20" : ""
+                          }`}
+                          onClick={() => {
+                            setVisible(true);
+                            setProduct(product);
+                            setProductArea("local");
+                          }}
+                        >
+                          <td className="p-3 text-gray-800 dark:text-white">
+                            {product?.id?.slice(-4)}
+                          </td>
+                          <td className="p-3 text-gray-800 dark:text-white">
+                            {product?.name}
+                          </td>
+                        </tr>
+                      );
+                    })}
                   </tbody>
                 </table>
               </div>
@@ -649,7 +659,9 @@ export default function ImportRecipe() {
                           <tr
                             key={product.id}
                             className={`cursor-pointer border border-gray-200 dark:border-gray-700 hover:bg-gray-50 dark:hover:bg-gray-700 transition-colors ${
-                              find ? "bg-green-50 dark:bg-green-900/20" : "bg-red-50 dark:bg-red-900/20"
+                              find
+                                ? "bg-green-50 dark:bg-green-900/20"
+                                : "bg-red-50 dark:bg-red-900/20"
                             }`}
                             onClick={() => {
                               setVisible(true);
@@ -668,7 +680,9 @@ export default function ImportRecipe() {
                             <td className="p-3 font-medium text-gray-800 dark:text-white">
                               {product?.id?.slice(-4)}
                             </td>
-                            <td className="p-3 text-gray-800 dark:text-white">{product?.name}</td>
+                            <td className="p-3 text-gray-800 dark:text-white">
+                              {product?.name}
+                            </td>
                           </tr>
                         );
                       })}
